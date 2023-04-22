@@ -49,9 +49,23 @@ public:
     bool getIswhite() {return this->Iswhite;}
     bool getIsalive() {return this->Isalive;}
 
-    bool move_valid(Position final);    // this function checks, depending on the move rules for every piece, if a move is valid to a certain position
+    virtual bool move_valid(Position final) {
+        return true;
+    }    // this function checks, depending on the move rules for every piece, if a move is valid to a certain position
 
-    PieceType Piecetype();
+    virtual void Piecetype() {
+        std::cout << "King" << std::endl;
+//        return KING;
+    }
+
+};
+
+
+class NoPiece: public Piece {
+    NoPiece(bool iswhite) : Piece(iswhite) {}
+    NoPiece() {Piece();}
+
+    void Piecetype() override {std::cout << "Type Nopiece" << std::endl;}// return KING;}
 
 };
 
@@ -66,7 +80,7 @@ public:
     King() {Piece();}
 
     // check, when a certain move is valid!
-    bool move_valid(Position final) {
+    bool move_valid(Position final) override {
         if (!final.check_pos()) {std::cout << "final position invalid" << std::endl; return false;}
 
         int tx[] = {1, 1, -1, -1, 1, -1, 0, 0};
@@ -82,7 +96,7 @@ public:
         return result;
     }
 
-    PieceType Piecetype() {return KING;}
+    void Piecetype() override {std::cout << "Type King" << std::endl;}// return KING;}
 
 };
 
@@ -93,7 +107,7 @@ public:
     Queen() {Piece();}
 
     // check, when a certain move is valid!
-    bool move_valid(Position final) {
+    bool move_valid(Position final) override {
         if (!final.check_pos()) {std::cout << "final position invalid" << std::endl; return false;}
 
         int tx[] = {1, 1, -1, -1, 1, -1, 0, 0};
@@ -111,7 +125,7 @@ public:
         return result;
     }
 
-    PieceType Piecetype() {return QUEEN;}
+    void Piecetype() override {std::cout << "Type Queen" << std::endl;}// return QUEEN;}
 
 };
 
@@ -122,7 +136,7 @@ public:
     Rook() {Piece();}
 
     // check, when a certain move is valid!
-    bool move_valid(Position final) {
+    bool move_valid(Position final) override {
         if (!final.check_pos()) {std::cout << "final position invalid" << std::endl; return false;}
 
         int tx[] = {1, -1, 0, 0};
@@ -139,7 +153,7 @@ public:
         return result;
     }
 
-    PieceType Piecetype() {return ROOK;}
+    void Piecetype() override {std::cout << "Type Rook" << std::endl;}// return ROOK;}
 
 };
 
@@ -149,7 +163,7 @@ public:
     Knight(bool iswhite) : Piece(iswhite) {}
     Knight() {Piece();}
     // check, when a certain move is valid!
-    bool move_valid(Position final) {
+    bool move_valid(Position final) override {
         if (!final.check_pos()) {return false;}
 
         int tx[] = {-2, -2, -1, 1, 2, 2, 1, -1};
@@ -165,7 +179,7 @@ public:
         return result;
     }
 
-    PieceType Piecetype() {return KNIGHT;}
+    void Piecetype() override {std::cout << "Type Knight" << std::endl;}// return KNIGHT;}
 
 };
 
@@ -176,7 +190,7 @@ public:
     Bishop() {Piece();}
 
     // check, when a certain move is valid!
-    bool move_valid(Position final) {
+    bool move_valid(Position final) override {
         if (!final.check_pos()) {std::cout << "final position invalid" << std::endl; return false;}
 
         int tx[] = {1, 1, -1, -1};
@@ -194,7 +208,7 @@ public:
         return result;
     }
 
-    PieceType Piecetype() {return BISHOP;}
+    void Piecetype() override {std::cout << "Type Bishop" << std::endl;}// return BISHOP;}
 
 };
 
@@ -212,7 +226,7 @@ public:
     Pawn() {Piece();}
 
     // check, when a certain move is valid!
-    bool move_valid(Position final) {
+    bool move_valid(Position final) override {
         if (!final.check_pos()) {std::cout << "final position invalid" << std::endl; return false;}
         bool result = false;
 
@@ -242,7 +256,7 @@ public:
     }
 
 
-    PieceType Piecetype() {return PAWN;}
+    void Piecetype() override {std::cout << "Type Pawn" << std::endl;}// return PAWN;}
 
 };
 

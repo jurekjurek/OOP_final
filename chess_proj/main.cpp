@@ -4,7 +4,8 @@
 //#include "piece.h"
 //#include "player.h"
 //#include "board.h"
-#include "game.h"
+//#include "game.h"
+#include "test.h"
 using namespace std;
 
 /*
@@ -32,12 +33,15 @@ int main()
 //    pawn.setFirstmove(true);
 //    rook.setPos(position);
 //    cout << pawn.move_valid(position2) << endl;
-//    Player player1(iswhite);
-//    Player player2(!iswhite);
 //    cout << player2.getIswhite() << " and " << player1.getIswhite() << endl;
 //    cout << "What do we get? " << player.getBishop(2) << endl;            // returns a pointer
 //    ChessBoard board(player1, player2);
 //    cout << board.getPiece(Position(1,1))->getIswhite() << " and " << board.getPiece(Position(1,7))->getIswhite() << endl;
     ChessGame test_game;
-    return 0;
+    cout << "test" << endl;
+    Player player1(iswhite);
+    Player player2(!iswhite);
+//    player1.getMove();
+    test_game.Maketurn(player1, player2);
+//    return 0;
 }

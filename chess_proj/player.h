@@ -85,36 +85,39 @@ public:
     // I will adapt this using the QT framework later. Now only to use cin and see if everything works.
     // we have to return a move
     Move getMove() {
+        std::cout << "getMove executed" << std::endl;
         int x1, y1, x2, y2;
-        std::cout << "Enter four numbers, the first two corresponding to x1, y1, the second two to x2, y2" << std::endl;
+        std::cout << "Enter four numbers, the first two corresponding to x1, y1, the second two to x2, y2" << std::endl << std::flush;
         std::cin >> x1 >> y1 >> x2 >> y2;
-        Position pos1 = Position(x1, y1);
-        Position pos2 = Position(x2, y2);
+        std::cout << "test1" << std::endl;
+        Position pos1(x1, y1);
+        Position pos2(x2, y2);
+        std::cout << "test1" << std::endl;
         Move move(pos1, pos2);
+        std::cout << "test1" << std::endl;
         return move;
     }
 
     // why is this here?
-    void showOutput() {
-        GameState status;
+    void showOutput(GameState status) {
         switch (status) {
             case ACTIVE:
-                std::cout << "Game active" << std::endl;
+                std::cout << "State: Game active" << std::endl;
                 break;
             case ERROR:
-                std::cout << "ERROR" << std::endl;
+                std::cout << "State: ERROR" << std::endl;
                 break;
             case CHECK:
-                std::cout << "You're in check!" << std::endl;
+                std::cout << "State: You're in check!" << std::endl;
                 break;
             case DRAW:
-                std::cout << "Game is drawn" << std::endl;
+                std::cout << "State: Game is drawn" << std::endl;
                 break;
             case WHITEWINS:
-                std::cout << "White wins" << std::endl;
+                std::cout << "State: White wins" << std::endl;
                 break;
             case BLACKWINS:
-                std::cout << "Black wins" << std::endl;
+                std::cout << "State: Black wins" << std::endl;
                 break;
         }
     }

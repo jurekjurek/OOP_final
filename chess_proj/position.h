@@ -2,6 +2,7 @@
 #define POSITION_H
 
 #include <iostream>
+#include <typeinfo>
 
 /*
  *  This class can hold a position, characterised by an X- and a Y-value

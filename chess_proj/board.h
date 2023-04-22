@@ -115,7 +115,11 @@ public:
 
     // getter and setter for pieces
     // getPiece returns A POINTER TO A PIECE!!!
-    Piece* getPiece(Position pos) {
+    Piece getPiece(Position pos) {
+        return *Board[pos.getX()][pos.getY()];
+    }
+
+    Piece* getPiecePointer(Position pos) {
         return Board[pos.getX()][pos.getY()];
     }
 

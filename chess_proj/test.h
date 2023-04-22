@@ -1,5 +1,5 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef TEST_H
+#define TEST_H
 
 #include "board.h"
 
@@ -42,38 +42,46 @@ public:
 
         std::cout << "Got the move, now to check if there's a piece at that spot." << std::endl;
 
+        std::cout << "x and y of first: " << move.getFirst().getX() << " and " << move.getFirst().getY() << std::endl;
+        std::cout << "x and y of last: " << move.getLast().getX() << " and " << move.getLast().getY() << std::endl;
+
         Piece pieceOne = this->Board.getPiece(move.getFirst());
+        Piece* pieceOne_ptr = this->Board.getPiecePointer(move.getFirst());
 
-        std::cout << "test" << std::endl;
+        // Now, piece in spot two?
+        Piece pieceTwo = this->Board.getPiece(move.getLast());
+        Piece* pieceTwo_ptr = this->Board.getPiecePointer(move.getLast());
+        if (pieceTwo_ptr == nullptr) {std::cout << "No Piece at destination spot" << std::endl;}
 
-        if (&pieceOne == nullptr) {std::cout << "There is no piece at the starting position! Pointer is nullptr." << std::endl; return false;}
+        if (pieceOne_ptr == nullptr) {std::cout << "There is no piece at the starting position! Pointer is nullptr." << std::endl; return false;}
 
-        std::cout << "Typeinfo " << typeid(pieceOne_).name() << " Pos " << pieceOne_.getPos().getY()  << std::endl;
+        std::cout << "Typeinfo " << typeid(pieceOne).name() << " Pos " << pieceOne.getPos().getY()  << std::endl;
 
 //        pieceOne->Piecetype();
-        pieceOne_.Piecetype();
+        pieceOne.Piecetype();
 
-        std::cout << "Test" << std::endl;
 
-        if (current.getIswhite() != pieceOne_.getIswhite()) {
-            std::cout << "color of current player is not equal to the color of the piece you're trying to move. Player: " << current.getIswhite() << " Piece: " << pieceOne->getIswhite() << std::endl;
+        // okay, lets test all kinds of things here
+
+        std::cout << "Player colors, 1 " << current.getIswhite() <<  " 2 " << other.getIswhite() << " Piece colors, 1 " << pieceOne.getIswhite() << " 2 " << pieceTwo.getIswhite() << " Piece positions 1 x y " << pieceOne.getPos().getX() << pieceOne.getPos().getY() << " 2 x y " << pieceTwo.getPos().getX() << pieceTwo.getPos().getY() << std::endl;
+
+        if (current.getIswhite() != pieceOne.getIswhite()) {
+            std::cout << "color of current player is not equal to the color of the piece you're trying to move. Player: " << current.getIswhite() << " Piece: " << pieceOne.getIswhite() << std::endl;
             return false;
         }
 
-        // Now, let's check for other pieces in the destination spot, for example
-        Piece pieceTwo = this->Board.getPiece(move.getLast());
 
 
         // if piece at destination and piece at source have the same color -> error
-        if (pieceTwo_.getIswhite() == pieceOne_.getIswhite()) {std::cout << "The spot you want to move to is blocked by a piece of your color. " << pieceTwo_.getIswhite() << "" << pieceOne_.getIswhite() << std::endl; return false;}
+        if (pieceTwo.getIswhite() == pieceOne.getIswhite()) {std::cout << "The spot you want to move to is blocked by a piece of your color. " << pieceTwo.getIswhite() << "" << pieceOne.getIswhite() << std::endl; return false;}
 
-        bool checkMove = pieceOne->move_valid(move.getLast());
+        bool checkMove = pieceOne.move_valid(move.getLast());
 
         // if the move is not valid -> exit
         if (!checkMove) {std::cout << "The move you are trying to make is not a valid move for this piece." << std::endl; return false;}
 
         // PIECE ONE GETS A NEW POSITION
-        pieceOne->setPos(move.getLast());
+        pieceOne.setPos(move.getLast());
         std::cout << "Just changed the position of your piece to the new position" << std::endl;
 
         // setPiece takes a pointer to a piece and a position
@@ -81,13 +89,13 @@ public:
         this->Board.setPiece(nullptr, move.getFirst());
         std::cout << "We set the now empty spot to null." << std::endl;
         //
-        this->Board.setPiece(pieceOne, move.getLast());
+        this->Board.setPiece(&pieceOne, move.getLast());
         std::cout << "and told the board where your piece is now." << std::endl;
 
         // collect all captured pieces at position -1, -1, IDK...
 
-        pieceTwo->setPos(Position(-1, -1));
-        pieceTwo->setIsalive(false);
+        pieceTwo.setPos(Position(-1, -1));
+        pieceTwo.setIsalive(false);
         // maybe there could be a piece of the given type appearing in the corner or so... let's see
 
         // now, this move that we just made is only valid if our king (so the king of the current player) is still safe
@@ -95,13 +103,13 @@ public:
         bool kingStillSafe = isCheck(other, current);
 
         if (!kingStillSafe) {
-            pieceOne->setPos(move.getFirst());
-            if (pieceTwo != nullptr) {
-                pieceTwo->setPos(move.getLast());
-                pieceTwo->setIsalive(true);
+            pieceOne.setPos(move.getFirst());
+            if (pieceTwo_ptr != nullptr) {
+                pieceTwo.setPos(move.getLast());
+                pieceTwo.setIsalive(true);
 
                 // we have to provide the reference to a certain piece, not the piece itself
-                this->Board.setPiece(pieceTwo, move.getLast());
+                this->Board.setPiece(&pieceTwo, move.getLast());
             }
             else {this->Board.setPiece(nullptr, move.getLast());}
             std::cout << "The move you were trying to make is not valid because it would leave your king attacked." << std::endl;
@@ -164,7 +172,7 @@ public:
             for (int j = -1; j<2; j++) {
                 // if every spot around the king is either attacked or blocked by a piece of the same color
                 // the getPiece method takes a pos
-                if (!isAttackingSpot(current, kingPos.shiftPos(i, j)) or this->Board.getPiece(kingPos.shiftPos(i, j))->getIswhite() == other.getIswhite() ) {return false;}
+                if (!isAttackingSpot(current, kingPos.shiftPos(i, j)) or this->Board.getPiece(kingPos.shiftPos(i, j)).getIswhite() == other.getIswhite() ) {return false;}
             }
         }
 
@@ -182,7 +190,7 @@ public:
             for (int j = -1; j<2; j++) {
                 // if every spot around the king is either attacked or blocked by a piece of the same color
                 // the getPiece method takes a pos
-                if (!isAttackingSpot(current, kingPos.shiftPos(i, j)) or this->Board.getPiece(kingPos.shiftPos(i, j))->getIswhite() == other.getIswhite() ) {return false;}
+                if (!isAttackingSpot(current, kingPos.shiftPos(i, j)) or this->Board.getPiece(kingPos.shiftPos(i, j)).getIswhite() == other.getIswhite() ) {return false;}
             }
         }
 
@@ -247,4 +255,5 @@ public:
 };
 
 
-#endif // GAME_H
+
+#endif // TEST_H
