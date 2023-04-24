@@ -11,14 +11,14 @@
 
 class ChessBoard {
 private:
-    Piece* Board[8][8];
+    Piece Board[8][8];
 public:
     // constructor sets all the pointers to zero
     ChessBoard(Player white, Player black) {
         // fill
         for (int i = 0; i < 8; i++) {
             for (int j = 2; j < 6; j++) {
-                Board[i][j] = nullptr;
+                Board[i][j] = new NoPiece();
             }
         }
         // white

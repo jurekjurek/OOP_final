@@ -21,8 +21,8 @@ public:
     // when the class is called, a new game is generated
     // Black is not white, White is white
     ChessGame() : Black(false), White(true) {
-        this->Black = Player(false);
-        this->White = Player(true);
+//        this->Black = Player(false);
+//        this->White = Player(true);
         this->Board = ChessBoard(White, Black);
         this->Whoseturn = true;
         this->state = ACTIVE;
@@ -35,7 +35,9 @@ public:
 //        Player other;
 //        if (this->Whoseturn == true) {this->White = current; this->Black = other;}
 //        else {this->White = other; this->Black = current;}
-
+        this->White = Player(true);
+        this->Black = Player(false);
+        ChessBoard Board(White, Black);
         std::cout << "Maketurn function executed" << std::endl;
 
         Move move = current.getMove();

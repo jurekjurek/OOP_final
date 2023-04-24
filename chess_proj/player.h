@@ -67,11 +67,11 @@ public:
         return &Rooks[i];
     }
     Bishop* getBishop(int i) {
-        if(i<0 or i>1) {std::cout << "There are only two bishops." << std::endl; return nullptr;}
+//        if(i<0 or i>1) {std::cout << "There are only two bishops." << std::endl; return nullptr;}
         return &Bishops[i];
     }
     Knight* getKnight(int i) {
-        if(i<0 or i>1) {std::cout << "There are only two knights." << std::endl; return nullptr;}
+//        if(i<0 or i>1) {std::cout << "There are only two knights." << std::endl; return nullptr;}
         return &Knights[i];
     }
 

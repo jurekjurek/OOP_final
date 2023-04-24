@@ -57,28 +57,28 @@ public:
 
     // we need these methods in the player class because each piece belongs to one particular player
 
-    King* getKing() {return &KinG;}
+    King getKing() {return KinG;}
 
-    Queen* getQueen() {return &QueeN;}
+    Queen getQueen() {return QueeN;}
 
     // For these Pieces, we have two, so we have to pick a piece, each piece has a number assigned to it
-    Rook* getRook(int i) {
+    Rook getRook(int i) {
         // if(i<0 or i>1) {std::cout << "There are only two rooks." << std::endl; return nullptr;}
-        return &Rooks[i];
+        return Rooks[i];
     }
-    Bishop* getBishop(int i) {
+    Bishop getBishop(int i) {
         if(i<0 or i>1) {std::cout << "There are only two bishops." << std::endl; return nullptr;}
-        return &Bishops[i];
+        return Bishops[i];
     }
-    Knight* getKnight(int i) {
+    Knight getKnight(int i) {
         if(i<0 or i>1) {std::cout << "There are only two knights." << std::endl; return nullptr;}
-        return &Knights[i];
+        return Knights[i];
     }
 
 
-    Pawn* getPawn(int i) {
+    Pawn getPawn(int i) {
         if(i<0 or i>7) {std::cout << "There are only eight pawns." << std::endl; return nullptr;}
-        return &Pawns[i];
+        return Pawns[i];
     }
 
     // we somehow have to get user input.

@@ -36,6 +36,8 @@ public:
 //        if (this->Whoseturn == true) {this->White = current; this->Black = other;}
 //        else {this->White = other; this->Black = current;}
 
+        ChessBoard Board(White, Black);
+
         std::cout << "Maketurn function executed" << std::endl;
 
         Move move = current.getMove();
