@@ -29,6 +29,7 @@ private:
     bool Isalive;
     bool Iswhite;
 //    int PieceNo;
+    bool Firstmove = true;
 public:
 
     // constructor
@@ -41,6 +42,9 @@ public:
         this->Iswhite = true;
         this->Isalive = true;
     }
+
+    void setFirstmove(bool firstmove) {this->Firstmove = firstmove;}
+    bool getFirstmove() {return this->Firstmove;}
 
     // setters and getters for all the variables, but I don't know if we will actually need all of these
 
@@ -271,13 +275,12 @@ public:
 
 class Pawn: public Piece {
 private:
-    bool Firstmove = false;
     bool Capturepossible = false;
     int PieceNo;
 public:
 
-    void setFirstmove(bool firstmove) {this->Firstmove = firstmove;}
-    bool getFirstmove() {return this->Firstmove;}
+//    void setFirstmove(bool firstmove) {this->Firstmove = firstmove;}
+//    bool getFirstmove() {return this->Firstmove;}
 
     Pawn(bool iswhite) : Piece(iswhite) {}
     Pawn() {Piece();}
@@ -291,7 +294,7 @@ public:
         int x = this->getPos().getX();
         int y = this->getPos().getY();
 
-        if (this->Firstmove and x == final.getX() and y+2 == final.getY()) {result = true;}
+        if (this->getFirstmove() and x == final.getX() and y+2 == final.getY()) {result = true;}
         else if (x == final.getX() and y+1 == final.getY()) {result = true;}
 
         return result;
