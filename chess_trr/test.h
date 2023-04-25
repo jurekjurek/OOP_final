@@ -28,14 +28,11 @@ public:
 //        this->Board = ChessBoard(White, Black);
         this->Whoseturn = true;
         this->state = ACTIVE;
-        this->Board.printBoard();
-        cout << "Does this work? I want to see where the piece of a specific player is. " << Black.getKnight(0)->getPos().getX() << " " << Black.getKnight(0)->getPos().getY() << endl;
-        cout << Board.getPiece(Position(0,6))->getPos().getY() << endl;
+//        this->Board.printBoard();
     }
 
     Player getPlayerWhite() {return this->White;}
     Player getPlayerBlack() {return this->Black;}
-
 
 
     bool Maketurn(Player current, Player other, Move move) {
@@ -105,7 +102,7 @@ public:
 
         bool checkMove = pieceOne->move_valid(move.getLast());
 
-        if (pieceOne->Piecetype() == PAWN)
+//        if (pieceOne->Piecetype() == PAWN)
 
         // if the move is not valid -> exit
         if (!checkMove) {
@@ -191,9 +188,11 @@ public:
 //        std::cout << "We set the now empty spot to null." << std::endl;
         //
         this->Board.setPiece(pieceOne, pos2, this->Whoseturn);
+        cout << "TESTESTESTEST, here is where we set the position." << endl;
         std::cout << "and told the board where your piece is now." << std::endl;
 
-        cout << "TESTESTEST" << Board.getPiece(pos2)->Piecetype() << endl;
+        cout << Board.getPiece(pos2)->Piecetype() << Board.getPiece(pos2)->getPieceNo() << endl;
+
 
         // collect all captured pieces at position -1, -1, IDK...
         if (pieceTwo != nullptr) {
@@ -227,7 +226,9 @@ public:
 
         // important: if the piece was a pawn, we set its first move to false, now it can no longer do two squares at once.
         if (pieceOne->Piecetype() == PAWN) {pieceOne->setFirstmove(false);}
-//        Board.printBoard();
+        this->Board = Board;
+        Board.printBoard();
+//        cout << "testsetsetldkfjsdkhk" <<  Board.getPiece(pos2)->Piecetype() << Board.getPiece(pos2)->getPieceNo() << endl;
         return true;
 
     }           // make turn function is over
@@ -366,6 +367,11 @@ public:
 
             bool ok = this->Maketurn(current, other, move);
 
+            cout << "test right before printborad" << endl;
+
+            cout << typeid(Board.getPiece(move.getLast())).name() << endl;
+
+            this->Board.printBoard();
 
 
             if (ok) {cout << "Thank you. This is a valid move given the constellation of pieces on the board." << endl;}
