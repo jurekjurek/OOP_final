@@ -20,31 +20,30 @@ private:
     bool Valid;
 public:
     // constructor
-    Position(int x, int y) {
-        if (x >= 0 and y >= 0 and x < 8 and y < 8) {
-            this->X = x;
-            this->Y = y;
-            this->Valid = true;
-        }
-        else {this->X = 0; this->Y = 0; this->Valid=false;}
-    }
+    Position(int, int);
+//        if (x >= 0 and y >= 0 and x < 8 and y < 8) {
+//            this->X = x;
+//            this->Y = y;
+//            this->Valid = true;
+//        }
+//        else {this->X = 0; this->Y = 0; this->Valid=false;}
+//    }
     // default constructor, FINDE NOCHMAL RAUS, WARUM!!
-    Position() {this->X = 0; this->Y = 0;}
-
+    Position();
     // setter and getter for the private variables X, Y
-    void setX(int x) {this->X = x;}
-    void setY(int y) {this->Y = y;}
-    int getX() {return this->X;}
-    int getY() {return this->Y;}
+    void setX(int);
+    void setY(int);
+    int getX();
+    int getY();
 
-    bool check_pos() {
-        if (this->X >= 0 and this->Y >= 0 and this->X < 8 and this->Y < 8) {return true;}
-        else {return false;}
-    }
+    bool check_pos();
+//        if (this->X >= 0 and this->Y >= 0 and this->X < 8 and this->Y < 8) {return true;}
+//        else {return false;}
+//    }
 
-    bool getValid() {return this->Valid;}
+    bool getValid();
 
-    Position shiftPos(int x, int y) {this->X += x; this->Y += y; return Position(this->X, this->Y);}
+    Position shiftPos(int, int); // {this->X += x; this->Y += y; return Position(this->X, this->Y);}
 
 };
 

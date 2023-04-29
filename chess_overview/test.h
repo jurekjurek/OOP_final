@@ -43,7 +43,7 @@ public:
 
 
     bool Maketurn(Player current, Player other, Move move) {
-        std::cout << "Maketurn function executed" << std::endl;
+//        std::cout << "Maketurn function executed" << std::endl;
 
         Position pos1 = move.getFirst();
         Position pos2 = move.getLast();
@@ -56,7 +56,7 @@ public:
         Piece* pieceTwo = this->Board.getPiece(pos2);
 
         if (pieceTwo == nullptr) {
-            std::cout << "No Piece at destination spot" << std::endl;
+//            std::cout << "No Piece at destination spot" << std::endl;
         }
 
         if (pieceOne == nullptr) {
@@ -162,16 +162,19 @@ public:
         // PIECE ONE GETS A NEW POSITION
         pieceOne->setPos(pos2);
 
+        cout << "this is probably it!" << endl;
+
         // THE BOARD NOW ALSO GETS THE INFORMATION OF THE NEW POSITION OF PIECE ONE
         this->Board.setPiece(nullptr, pos1, this->Whoseturn);
+        cout << "test " << endl;
         this->Board.setPiece(pieceOne, pos2, this->Whoseturn);
 
 
-
+        cout << "this shall not be anymore? " << endl;
 
         // now, this move that we just made is only valid if our king (so the king of the current player) is still safe
         // so not in check
-        bool kingStillSafe = !isCheck(other, current);
+        bool kingStillSafe = !Check(other, current);
 
         // if king is not safe -> abort
         if (!kingStillSafe) {
@@ -199,7 +202,7 @@ public:
 
 
     // Is Player current attacking spot dest??
-    bool isAttackingSpot(Player current, Player other, Position dest) {
+    bool Attack(Player current, Player other, Position dest) {
         bool attack = false;
         // when a piece is allowed to move. Look at all the potential attacking pieces.
         if (Maketurn(current, other, Move(current.getKing()->getPos(), dest))) {attack = true;}
@@ -228,20 +231,19 @@ public:
         return attack;
     }
 
-    // Is other current player checking other player?
+    // Is current player checking other player?
     // abaendern!!
-    bool isCheck(Player current, Player other) {
+    bool Check(Player current, Player other) {
         Position kingPos = other.getKing()->getPos();
-        if (isAttackingSpot(current, other, kingPos)) {return true;}
+        if (Attack(current, other, kingPos)) {return true;}
         else {
-//            cout << "There is no check on the board" << endl;
             return false;
         }
     }
 
-    bool isCheckMate(Player current, Player other) {
+    bool CheckMate(Player current, Player other) {
         // only check for the case that current is checking other, because other can not be in check at this point
-        if (!isCheck(current, other)) {return false;}
+        if (!Check(current, other)) {return false;}
         Position kingPos = other.getKing()->getPos();
 
         // here maybe a lambda function to iterate over all possible positions the king can be in
@@ -250,8 +252,8 @@ public:
                 // if every spot around the king is either attacked or blocked by a piece of the same color
                 // the getPiece method takes a pos
                 // if one spot is NOT attacked and the spot is either free or a piece of the other color is on it, then it is not checkmate
-                if (!isAttackingSpot(current, other, kingPos.shiftPos(i, j)) and this->Board.getPiece(kingPos.shiftPos(i, j)) == nullptr ) {return false;}
-                else if (!isAttackingSpot(current, other, kingPos.shiftPos(i, j)) and this->Board.getPiece(kingPos.shiftPos(i, j))->getIswhite() == current.getIswhite()) {return false;}
+                if (!Attack(current, other, kingPos.shiftPos(i, j)) and this->Board.getPiece(kingPos.shiftPos(i, j)) == nullptr ) {return false;}
+                else if (!Attack(current, other, kingPos.shiftPos(i, j)) and this->Board.getPiece(kingPos.shiftPos(i, j))->getIswhite() == current.getIswhite()) {return false;}
             }
         }
         return true;
@@ -261,19 +263,19 @@ public:
         // and make_move does not work for any spot for the king
         // and there is no piece that can move in front of the king
 
-    // this function is quite similar to the isCheckMate function
+    // this function is quite similar to the CheckMate function
     // but actually, we have to make sure that no piece can move. Not a single one.
     bool isStaleMate(Player current, Player other) {
-        if (isCheck(current, other)) {return false;}
+        if (Check(current, other)) {return false;}
         Position kingPos = other.getKing()->getPos();
         // here maybe a lambda function to iterate over all possible positions the king can be in
         for (int i = -1; i<2; i++) {
             for (int j = -1; j<2; j++) {
                 // if every spot around the king is either attacked or blocked by a piece of the same color
                 // the getPiece method takes a pos
-//                if (!isAttackingSpot(current, kingPos.shiftPos(i, j)) or this->Board.getPiece(kingPos.shiftPos(i, j))->getIswhite() == other.getIswhite() ) {return false;}
-                if (!isAttackingSpot(current, other, kingPos.shiftPos(i, j)) and this->Board.getPiece(kingPos.shiftPos(i, j)) == nullptr ) {return false;}
-                else if (!isAttackingSpot(current, other, kingPos.shiftPos(i, j)) and this->Board.getPiece(kingPos.shiftPos(i, j))->getIswhite() == current.getIswhite()) {return false;}
+//                if (!Attack(current, kingPos.shiftPos(i, j)) or this->Board.getPiece(kingPos.shiftPos(i, j))->getIswhite() == other.getIswhite() ) {return false;}
+                if (!Attack(current, other, kingPos.shiftPos(i, j)) and this->Board.getPiece(kingPos.shiftPos(i, j)) == nullptr ) {return false;}
+                else if (!Attack(current, other, kingPos.shiftPos(i, j)) and this->Board.getPiece(kingPos.shiftPos(i, j))->getIswhite() == current.getIswhite()) {return false;}
                 // here, we have to iterate over the pieces on the board and see if any of them can move.
                 else if (true) {return false;}
             }
@@ -323,9 +325,15 @@ public:
             ok = this->Maketurn(current, other, move);
 
 
+            cout << "Makturn function over." << endl;
 
             if (ok) {cout << "Thank you. This is a valid move given the constellation of pieces on the board." << endl;}
-            if (!ok) {
+
+//            break;
+
+            // I want the player to reenter the move, until the move is valid.
+            while (!ok) {
+                state = ERROR;
                 cout << "ERROR." << endl;
                 if (this->error == NOVALIDPOS) {cout << "You did not provide a valid position. " << endl;}
                 else if (this->error == NOPIECE) {cout << "There is no piece at the spot you are trying to access. " << endl;}
@@ -335,13 +343,6 @@ public:
                 else if (this->error == NOVALIDMOVE) {cout << "The move you provided is against the rules of moving for this piece. " << endl;}
                 else if (this->error == KINGUNSAFE) {cout << "The move you are trying to make would leave your king in check. " << endl;}
                 cout << "Try again!" << endl;
-            }
-
-//            break;
-
-            // I want the player to reenter the move, until the move is valid.
-            while (!ok) {
-                state = ERROR;
                 Move move = current.getMove();
                 ok = this->Maketurn(current, other, move);
                 if (ok) {cout << "Thank you. This is a valid move given the constellation of pieces on the board." << endl;}
@@ -350,7 +351,7 @@ public:
 
 
 
-            bool gameOver = this->isCheckMate(current, other);
+            bool gameOver = this->CheckMate(current, other);
 
             // if the game is over, determine the winner and break the while loop
             if (gameOver) {
@@ -361,18 +362,18 @@ public:
             }
             if (!gameOver) {cout << "No Checkmate, game continues." << endl;}
 
+            cout << "TEST AFTER GAMEOVER CHECK" << endl;
 
+//            bool draw = this->isStaleMate(current, other);
 
-            bool draw = this->isStaleMate(current, other);
+//            if (draw) {std::cout << "The game is drawn." << std::endl; state = DRAW; break;}
 
-            if (draw) {std::cout << "The game is drawn." << std::endl; state = DRAW; break;}
+//            if (!draw) {cout << "No Stalemate, game continues." << endl;}
 
-            if (!draw) {cout << "No Stalemate, game continues." << endl;}
-
-
+            cout << "TEST AFTER DRAW CHECK" << endl;
 
             // after white, it's black and after black, it's white.
-            bool ischeck = this->isCheck(current, other);
+            bool ischeck = this->Check(current, other);
             if (ischeck) {
                 std::cout << "Your move is valid. The other player is in check and has to respond to that." << std::endl;
                 current.showOutput(state);
@@ -382,28 +383,6 @@ public:
             this->Whoseturn = !Whoseturn;
             current.showOutput(state);
 
-//            break;
-
-            cout << "Last Move" << move.getLast().getX() << move.getLast().getY() << endl;
-            bool asdf = this->Board.getPiece(Position(1,2)) == nullptr;
-            cout << asdf << endl;
-//            cout << Board.getPiece(Position(1,2))->getPos().getX() << " " << Board.getPiece(move.getLast())->getPos().getY() << endl;
-
-//            for (int i = 0; i<8; i++) {
-//                for (int j = 0; j<8; j++) {
-//                    if (Board.getPiece(Position(j, i)) == nullptr) {
-//                        std::cout << 0 << " ";
-//                    }
-//                    else if (Board.getPiece(Position(j, i))->Piecetype() == PAWN) {std::cout << "P" << " ";}
-//                    else if (Board.getPiece(Position(j, i))->Piecetype() == KNIGHT) {std::cout << "N" << " ";}
-//                    else if (Board.getPiece(Position(j, i))->Piecetype() == BISHOP) {std::cout << "B" << " ";}
-//                    else if (Board.getPiece(Position(j, i))->Piecetype() == ROOK) {std::cout << "R" << " ";}
-//                    else if (Board.getPiece(Position(j, i))->Piecetype() == KING) {std::cout << "K" << " ";}
-//                    else if (Board.getPiece(Position(j, i))->Piecetype() == QUEEN) {std::cout << "Q" << " ";}
-//                    else {std::cout << "2" << " ";}
-//                }
-//                std::cout << std::endl;
-//            }
 //            Board.printBoard();
 
 

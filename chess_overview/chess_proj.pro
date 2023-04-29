@@ -4,10 +4,16 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
-        main.cpp
+        board.cpp \
+        boardclass.cpp \
+        main.cpp \
+        piece.cpp \
+        player.cpp \
+        position.cpp
 
 HEADERS += \
     board.h \
+    boardclass.h \
     piece.h \
     player.h \
     position.h \

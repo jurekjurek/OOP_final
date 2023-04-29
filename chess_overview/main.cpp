@@ -5,6 +5,10 @@
 //#include "player.h"
 //#include "board.h"
 #include "test.h"
+#include "position.cpp"
+#include "piece.cpp"
+#include "player.cpp"
+#include "board.cpp"
 using namespace std;
 
 /*

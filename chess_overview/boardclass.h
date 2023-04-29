@@ -1,5 +1,6 @@
-#ifndef BOARD_H
-#define BOARD_H
+#ifndef BOARDCLASS_H
+#define BOARDCLASS_H
+
 #include "player.h"
 
 /*  The Borad class is an 8x8 array of pointers to pieces.
@@ -12,8 +13,8 @@
 class ChessBoard {
 private:
     Piece* Board[8][8];
-    Player Black;
-    Player White;
+    Player black;
+    Player white;
 public:
     // constructor sets all the pointers to zero
     ChessBoard(Player, Player);
@@ -34,9 +35,8 @@ public:
     // set piece with given color to some position
     void setPiece(Piece*, Position, Player);
 
+
 };
 
 
-
-
-#endif // BOARD_H
+#endif // BOARDCLASS_H
