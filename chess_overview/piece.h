@@ -56,6 +56,8 @@ public:
 
     virtual int getPieceNo();
 
+    virtual bool getPromotion();
+
 };
 
 
@@ -150,6 +152,7 @@ class Pawn: public Piece {
 private:
     bool Capturepossible = false;
     int PieceNo;
+    bool promotion = false;
 public:
 
 //    void setFirstmove(bool firstmove) {this->Firstmove = firstmove;}
@@ -164,14 +167,14 @@ public:
     // Pawn is the only piece that has a capture_valid class!
     bool capture_valid(Position);
 
-    bool promotion();
-
 
     PieceType Piecetype() override;
 
     void setPieceNo(int) override;
 
     int getPieceNo() override;
+
+    bool getPromotion();
 
 };
 

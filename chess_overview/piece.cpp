@@ -61,6 +61,10 @@ int Piece::getPieceNo() {
     return 0;
 }
 
+bool Piece::getPromotion() {
+    return false;
+}
+
 
 
 // now, for the children
@@ -153,9 +157,6 @@ PieceType Rook::Piecetype()  {
 
 
 void Rook::setPieceNo(int i)  {
-    if (i>1) {
-        cout << "You are trying to set a non-valid piecenumber. Not doing that" << endl;
-    }
     this->PieceNo = i;
 }
 
@@ -194,9 +195,6 @@ PieceType Knight::Piecetype()  {
 }
 
 void Knight::setPieceNo(int i)  {
-    if (i>1) {
-        cout << "You are trying to set a non-valid piecenumber. Not doing that" << endl;
-    }
     this->PieceNo = i;
 }
 
@@ -236,10 +234,8 @@ PieceType Bishop::Piecetype()  {
     return BISHOP;
 }
 
+// pieceno can actually be bigger than 1, because of promotion
 void Bishop::setPieceNo(int i)  {
-    if (i>1) {
-        cout << "You are trying to set a non-valid piecenumber. Not doing that" << endl;
-    }
     this->PieceNo = i;
 }
 
@@ -273,13 +269,13 @@ bool Pawn::move_valid(Position final)  {
 //        cout << "Apparently, your piece is white. " << endl;
         if (this->getFirstmove() and x == final.getX() and y+2 == final.getY()) {result = true;}
         else if (x == final.getX() and y+1 == final.getY()) {result = true;}
-        if (result == true and y == 7) {cout << "Your pawn can be promoted!" << endl;}
+        if (result == true and y == 7) {cout << "Your pawn can be promoted!" << endl; this->promotion = true;}
     }
     if (!this->getIswhite()) {
 //        cout << "Apparently, your piece is black. " << endl;
         if (this->getFirstmove() and x == final.getX() and y-2 == final.getY()) {result = true;}
         else if (x == final.getX() and y-1 == final.getY()) {result = true;}
-        if (result == true and y == 0) {cout << "Your pawn can be promoted!" << endl;}
+        if (result == true and y == 0) {cout << "Your pawn can be promoted!" << endl; this->promotion = true;}
     }
 
     return result;
@@ -316,10 +312,9 @@ int Pawn::getPieceNo()  {
     return this->PieceNo;
 }
 
-bool Pawn::promotion() {
-    return true;
+bool Pawn::getPromotion() {
+    return this->promotion;
 }
-
 
 
 

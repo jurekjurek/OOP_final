@@ -16,6 +16,7 @@ enum MaketurnError {
     PIECEINWAY,
     WRONGCOLOR,
     SPOTBLOCKED,
+    SPOTBLOCKED_PAWN,
     NOVALIDMOVE,
     KINGUNSAFE
 };
@@ -30,6 +31,7 @@ private:
     MaketurnError error;
     vector<int> move_list;
     int move_count;
+    int promotion_count;
 public:
     // when the class is called, a new game is generated
     // Black is not white, White is white
@@ -72,9 +74,17 @@ public:
 
 
         // if piece at destination and piece at source have the same color -> error
-        if (pieceTwo != nullptr and pieceTwo->getIswhite() == pieceOne->getIswhite()) {
-            this->error = SPOTBLOCKED;
-            return false;
+        if (pieceOne->Piecetype() != PAWN) {
+            if (pieceTwo != nullptr and pieceTwo->getIswhite() == pieceOne->getIswhite()) {
+                this->error = SPOTBLOCKED;
+                return false;
+            }
+        }
+        else if (pieceOne->Piecetype() == PAWN) {
+            if (pieceTwo != nullptr) {
+                this->error = SPOTBLOCKED_PAWN;
+                return false;
+            }
         }
 
         bool checkMove = pieceOne->move_valid(move.getLast());
@@ -165,12 +175,10 @@ public:
         cout << "this is probably it!" << endl;
 
         // THE BOARD NOW ALSO GETS THE INFORMATION OF THE NEW POSITION OF PIECE ONE
-        this->Board.setPiece(nullptr, pos1, this->Whoseturn);
+        this->Board.setPiece(nullptr, pos1, current);
         cout << "test " << endl;
-        this->Board.setPiece(pieceOne, pos2, this->Whoseturn);
+        this->Board.setPiece(pieceOne, pos2, current);
 
-
-        cout << "this shall not be anymore? " << endl;
 
         // now, this move that we just made is only valid if our king (so the king of the current player) is still safe
         // so not in check
@@ -184,9 +192,9 @@ public:
                 pieceTwo->setIsalive(true);
 
                 // we have to provide the reference to a certain piece, not the piece itself
-                this->Board.setPiece(pieceTwo, pos2, this->Whoseturn);
+                this->Board.setPiece(pieceTwo, pos2, current);
             }
-            else {this->Board.setPiece(nullptr, pos2, this->Whoseturn);}
+            else {this->Board.setPiece(nullptr, pos2, current);}
             this->error = KINGUNSAFE;
             return false;
         }
@@ -194,8 +202,14 @@ public:
         // important: if the piece was a pawn, we set its first move to false, now it can no longer do two squares at once.
         if (pieceOne->Piecetype() == PAWN) {pieceOne->setFirstmove(false);}
         this->Board = Board;
-        // SHOW CURRENT STATE OF THE BOARD
-        Board.printBoard();
+
+        // check if Pawn can be promoted
+        if (pieceOne->Piecetype() == PAWN and pieceOne->getPromotion()) {
+            this->promotion(current, other, pos2);
+        }
+
+
+
         return true;
 
     }           // make turn function is over
@@ -266,26 +280,47 @@ public:
     // this function is quite similar to the CheckMate function
     // but actually, we have to make sure that no piece can move. Not a single one.
     bool isStaleMate(Player current, Player other) {
-        if (Check(current, other)) {return false;}
-        Position kingPos = other.getKing()->getPos();
-        // here maybe a lambda function to iterate over all possible positions the king can be in
-        for (int i = -1; i<2; i++) {
-            for (int j = -1; j<2; j++) {
-                // if every spot around the king is either attacked or blocked by a piece of the same color
-                // the getPiece method takes a pos
-//                if (!Attack(current, kingPos.shiftPos(i, j)) or this->Board.getPiece(kingPos.shiftPos(i, j))->getIswhite() == other.getIswhite() ) {return false;}
-                if (!Attack(current, other, kingPos.shiftPos(i, j)) and this->Board.getPiece(kingPos.shiftPos(i, j)) == nullptr ) {return false;}
-                else if (!Attack(current, other, kingPos.shiftPos(i, j)) and this->Board.getPiece(kingPos.shiftPos(i, j))->getIswhite() == current.getIswhite()) {return false;}
-                // here, we have to iterate over the pieces on the board and see if any of them can move.
-                else if (true) {return false;}
-            }
-        }
-        return true;
+//        if (Check(current, other)) {return false;}
+//        Position kingPos = other.getKing()->getPos();
+//        // here maybe a lambda function to iterate over all possible positions the king can be in
+//        for (int i = -1; i<2; i++) {
+//            for (int j = -1; j<2; j++) {
+//                // if every spot around the king is either attacked or blocked by a piece of the same color
+//                // the getPiece method takes a pos
+////                if (!Attack(current, kingPos.shiftPos(i, j)) or this->Board.getPiece(kingPos.shiftPos(i, j))->getIswhite() == other.getIswhite() ) {return false;}
+//                if (!Attack(current, other, kingPos.shiftPos(i, j)) and this->Board.getPiece(kingPos.shiftPos(i, j)) == nullptr ) {return false;}
+//                else if (!Attack(current, other, kingPos.shiftPos(i, j)) and this->Board.getPiece(kingPos.shiftPos(i, j))->getIswhite() == current.getIswhite()) {return false;}
+//                // here, we have to iterate over the pieces on the board and see if any of them can move.
+//                else if (true) {return false;}
+//            }
+//        }
+        return false;
 
     }
         // king is not attacked
         // but make_move does not work, because all of the fields are attacked
         // and the player can not move any other piece, so make_move does not work for any other piece either
+
+
+
+    void promotion(Player current, Player other, Position pos) {
+        int promotion_type;
+        cout << "Your pawn can be promoted. Please provide the peace you want to promote to. Provide a number as follows: " << endl;
+        cout << "Queen: 1" << endl << "Rook: 2" << endl << "Knight: 3" << endl << "Bishop: 4" << endl;
+        cin >> promotion_type;
+        switch (promotion_type) {
+        case 1:
+            Board.setPiece(current.getQueen(), pos, current);
+        case 2:
+            Board.setPiece(current.getRook(0), pos, current); // Board.setPiece(current.getRook(this->promotion_count + 3), pos, current);
+        case 3:
+            Board.setPiece(current.getKnight(0), pos, current);
+        case 4:
+            Board.setPiece(current.getBishop(0), pos, current);
+        }
+        this->promotion_count += 1;
+    }
+
 
 
     // this method is responsible for keeping the game going
@@ -325,7 +360,7 @@ public:
             ok = this->Maketurn(current, other, move);
 
 
-            cout << "Makturn function over." << endl;
+            cout << "Maketurn function over." << endl;
 
             if (ok) {cout << "Thank you. This is a valid move given the constellation of pieces on the board." << endl;}
 
@@ -333,21 +368,24 @@ public:
 
             // I want the player to reenter the move, until the move is valid.
             while (!ok) {
-                state = ERROR;
+//                state = ERROR;
                 cout << "ERROR." << endl;
                 if (this->error == NOVALIDPOS) {cout << "You did not provide a valid position. " << endl;}
                 else if (this->error == NOPIECE) {cout << "There is no piece at the spot you are trying to access. " << endl;}
                 else if (this->error == PIECEINWAY) {cout << "There is a piece in the way and your piece cannot jump, since it is not a knight. " << endl;}
                 else if (this->error == WRONGCOLOR) {cout << "This piece has the wrong color. " << endl;}
                 else if (this->error == SPOTBLOCKED) {cout << "The spot you are trying to move to is blocked by a piece of your color. " << endl;}
+                else if (this->error == SPOTBLOCKED_PAWN) {cout << "The spot you are trying to move to is blocked by a piece of your color. The Pawn can only hit diagonally. " << endl;}
                 else if (this->error == NOVALIDMOVE) {cout << "The move you provided is against the rules of moving for this piece. " << endl;}
                 else if (this->error == KINGUNSAFE) {cout << "The move you are trying to make would leave your king in check. " << endl;}
                 cout << "Try again!" << endl;
                 Move move = current.getMove();
                 ok = this->Maketurn(current, other, move);
-                if (ok) {cout << "Thank you. This is a valid move given the constellation of pieces on the board." << endl;}
+                if (ok) {cout << "Thank you. This is a valid move given the constellation of pieces on the board." << endl;}// state == ACTIVE;}
                 if (!ok) {cout << "Try again!" << endl;}
             }
+
+
 
 
 
@@ -364,11 +402,14 @@ public:
 
             cout << "TEST AFTER GAMEOVER CHECK" << endl;
 
-//            bool draw = this->isStaleMate(current, other);
+            bool draw = this->isStaleMate(current, other);
 
-//            if (draw) {std::cout << "The game is drawn." << std::endl; state = DRAW; break;}
+            cout << "checkcheckcheck" << endl;
 
-//            if (!draw) {cout << "No Stalemate, game continues." << endl;}
+
+            if (draw) {std::cout << "The game is drawn." << std::endl; state = DRAW; break;}
+
+            if (!draw) {cout << "No Stalemate, game continues." << endl;}
 
             cout << "TEST AFTER DRAW CHECK" << endl;
 
@@ -383,7 +424,7 @@ public:
             this->Whoseturn = !Whoseturn;
             current.showOutput(state);
 
-//            Board.printBoard();
+            Board.printBoard();
 
 
             this->move_list.push_back(move.getFirst().getX());

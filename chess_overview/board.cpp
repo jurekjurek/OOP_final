@@ -155,7 +155,7 @@ Player ChessBoard::getPlayerWhite() {
 
 
 void ChessBoard::printBoard() {
-    for (int i = 0; i<8; i++) {
+    for (int i = 7; i>=0; i--) {
         for (int j = 0; j<8; j++) {
             if (Board[j][i] == nullptr) {
                 std::cout << 0 << " ";
@@ -179,7 +179,8 @@ Piece* ChessBoard::getPiece(Position pos) {
 
 void ChessBoard::setPiece(Piece* piece, Position pos, Player current) {
     if (current.getIswhite()) {
-        if (piece == nullptr) {this->Board[pos.getX()][pos.getY()] = nullptr;}
+        cout << "current player is white." << endl;
+        if (piece == nullptr) {cout << "We have a nullptr" << endl;this->Board[pos.getX()][pos.getY()] = nullptr;}
         else if (piece->Piecetype() == KING) {
             this->Board[pos.getX()][pos.getY()] = this->White.getKing();
             this->White.getKing()->setPos(pos);

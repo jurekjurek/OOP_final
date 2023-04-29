@@ -3,12 +3,17 @@
 
 Player::Player(bool iswhite) {
     this->Iswhite       = iswhite;
+    this->KinG          = new King(iswhite);
+    this->QueeN         = new Queen(iswhite);
     this->Rooks[0]      = new Rook(iswhite);
     this->Rooks[1]      = new Rook(iswhite);
+    this->Rooks[2]      = new Rook(iswhite);
     this->Bishops[0]    = new Bishop(iswhite);
     this->Bishops[1]    = new Bishop(iswhite);
+    this->Bishops[2]    = new Bishop(iswhite);
     this->Knights[0]    = new Knight(iswhite);
     this->Knights[1]    = new Knight(iswhite);
+    this->Knights[2]    = new Knight(iswhite);
     this->Pawns[0]      = new Pawn(iswhite);
     this->Pawns[1]      = new Pawn(iswhite);
     this->Pawns[2]      = new Pawn(iswhite);
@@ -38,17 +43,14 @@ Queen* Player::getQueen() {return &QueeN;}
 
 // For these Pieces, we have two, so we have to pick a piece, each piece has a number assigned to it
 Rook* Player::getRook(int i) {
-     if(i>1) {std::cout << "There are only two rooks." << std::endl; return nullptr;}
     Rooks[i].setPieceNo(i);
     return &Rooks[i];
 }
 Bishop* Player::getBishop(int i) {
-    if(i>1) {std::cout << "There are only two bishops." << std::endl; return nullptr;}
     Bishops[i].setPieceNo(i);
     return &Bishops[i];
 }
 Knight* Player::getKnight(int i) {
-    if(i>1) {std::cout << "There are only two knights." << std::endl; return nullptr;}
     Knights[i].setPieceNo(i);
     return &Knights[i];
 }
