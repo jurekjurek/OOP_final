@@ -1,0 +1,16 @@
+release/ajout.o
+release/cavalier.o
+release/fenetredemarrage.o
+release/fou.o
+release/jeuechecwindow.o
+release/main.o
+release/mainwindow.o
+release/piece.o
+release/pion.o
+release/plateauechec.o
+release/reine.o
+release/roi.o
+release/tour.o
+release/moc_fenetredemarrage.o
+release/moc_jeuechecwindow.o
+release/moc_mainwindow.o

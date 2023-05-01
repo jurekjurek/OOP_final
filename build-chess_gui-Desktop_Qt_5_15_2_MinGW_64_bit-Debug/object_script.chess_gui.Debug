@@ -1,0 +1,16 @@
+debug/ajout.o
+debug/cavalier.o
+debug/fenetredemarrage.o
+debug/fou.o
+debug/jeuechecwindow.o
+debug/main.o
+debug/mainwindow.o
+debug/piece.o
+debug/pion.o
+debug/plateauechec.o
+debug/reine.o
+debug/roi.o
+debug/tour.o
+debug/moc_fenetredemarrage.o
+debug/moc_jeuechecwindow.o
+debug/moc_mainwindow.o
