@@ -1,0 +1,18 @@
+display class 
+
+- a pointer called DisplayScene of type QGraphicsScene 
+
+- Game game 
+
+- some type of Qlist where pointers to Space are listed 
+
+- A Qstring type called move 
+
+- void setup()
+
+- void placePieces()
+
+- A variable of type Color called turnColor 
+
+- a pointer to a QGraphicsTextItem called turn and one called check 
+
