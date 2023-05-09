@@ -87,11 +87,12 @@ King::King() {Piece();}
 bool King::move_valid(Position final){
     if (!final.check_pos()) {std::cout << "final position invalid" << std::endl; return false;}
 
-    int tx[] = {1, 1, -1, -1, 1, -1, 0, 0};
-    int ty[] = {-1, 1, -1, 1, 0, 0, 1, -1};
+    // -2 and +2 in case of castles
+    int tx[] = {1, 1, -1, -1, 1, -1, 0, 0, -2, 2};
+    int ty[] = {-1, 1, -1, 1, 0, 0, 1, -1, 0, 0};
     bool result = false;
 
-    for (int i =0; i<8; i++) {
+    for (int i =0; i<10; i++) {
         int x = this->getPos().getX();
         int y = this->getPos().getY();
         if (x+tx[i] == final.getX() and y+ty[i] == final.getY()) {result = true;}

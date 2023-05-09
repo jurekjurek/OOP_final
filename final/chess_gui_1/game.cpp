@@ -16,6 +16,16 @@ bool ChessGame::Maketurn(Player current, Player other, Move move) {
             Position pos1 = move.getFirst();
             Position pos2 = move.getLast();
 
+
+            // MAKE A LAMBDA FUNCTION OUT OF THIS
+            int x1 = pos1.getX();
+            int x2 = pos2.getX();
+            int y1 = pos1.getY();
+            int y2 = pos2.getY();
+            int x1x2 = abs(x1-x2);
+            int y1y2 = abs(y1-y2);
+
+
             if (!pos1.getValid() or !pos1.getValid()) {this->error = NOVALIDPOS; return false;}
 
             Piece* pieceOne = this->Board.getPiece(pos1);
@@ -55,6 +65,13 @@ bool ChessGame::Maketurn(Player current, Player other, Move move) {
 //                }
 //            }
 
+
+
+
+
+
+
+
             bool checkMove = pieceOne->move_valid(move.getLast());
 
     //        if (pieceOne->Piecetype() == PAWN)
@@ -86,14 +103,49 @@ bool ChessGame::Maketurn(Player current, Player other, Move move) {
             }
 
 
+            // castles
+            if (pieceOne->Piecetype() == KING and x1x2 == 2) {
+                // in case white wants to castle
+                if (pieceOne->getIswhite() and pieceOne->getFirstmove() and Board.getPiece(Position(7,0))->getFirstmove()) {
+                    // castles kingside
+                    // if there is no piece in the way and if the king as well as the rook have not moved so far
+                    if (x1 < x2 and Board.getPiece(Position(5,0)) == nullptr and Board.getPiece(Position(6,0)) == nullptr) {
+                        if (!Attack(other, current, Position(5,0)) and !Attack(other, current, Position(6,0)) and !Attack(other, current, Position(7,0))) {
+                            qDebug() << "Castling Kingside, white.";
+                        }
+                    }
+                    // castles queenside
+                    if (x1 > x2 and Board.getPiece(Position(1,0)) == nullptr and Board.getPiece(Position(2,0)) == nullptr and Board.getPiece(Position(3,0)) == nullptr) {
+                        if (!Attack(other, current, Position(1,0)) and !Attack(other, current, Position(2,0)) and !Attack(other, current, Position(3,0)) and !Attack(other, current, Position(0,0))) {
+                            qDebug() << "Castling Queenside, white.";
+                        }
+                    }
+                }
 
-            // MAKE A LAMBDA FUNCTION OUT OF THIS
-            int x1 = pos1.getX();
-            int x2 = pos2.getX();
-            int y1 = pos1.getY();
-            int y2 = pos2.getY();
-            int x1x2 = abs(x1-x2);
-            int y1y2 = abs(y1-y2);
+                // in case black wants to castle
+                if (!pieceOne->getIswhite()) {
+                    // castles kingside
+                    // if there is no piece in the way and if the king as well as the rook have not moved so far
+                    if (x1 < x2 and Board.getPiece(Position(5,7)) == nullptr and Board.getPiece(Position(7,0)) == nullptr) {
+                        if (!Attack(other, current, Position(5,7)) and !Attack(other, current, Position(6,7)) and !Attack(other, current, Position(7,7))) {
+                            qDebug() << "Castling Kingside, black.";
+                        }
+                    }
+                    // castles queenside
+                    if (x1 > x2 and Board.getPiece(Position(1,7)) == nullptr and Board.getPiece(Position(2,7)) == nullptr and Board.getPiece(Position(3,7)) == nullptr) {
+                        if (!Attack(other, current, Position(1,7)) and !Attack(other, current, Position(2,7)) and !Attack(other, current, Position(3,7)) and !Attack(other, current, Position(0,7))) {
+                            qDebug() << "Castling Queenside, black.";
+                        }
+                    }
+                }
+
+                else {this->error = NOVALIDMOVE; return false;}
+
+            }
+
+
+
+
 
                 // x1x2 and y1y2 are either equal or one is zero.
                 // the knight case is not being taken into account, since the knight jumps
@@ -166,7 +218,7 @@ bool ChessGame::Maketurn(Player current, Player other, Move move) {
 //                Board.getPiece(Position(pos2.getX(), pos1.getY()))->setPos(Position(0,0));
                 cout << "Position of the enpassanted piece: " << pos2.getX() << " " << pos1.getY() << endl;
                 this->Board.setPiece(nullptr, Position(pos2.getX(), pos1.getY()), current);
-
+            }
 
             // PIECE ONE GETS A NEW POSITION
             pieceOne->setPos(pos2);
@@ -203,10 +255,12 @@ bool ChessGame::Maketurn(Player current, Player other, Move move) {
             // here still:
             // set all pawns to enpassant not allowed
 
+            // in the case of Rook, Pawn and King it is important to know for specific rules if the piece has moved before (castling, movement of pawn, enpassant)
+            pieceOne->setFirstmove(false);
 
             // important: if the piece was a pawn, we set its first move to false, now it can no longer do two squares at once.
             if (pieceOne->Piecetype() == PAWN) {
-                pieceOne->setFirstmove(false);
+
                 pieceOne->setEnPassant(false);
                 if (y1y2 == 2) {pieceOne->setEnPassant(true);}
             }
@@ -222,9 +276,8 @@ bool ChessGame::Maketurn(Player current, Player other, Move move) {
 
             return true;
 
-        }           // make turn function is over
-
-
+                   // make turn function is over
+}
 
 
 bool ChessGame::Attack(Player current, Player other, Position dest) {
@@ -260,7 +313,7 @@ bool ChessGame::Attack(Player current, Player other, Position dest) {
 
 bool ChessGame::Check(Player current, Player other)  {
     Position kingPos = other.getKing()->getPos();
-    if (Attack(current, other, kingPos)) {return true;}
+    if (Attack(current, other, kingPos)) {qDebug() << "CHECKKKKK"; return true;}
     else {
         return false;
     }
@@ -463,7 +516,9 @@ void ChessGame::resetMoves()
 // two spaces, the move can be executed if it is valid, or ignored if not.
 void ChessGame::getInput(QString input)
 {
-    this->move_count = 0;
+//    this->move_count = 0;
+    if (this->Whoseturn) {qDebug() << "White's move";}
+    if (!this->Whoseturn) {qDebug() << "Blacks turn";}
     qDebug() << "Game saw that " << input << "was clicked, and will now respond.";
 
     // If this is the first click, store it in move1
@@ -519,6 +574,8 @@ void ChessGame::getInput(QString input)
         }
         Move move(Position(x1,y1), Position(x2,y2));
 
+        Position pos1 = move.getFirst();
+        Position pos2 = move.getLast();
 
         Player current;
         Player other;
@@ -526,7 +583,16 @@ void ChessGame::getInput(QString input)
         else {other = Board.getPlayerWhite(); current = Board.getPlayerBlack(); cout << "BLACKS MOVE, move number " << move_count  << endl;}
 
 
-
+        qDebug() << "You picked a piece of type ";
+        if (Board.getPiece(pos1)->Piecetype() == PAWN) {qDebug() << "Pawn";}
+        else if (Board.getPiece(pos1)->Piecetype() == KNIGHT) {qDebug() << "Knight" << " ";}
+        else if (Board.getPiece(pos1)->Piecetype() == BISHOP) {qDebug() << "Bishop" << " ";}
+        else if (Board.getPiece(pos1)->Piecetype() == ROOK) {qDebug() << "Rook" << " ";}
+        else if (Board.getPiece(pos1)->Piecetype() == KING) {qDebug()<< "King" << " ";}
+        else if (Board.getPiece(pos1)->Piecetype() == QUEEN) {qDebug() << "Queen" << " ";}
+        else if (Board.getPiece(pos1)->Piecetype() == NONE) {qDebug() << "none" << " ";}
+        else {cout << "i dont know" << endl;}
+        qDebug() << " and you want to move it from " << pos1.getX() << " " << pos1.getY() << " to " << pos2.getX() << " " << pos2.getY();
 
         bool ok = this->Maketurn(current, other, move);
 
@@ -585,6 +651,13 @@ void ChessGame::getInput(QString input)
                 return;
             }
         }
+
+        // CHECK
+        bool Checkstate = this->Check(current, other);
+        if (Checkstate) {
+            qDebug() << "CHECK!!!";
+        }
+
 
         // CHECKMATE
         bool gameOver = this->CheckMate(current, other);
