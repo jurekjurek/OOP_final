@@ -223,34 +223,32 @@ bool ChessGame::Maketurn(Player current, Player other, Move move) {
             // PIECE ONE GETS A NEW POSITION
             pieceOne->setPos(pos2);
 
-            cout << "this is probably it!" << endl;
-
             // THE BOARD NOW ALSO GETS THE INFORMATION OF THE NEW POSITION OF PIECE ONE
             this->Board.setPiece(nullptr, pos1, current);
-            cout << "test " << endl;
+
             this->Board.setPiece(pieceOne, pos2, current);
 
 
-
+            // KINGUNSAFE
 
             // now, this move that we just made is only valid if our king (so the king of the current player) is still safe
             // so not in check
-            bool kingStillSafe = !Check(other, current);
+//            bool kingStillSafe = !Check(other, current);
 
             // if king is not safe -> abort
-            if (!kingStillSafe) {
-                pieceOne->setPos(pos1);
-                if (pieceTwo != nullptr) {
-                    pieceTwo->setPos(pos2);
-                    pieceTwo->setIsalive(true);
+//            if (!kingStillSafe) {
+//                pieceOne->setPos(pos1);
+//                if (pieceTwo != nullptr) {
+//                    pieceTwo->setPos(pos2);
+//                    pieceTwo->setIsalive(true);
 
-                    // we have to provide the reference to a certain piece, not the piece itself
-                    this->Board.setPiece(pieceTwo, pos2, current);
-                }
-                else {this->Board.setPiece(nullptr, pos2, current);}
-                this->error = KINGUNSAFE;
-                return false;
-            }
+//                    // we have to provide the reference to a certain piece, not the piece itself
+//                    this->Board.setPiece(pieceTwo, pos2, current);
+//                }
+//                else {this->Board.setPiece(nullptr, pos2, current);}
+//                this->error = KINGUNSAFE;
+//                return false;
+//            }
 
             // here still:
             // set all pawns to enpassant not allowed
@@ -281,30 +279,35 @@ bool ChessGame::Maketurn(Player current, Player other, Move move) {
 
 
 bool ChessGame::Attack(Player current, Player other, Position dest) {
-
+//    qDebug() << "Attack function executed";
     bool attack = false;
     // when a piece is allowed to move. Look at all the potential attacking pieces.
-    if (Maketurn(current, other, Move(current.getKing()->getPos(), dest))) {attack = true;}
+//    cout << "Position of currents Queen: " << current.getQueen()->getPos().getX() << " " << current.getQueen()->getPos().getY() << endl;
+//    cout << Maketurn(current, other, Move(current.getQueen()->getPos(), Position(4,7))) << " Is this zero????" << endl;
+
+    cout << "The destination position is: " << dest.getX() << " " << dest.getY() << endl;
+
+    if (Maketurn(current, other, Move(current.getKing()->getPos(), dest))) {qDebug() << "The other players King can attack this spot."; attack = true;}
     // can the queen attack the position dest?
-    if (Maketurn(current, other, Move(current.getQueen()->getPos(), dest))) {attack = true;}
+    if (Maketurn(current, other, Move(current.getQueen()->getPos(), dest))) {qDebug() << "The other players Queen can attack this spot."; attack = true;}
     // can either rook attack the position dest?
-    if (Maketurn(current, other, Move(current.getRook(0)->getPos(), dest))) {attack = true;}
-    if (Maketurn(current, other, Move(current.getRook(1)->getPos(), dest))) {attack = true;}
+    if (Maketurn(current, other, Move(current.getRook(0)->getPos(), dest))) {qDebug() << "The other players Rook can attack this spot."; attack = true;}
+    if (Maketurn(current, other, Move(current.getRook(1)->getPos(), dest))) {qDebug() << "The other players Rook can attack this spot."; attack = true;}
     // can either bishop attack the position dest?
-    if (Maketurn(current, other, Move(current.getBishop(0)->getPos(), dest))) {attack = true;}
-    if (Maketurn(current, other, Move(current.getBishop(1)->getPos(), dest))) {attack = true;}
+    if (Maketurn(current, other, Move(current.getBishop(0)->getPos(), dest))) {qDebug() << "The other players Bishop can attack this spot."; attack = true;}
+    if (Maketurn(current, other, Move(current.getBishop(1)->getPos(), dest))) {qDebug() << "The other players Bishop can attack this spot."; attack = true;}
     // can either knight attack the position dest?
-    if (Maketurn(current, other, Move(current.getKnight(0)->getPos(), dest))) {attack = true;}
-    if (Maketurn(current, other, Move(current.getKnight(1)->getPos(), dest))) {attack = true;}
+    if (Maketurn(current, other, Move(current.getKnight(0)->getPos(), dest))) {qDebug() << "The other players Knight can attack this spot."; attack = true;}
+    if (Maketurn(current, other, Move(current.getKnight(1)->getPos(), dest))) {qDebug() << "The other players Knight can attack this spot."; attack = true;}
     // can either pawn attack the position dest? Remember: the pawn is the only piece that has a special capturing direction
-    if (Maketurn(current, other, Move(current.getPawn(0)->getPos(), dest))) {attack = true;}
-    if (Maketurn(current, other, Move(current.getPawn(1)->getPos(), dest))) {attack = true;}
-    if (Maketurn(current, other, Move(current.getPawn(2)->getPos(), dest))) {attack = true;}
-    if (Maketurn(current, other, Move(current.getPawn(3)->getPos(), dest))) {attack = true;}
-    if (Maketurn(current, other, Move(current.getPawn(4)->getPos(), dest))) {attack = true;}
-    if (Maketurn(current, other, Move(current.getPawn(5)->getPos(), dest))) {attack = true;}
-    if (Maketurn(current, other, Move(current.getPawn(6)->getPos(), dest))) {attack = true;}
-    if (Maketurn(current, other, Move(current.getPawn(7)->getPos(), dest))) {attack = true;}
+    if (Maketurn(current, other, Move(current.getPawn(0)->getPos(), dest))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Maketurn(current, other, Move(current.getPawn(1)->getPos(), dest))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Maketurn(current, other, Move(current.getPawn(2)->getPos(), dest))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Maketurn(current, other, Move(current.getPawn(3)->getPos(), dest))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Maketurn(current, other, Move(current.getPawn(4)->getPos(), dest))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Maketurn(current, other, Move(current.getPawn(5)->getPos(), dest))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Maketurn(current, other, Move(current.getPawn(6)->getPos(), dest))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Maketurn(current, other, Move(current.getPawn(7)->getPos(), dest))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
 
     return attack;
 }
@@ -519,23 +522,21 @@ void ChessGame::getInput(QString input)
 //    this->move_count = 0;
     if (this->Whoseturn) {qDebug() << "White's move";}
     if (!this->Whoseturn) {qDebug() << "Blacks turn";}
-    qDebug() << "Game saw that " << input << "was clicked, and will now respond.";
+//    qDebug() << "Game saw that " << input << "was clicked, and will now respond.";
 
     // If this is the first click, store it in move1
     if (move1 == "")
     {
-        qDebug() << "First position recognized.";
+//        qDebug() << "First position recognized.";
         move1 = input.toStdString();
     }
     // If this is the second click, store it in move2
     else
     {
-        qDebug() << "First position recognized.";
+//        qDebug() << "Second position recognized.";
         move2 = input.toStdString();
 
         // We can now pass the move to the Game
-//        std::pair<int, int> from = board.algebraicToInt(move1); 	// convert substring to pair
-//        std::pair<int, int> to = board.algebraicToInt(move2);		// convert substring to pair
         int x1, y1, x2, y2;
         for (int i = 0; i < 8; i++) {
             if (move1[0] == '0') {x1 = 0;}
@@ -583,20 +584,26 @@ void ChessGame::getInput(QString input)
         else {other = Board.getPlayerWhite(); current = Board.getPlayerBlack(); cout << "BLACKS MOVE, move number " << move_count  << endl;}
 
 
-        qDebug() << "You picked a piece of type ";
-        if (Board.getPiece(pos1)->Piecetype() == PAWN) {qDebug() << "Pawn";}
-        else if (Board.getPiece(pos1)->Piecetype() == KNIGHT) {qDebug() << "Knight" << " ";}
-        else if (Board.getPiece(pos1)->Piecetype() == BISHOP) {qDebug() << "Bishop" << " ";}
-        else if (Board.getPiece(pos1)->Piecetype() == ROOK) {qDebug() << "Rook" << " ";}
-        else if (Board.getPiece(pos1)->Piecetype() == KING) {qDebug()<< "King" << " ";}
-        else if (Board.getPiece(pos1)->Piecetype() == QUEEN) {qDebug() << "Queen" << " ";}
-        else if (Board.getPiece(pos1)->Piecetype() == NONE) {qDebug() << "none" << " ";}
-        else {cout << "i dont know" << endl;}
-        qDebug() << " and you want to move it from " << pos1.getX() << " " << pos1.getY() << " to " << pos2.getX() << " " << pos2.getY();
+//        qDebug() << "You picked a piece of type ";
+//        if (Board.getPiece(pos1)->Piecetype() == PAWN) {qDebug() << "Pawn";}
+//        else if (Board.getPiece(pos1)->Piecetype() == KNIGHT) {qDebug() << "Knight" << " ";}
+//        else if (Board.getPiece(pos1)->Piecetype() == BISHOP) {qDebug() << "Bishop" << " ";}
+//        else if (Board.getPiece(pos1)->Piecetype() == ROOK) {qDebug() << "Rook" << " ";}
+//        else if (Board.getPiece(pos1)->Piecetype() == KING) {qDebug()<< "King" << " ";}
+//        else if (Board.getPiece(pos1)->Piecetype() == QUEEN) {qDebug() << "Queen" << " ";}
+//        else if (Board.getPiece(pos1)->Piecetype() == NONE) {qDebug() << "none" << " ";}
+//        else {cout << "i dont know" << endl;}
+//        qDebug() << " and you want to move it from " << pos1.getX() << " " << pos1.getY() << " to " << pos2.getX() << " " << pos2.getY();
+
+
+        cout << "Queens position of current player: " << current.getQueen()->getPos().getX() << " " << current.getQueen()->getPos().getY() << endl;
+        cout << "Queens position of other player: " << other.getQueen()->getPos().getX() << " " << other.getQueen()->getPos().getY() << endl;
+
 
         bool ok = this->Maketurn(current, other, move);
 
-
+        cout << "Queens position of current player: " << current.getQueen()->getPos().getX() << " " << current.getQueen()->getPos().getY() << endl;
+        cout << "Queens position of other player: " << other.getQueen()->getPos().getX() << " " << other.getQueen()->getPos().getY() << endl;
 
         if (ok) {emit sendResponse("Thank you. This is a valid move given the constellation of pieces on the board.");}
 
@@ -604,53 +611,58 @@ void ChessGame::getInput(QString input)
 //            cout << "ERROR." << endl;
             if (this->error == NOVALIDPOS) {
                 qDebug() << "You did not provide a valid position.";
-                sendResponse("Invalid Move");
+                emit sendResponse("Invalid Move");
                 resetMoves();
                 return;
             }
             else if (this->error == NOPIECE) {
                 qDebug() << "There is no piece at the spot you want to move from. ";
-                sendResponse("Invalid Move");
+                emit sendResponse("Invalid Move");
                 resetMoves();
                 return;
             }
             else if (this->error == PIECEINWAY) {
                 qDebug() << "There is a piece in the way and your piece cannot jump, since it is not a knight. ";
-                sendResponse("Invalid Move");
+                emit sendResponse("Invalid Move");
                 resetMoves();
                 return;
             }
             else if (this->error == WRONGCOLOR) {
                 qDebug() << "This piece has the wrong color.";
-                sendResponse("Invalid Move");
+                emit sendResponse("Invalid Move");
                 resetMoves();
                 return;
             }
             else if (this->error == SPOTBLOCKED) {
                 qDebug() << "The spot you are trying to move to is blocked by a piece of your color. ";
-                sendResponse("Invalid Move");
+                emit sendResponse("Invalid Move");
                 resetMoves();
                 return;
             }
             else if (this->error == SPOTBLOCKED_PAWN) {
                 qDebug() << "The spot you are trying to move to is blocked by a piece of your color. The Pawn can only hit diagonally. ";
-                sendResponse("Invalid Move");
+                emit sendResponse("Invalid Move");
                 resetMoves();
                 return;
             }
             else if (this->error == NOVALIDMOVE) {
                 qDebug() <<  "The move you provided is against the rules of moving for this piece. " ;
-                sendResponse("Invalid Move");
+                emit sendResponse("Invalid Move");
                 resetMoves();
                 return;
             }
             else if (this->error == KINGUNSAFE) {
                 qDebug() << "The move you are trying to make would leave your king in check. ";
-                sendResponse("Invalid Move");
+                emit sendResponse("Invalid Move");
                 resetMoves();
                 return;
             }
         }
+
+        cout << "Test number 3" << endl;
+        cout << "Queens position of current player: " << current.getQueen()->getPos().getX() << " " << current.getQueen()->getPos().getY() << endl;
+        cout << "Queens position of other player: " << other.getQueen()->getPos().getX() << " " << other.getQueen()->getPos().getY() << endl;
+
 
         // CHECK
         bool Checkstate = this->Check(current, other);
@@ -659,19 +671,26 @@ void ChessGame::getInput(QString input)
         }
 
 
+        cout << "Test 4" << endl;
+        cout << "Queens position of current player: " << current.getQueen()->getPos().getX() << " " << current.getQueen()->getPos().getY() << endl;
+        cout << "Queens position of other player: " << other.getQueen()->getPos().getX() << " " << other.getQueen()->getPos().getY() << endl;
+
+
+
+
         // CHECKMATE
-        bool gameOver = this->CheckMate(current, other);
-        if (gameOver) {
-            if (this->Whoseturn) {state = WHITEWINS; sendResponse("Checkmate. White wins."); return;}
-            else {state = BLACKWINS; sendResponse("Checkmate. Black wins."); return;}
-        }
+//        bool gameOver = this->CheckMate(current, other);
+//        if (gameOver) {
+//            if (this->Whoseturn) {state = WHITEWINS; sendResponse("Checkmate. White wins."); return;}
+//            else {state = BLACKWINS; sendResponse("Checkmate. Black wins."); return;}
+//        }
 
 
 
         // DRAW
-        bool draw = this->StaleMate(current, other);
-        if (draw) {sendResponse("The game is drawn."); return;}
-        if (!draw) {sendResponse("No stalemate. The game goes on. ");}
+//        bool draw = this->StaleMate(current, other);
+//        if (draw) {sendResponse("The game is drawn."); return;}
+//        if (!draw) {sendResponse("No stalemate. The game goes on. ");}
 
 
         // after white, it's black and after black, it's white.

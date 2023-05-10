@@ -13,8 +13,8 @@ ChessBoard::ChessBoard(Player white, Player black)  {
     // double check that the colors are correct
     this->White = white;
     this->Black = black;
-    White.setIswhite(true);
-    Black.setIswhite(false);
+//    White.setIswhite(true);
+//    Black.setIswhite(false);
     // white
     // pieces
     Board[0][0] = White.getRook(0);
@@ -135,14 +135,14 @@ ChessBoard::ChessBoard(Player white, Player black)  {
 
 
 
-ChessBoard::ChessBoard() {
-    cout << "Default ChessBoard constructor executed. " << endl;
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            Board[i][j] = nullptr;
-        }
-    }
-}
+//ChessBoard::ChessBoard() {
+//    cout << "Default ChessBoard constructor executed. " << endl;
+//    for (int i = 0; i < 8; i++) {
+//        for (int j = 0; j < 8; j++) {
+//            Board[i][j] = nullptr;
+//        }
+//    }
+//}
 
 
 Player ChessBoard::getPlayerBlack() {
@@ -152,6 +152,18 @@ Player ChessBoard::getPlayerBlack() {
 Player ChessBoard::getPlayerWhite() {
     return this->White;
 }
+
+void ChessBoard::setPlayerWhite(Player white)
+{
+    this->White = white;
+}
+
+void ChessBoard::setPlayerBlack(Player black)
+{
+    this->Black = black;
+}
+
+
 
 
 void ChessBoard::printBoard() {
