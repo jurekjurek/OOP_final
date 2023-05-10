@@ -1,7 +1,7 @@
 #include "game.h"
 
 
-ChessGame::ChessGame() : Black(false), White(true), Board(White, Black) {
+ChessGame::ChessGame() : Black(false), White(true), Board(&White, &Black) {
     this->Whoseturn = true;
 //    this->White = Board.getPlayerWhite();
 //    this->Black = Board.getPlayerBlack();
@@ -161,7 +161,7 @@ bool ChessGame::Maketurn(Move move) {
 //                Board.getPiece(Position(pos2.getX(), pos1.getY()))->setIsalive(false);
 //                Board.getPiece(Position(pos2.getX(), pos1.getY()))->setPos(Position(0,0));
                 cout << "Position of the enpassanted piece: " << pos2.getX() << " " << pos1.getY() << endl;
-                this->Board.setPiece(nullptr, Position(pos2.getX(), pos1.getY()), this->Other);
+                this->Board.setPiece(nullptr, Position(pos2.getX(), pos1.getY()), &Other);
                 this->Board.getPiece(Position(pos2.getX(), pos1.getY()))->setIsalive(false);
                 this->Board.getPiece(Position(pos2.getX(), pos1.getY()))->setPos(Position(0,0));
             }
@@ -170,9 +170,9 @@ bool ChessGame::Maketurn(Move move) {
             pieceOne->setPos(pos2);
 
             // THE BOARD NOW ALSO GETS THE INFORMATION OF THE NEW POSITION OF PIECE ONE
-            this->Board.setPiece(nullptr, pos1, this->Current);
+            this->Board.setPiece(nullptr, pos1, &Current);
 
-            this->Board.setPiece(pieceOne, pos2, this->Current);
+            this->Board.setPiece(pieceOne, pos2, &Current);
 
 
             // in the case of Rook, Pawn and King it is important to know for specific rules if the piece has moved before (castling, movement of pawn, enpassant)
@@ -312,13 +312,13 @@ void ChessGame::promotion(Position pos)  {
     cin >> promotion_type;
     switch (promotion_type) {
     case 1:
-        Board.setPiece(this->Current.getQueen(), pos, this->Current);
+        Board.setPiece(this->Current.getQueen(), pos, &Current);
     case 2:
-        Board.setPiece(this->Current.getRook(0), pos, this->Current); // Board.setPiece(current.getRook(this->promotion_count + 3), pos, current);
+        Board.setPiece(this->Current.getRook(0), pos, &Current); // Board.setPiece(current.getRook(this->promotion_count + 3), pos, current);
     case 3:
-        Board.setPiece(this->Current.getKnight(0), pos, this->Current);
+        Board.setPiece(this->Current.getKnight(0), pos, &Current);
     case 4:
-        Board.setPiece(this->Current.getBishop(0), pos, this->Current);
+        Board.setPiece(this->Current.getBishop(0), pos, &Current);
     }
     this->promotion_count += 1;
 }
@@ -399,12 +399,14 @@ void ChessGame::getInput(QString input)
 //        this->White = Board.getPlayerWhite();
 //        this->Black = Board.getPlayerBlack();
 
-//        if (this->Whoseturn == true) {this->Current = this->White; this->Other = this->Black;}
-//        else {this->Other = this->White; this->Current = this->Black;}
+        if (this->Whoseturn == true) {this->Current = this->White; this->Other = this->Black;}
+        else {this->Other = this->White; this->Current = this->Black;}
 //        if (this->Whoseturn == true) {this->Current = Board.getPlayerWhite(); this->Other = Board.getPlayerBlack();}
 //        else {this->Other = Board.getPlayerWhite(); this->Current = Board.getPlayerBlack();}
-        if (this->Whoseturn == true) {cout << "WHITEE" << endl; this->White = this->Current; this->Black = this->Other;}
-        else {cout << "BLACKK" << endl; this->White = this->Other; this->Black = this->Current;}
+//        if (this->Whoseturn == true) {cout << "WHITEE" << endl; this->White = this->Current; this->Black = this->Other;}
+//        else {cout << "BLACKK" << endl; this->White = this->Other; this->Black = this->Current;}
+
+
 
 
 

@@ -16,7 +16,7 @@ private:
     Player White;
 public:
     // constructor sets all the pointers to zero
-    ChessBoard(Player, Player);
+    ChessBoard(Player*, Player*);
 
     // default constructor
 
@@ -35,7 +35,7 @@ public:
 
 
     // set piece with given color to some position
-    void setPiece(Piece*, Position, Player);
+    void setPiece(Piece*, Position, Player*);
 
 };
 

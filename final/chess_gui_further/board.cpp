@@ -2,7 +2,7 @@
 
 
 
-ChessBoard::ChessBoard(Player white, Player black)  {
+ChessBoard::ChessBoard(Player *white, Player *black)  {
     // fill
     for (int i = 0; i < 8; i++) {
         for (int j = 2; j < 6; j++) {
@@ -11,8 +11,10 @@ ChessBoard::ChessBoard(Player white, Player black)  {
     }
 
     // double check that the colors are correct
-    this->White = white;
-    this->Black = black;
+//    this->White = &white;
+//    this->Black = &black;
+    black = &Black;
+    white = &White;
 //    White.setIswhite(true);
 //    Black.setIswhite(false);
     // white
@@ -189,106 +191,84 @@ Piece* ChessBoard::getPiece(Position pos) {
 }
 
 
-void ChessBoard::setPiece(Piece* piece, Position pos, Player current) {
-    if (current.getIswhite()) {
+void ChessBoard::setPiece(Piece* piece, Position pos, Player* current) {
+    if (current->getIswhite()) {
 //        cout << "current player is white." << endl;
         if (piece == nullptr) {this->Board[pos.getX()][pos.getY()] = nullptr;}
         else if (piece->Piecetype() == KING) {
             this->Board[pos.getX()][pos.getY()] = this->White.getKing();
             this->White.getKing()->setPos(pos);
+//            current->getKing()->setPos(pos);
         }
         else if (piece->Piecetype() == QUEEN) {
             this->Board[pos.getX()][pos.getY()] = this->White.getQueen();
             this->White.getQueen()->setPos(pos);
+//            current->getQueen()->setPos(pos);
         }
         else if (piece->Piecetype() == ROOK) {
             this->Board[pos.getX()][pos.getY()] = this->White.getRook(piece->getPieceNo());
             this->White.getRook(piece->getPieceNo())->setPos(pos);
+//            current->getRook(piece->getPieceNo())->setPos(pos);
         }
         else if (piece->Piecetype() == KNIGHT) {
             this->Board[pos.getX()][pos.getY()] = this->White.getKnight(piece->getPieceNo());
             this->White.getKnight(piece->getPieceNo())->setPos(pos);
+//            current->getKnight(piece->getPieceNo())->setPos(pos);
         }
         else if (piece->Piecetype() == BISHOP) {
     //            if (whoseturn == true) {this->Board[pos.getX()][pos.getY()] = white.getBishop(piece->getPieceNo());}
     //            else {this->Board[pos.getX()][pos.getY()] = black.getBishop(piece->getPieceNo());}
             this->Board[pos.getX()][pos.getY()] = this->White.getBishop(piece->getPieceNo());
             this->White.getBishop(piece->getPieceNo())->setPos(pos);
+//            current->getBishop(piece->getPieceNo())->setPos(pos);
         }
         else if (piece->Piecetype() == PAWN) {
 //            cout << "Set pawn number " << piece->getPieceNo() << "to position " << pos.getX() << " " << pos.getY() << endl;
             this->Board[pos.getX()][pos.getY()] = this->White.getPawn(piece->getPieceNo());
             this->White.getPawn(piece->getPieceNo())->setPos(pos);
+//            current->getPawn(piece->getPieceNo())->setPos(pos);
         }
     }
 
-    else if (!current.getIswhite()) {
+    else if (!current->getIswhite()) {
         if (piece == nullptr) {this->Board[pos.getX()][pos.getY()] = nullptr;}
         else if (piece->Piecetype() == KING) {
             this->Board[pos.getX()][pos.getY()] = this->Black.getKing();
             this->Black.getKing()->setPos(pos);
+//            current->getKing()->setPos(pos);
         }
         else if (piece->Piecetype() == QUEEN) {
             this->Board[pos.getX()][pos.getY()] = this->Black.getQueen();
             this->Black.getQueen()->setPos(pos);
+//            current->getQueen()->setPos(pos);
         }
         else if (piece->Piecetype() == ROOK) {
             this->Board[pos.getX()][pos.getY()] = this->Black.getRook(piece->getPieceNo());
             this->Black.getRook(piece->getPieceNo())->setPos(pos);
+//            current->getRook(piece->getPieceNo())->setPos(pos);
         }
         else if (piece->Piecetype() == KNIGHT) {
             this->Board[pos.getX()][pos.getY()] = this->Black.getKnight(piece->getPieceNo());
             this->Black.getKnight(piece->getPieceNo())->setPos(pos);
+//            current->getKnight(piece->getPieceNo())->setPos(pos);
         }
         else if (piece->Piecetype() == BISHOP) {
     //            if (whoseturn == true) {this->Board[pos.getX()][pos.getY()] = Black.getBishop(piece->getPieceNo());}
     //            else {this->Board[pos.getX()][pos.getY()] = black.getBishop(piece->getPieceNo());}
             this->Board[pos.getX()][pos.getY()] = this->Black.getBishop(piece->getPieceNo());
             this->Black.getBishop(piece->getPieceNo())->setPos(pos);
+//            current->getBishop(piece->getPieceNo())->setPos(pos);
         }
         else if (piece->Piecetype() == PAWN) {
             cout << "Set pawn number " << piece->getPieceNo() << "to position " << pos.getX() << " " << pos.getY() << endl;
             this->Board[pos.getX()][pos.getY()] = this->Black.getPawn(piece->getPieceNo());
             this->Black.getPawn(piece->getPieceNo())->setPos(pos);
+//            current->getPawn(piece->getPieceNo())->setPos(pos);
         }
     }
-
-
-
-
-//    if (current.getIswhite() == this->White.getIswhite()) {this->White = current;}
-//    else {this->Black = current;}
-//    if (piece == nullptr) {this->Board[pos.getX()][pos.getY()] = nullptr;}
-//    else if (piece->Piecetype() == KING) {
-//        this->Board[pos.getX()][pos.getY()] = current.getKing();
-//        current.getKing()->setPos(pos);
-//    }
-//    else if (piece->Piecetype() == QUEEN) {
-//        this->Board[pos.getX()][pos.getY()] = current.getQueen();
-//        current.getQueen()->setPos(pos);
-//    }
-//    else if (piece->Piecetype() == ROOK) {
-//        this->Board[pos.getX()][pos.getY()] = current.getRook(piece->getPieceNo());
-//        current.getRook(piece->getPieceNo())->setPos(pos);
-//    }
-//    else if (piece->Piecetype() == KNIGHT) {
-//        this->Board[pos.getX()][pos.getY()] = current.getKnight(piece->getPieceNo());
-//        current.getKnight(piece->getPieceNo())->setPos(pos);
-//    }
-//    else if (piece->Piecetype() == BISHOP) {
-////            if (whoseturn == true) {this->Board[pos.getX()][pos.getY()] = white.getBishop(piece->getPieceNo());}
-////            else {this->Board[pos.getX()][pos.getY()] = black.getBishop(piece->getPieceNo());}
-//        this->Board[pos.getX()][pos.getY()] = current.getBishop(piece->getPieceNo());
-//        current.getBishop(piece->getPieceNo())->setPos(pos);
-//    }
-//    else if (piece->Piecetype() == PAWN) {
-//        cout << "Set pawn number " << piece->getPieceNo() << "to position " << pos.getX() << " " << pos.getY() << endl;
-//        this->Board[pos.getX()][pos.getY()] = current.getPawn(piece->getPieceNo());
-//        current.getPawn(piece->getPieceNo())->setPos(pos);
-//    }
-
-
 }
+
+
 
 
 
