@@ -12,8 +12,8 @@
 class ChessBoard {
 private:
     Piece* Board[8][8];
-    Player Black;
-    Player White;
+    Player* Black;
+    Player* White;
 public:
     // constructor sets all the pointers to zero
     ChessBoard(Player*, Player*);
@@ -22,11 +22,11 @@ public:
 
     ChessBoard();
 
-    Player getPlayerBlack();
-    Player getPlayerWhite();
+    Player* getPlayerBlack();
+    Player* getPlayerWhite();
 
-    void setPlayerWhite(Player);
-    void setPlayerBlack(Player);
+    void setPlayerWhite(Player*);
+    void setPlayerBlack(Player*);
 
     void printBoard();
 

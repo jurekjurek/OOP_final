@@ -32,7 +32,8 @@ class ChessGame : public QObject{
     Q_OBJECT
 private:
     Player White, Black;
-    Player Current, Other;
+    Player *Current;
+    Player *Other;
     ChessBoard Board;
     bool Whoseturn;         // true for white, false for black
     GameState state;
