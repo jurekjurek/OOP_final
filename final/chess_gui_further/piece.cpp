@@ -186,8 +186,8 @@ Knight::Knight() {Piece();}
 bool Knight::move_valid(Position final)  {
     if (!final.check_pos()) {return false;}
 
-    int tx[] = {-2, -2, -1, 1, 2, 2, 1, -1};
-    int ty[] = {-1, 1, 2, 2, 1, -1, -2, 2};
+    int tx[] = { 2, 2,-2,-2, 1, 1,-1,-1};
+    int ty[] = {-1, 1,-1, 1,-2, 2,-2, 2};
     bool result = false;
 
     for (int i =0; i<8; i++) {

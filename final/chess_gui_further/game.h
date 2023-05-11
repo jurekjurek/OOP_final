@@ -31,7 +31,8 @@ enum Color
 class ChessGame : public QObject{
     Q_OBJECT
 private:
-    Player White, Black;
+    Player White;
+    Player Black;
     Player *Current;
     Player *Other;
     ChessBoard Board;

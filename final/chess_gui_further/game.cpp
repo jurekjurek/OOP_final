@@ -91,21 +91,23 @@ bool ChessGame::Maketurn(Move move) {
             bool freeway = true;
             if (x1x2 == 1 or y1y2 == 1) {freeway = true;}
 
+            else if (pieceOne->Piecetype() == KNIGHT) {freeway = true;}
+
             //  ROOK OR QUEEN, MOVING IN STRAIGHT LINES
             //  pieces are on the same row
-            if (y1y2 == 0) {
+            else if (y1y2 == 0) {
                 // starting at 2, since the case 1 is taken care of, there can be no piece at the destination square
                 // and 0 also, a piece is not allowed to not move
                 for (int i = 1; i < x1x2; i++) {
                     // look at all the squares between x1 and x2 and see if theres a piece on that spot
-                    if (Board.getPiece(Position(min(x1,x2)+i , y1)) != nullptr) {freeway = false;}
+                    if (Board.getPiece(Position(min(x1,x2)+i , y1)) != nullptr) {cout << "Problem: Straight 1, " << "i" << endl; freeway = false;}
                 }
             }
             //  pieces are on the same column
             else if (x1x2 == 0) {
                 for (int i = 1; i < y1y2; i++) {
                     // look at all the squares between x1 and x2 and see if theres a piece on that spot
-                    if (Board.getPiece(Position(x1 , min(y1,y2)+i)) != nullptr) {freeway = false;}
+                    if (Board.getPiece(Position(x1 , min(y1,y2)+i)) != nullptr) {cout << "Problem: Straight 2, " << "i" << endl; freeway = false;}
                 }
             }
 
@@ -115,28 +117,28 @@ bool ChessGame::Maketurn(Move move) {
             else if (x1<x2 and y1<y2) {
                 for (int i = 1; i < x1x2; i++) {
                     // look at all the squares between x1 and x2 and see if theres a piece on that spot
-                    if (Board.getPiece(Position(x1+i , y1+i)) != nullptr) {freeway = false;}
+                    if (Board.getPiece(Position(x1+i , y1+i)) != nullptr) {cout << "Problem: Diagonal 1, " << i << endl; freeway = false;}
                 }
             }
             //  piece one on the upper right of piece two
             else if (x2<x1 and y2<y1) {
                 for (int i = 1; i < x1x2; i++) {
                     // look at all the squares between x1 and x2 and see if theres a piece on that spot
-                    if (Board.getPiece(Position(x2+i , y2+i)) != nullptr) {freeway = false;}
+                    if (Board.getPiece(Position(x2+i , y2+i)) != nullptr) {cout << "Problem: Diagonal 2, " << i << endl; freeway = false;}
                 }
             }
             //  piece one on the lower right of piece two
             else if (x2<x1 and y1<y2) {
                 for (int i = 1; i < x1x2; i++) {
                     // look at all the squares between x1 and x2 and see if theres a piece on that spot
-                    if (Board.getPiece(Position(x2+i , y1+i)) != nullptr) {freeway = false;}
+                    if (Board.getPiece(Position(x2+i , y2-i)) != nullptr) {cout << "Problem: Diagonal 3, " << i << endl; freeway = false;}
                 }
             }
             //  piece one on the upper left of piece two
             else if (x1<x2 and y2<y1) {
                 for (int i = 1; i < x1x2; i++) {
                     // look at all the squares between x1 and x2 and see if theres a piece on that spot
-                    if (Board.getPiece(Position(x1+i , y2+i)) != nullptr) {freeway = false;}
+                    if (Board.getPiece(Position(x1+i , y1-i)) != nullptr) {cout << "Problem: Diagonal 4, " << i << endl; freeway = false;}
                 }
             }
 
@@ -150,7 +152,7 @@ bool ChessGame::Maketurn(Move move) {
 
             //  if there is a piece at the second spot, kill it
             if (pieceTwo != nullptr) {
-                pieceTwo->setPos(Position(0,0));
+//                pieceTwo->setPos(Position(0,0));
                 pieceTwo->setIsalive(false);
             }
 
@@ -170,9 +172,33 @@ bool ChessGame::Maketurn(Move move) {
             pieceOne->setPos(pos2);
 
             // THE BOARD NOW ALSO GETS THE INFORMATION OF THE NEW POSITION OF PIECE ONE
+
+            // switched them, maybe that fixes it?
+            this->Board.setPiece(pieceOne, pos2, Current);
             this->Board.setPiece(nullptr, pos1, Current);
 
-            this->Board.setPiece(pieceOne, pos2, Current);
+
+            // KINGUNSAFE
+
+            // now, this move that we just made is only valid if our king (so the king of the current player) is still safe
+            // so not in check
+            bool kingStillSafe = !Check();
+
+            // if king is not safe -> abort
+            if (!kingStillSafe) {
+                pieceOne->setPos(pos1);
+                if (pieceTwo != nullptr) {
+                    pieceTwo->setPos(pos2);
+                    pieceTwo->setIsalive(true);
+
+                    // we have to provide the reference to a certain piece, not the piece itself
+                    this->Board.setPiece(pieceTwo, pos2, Current);
+                }
+                else {this->Board.setPiece(nullptr, pos2, Current);}
+                this->error = KINGUNSAFE;
+                return false;
+            }
+
 
 
             // in the case of Rook, Pawn and King it is important to know for specific rules if the piece has moved before (castling, movement of pawn, enpassant)
@@ -207,6 +233,7 @@ bool ChessGame::Maketurn(Move move) {
 //            this->White = Board.getPlayerWhite();
 //            this->Black = Board.getPlayerBlack();
 
+            Board.printBoard();
             return true;
 }
 

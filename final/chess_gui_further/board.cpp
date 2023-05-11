@@ -168,23 +168,23 @@ void ChessBoard::setPlayerBlack(Player* black)
 
 
 
-//void ChessBoard::printBoard() {
-//    for (int i = 7; i>=0; i--) {
-//        for (int j = 0; j<8; j++) {
-//            if (Board[j][i] == nullptr) {
-//                std::cout << 0 << " ";
-//            }
-//            else if (Board[j][i]->Piecetype() == PAWN) {std::cout << "P" << " ";}
-//            else if (Board[j][i]->Piecetype() == KNIGHT) {std::cout << "N" << " ";}
-//            else if (Board[j][i]->Piecetype() == BISHOP) {std::cout << "B" << " ";}
-//            else if (Board[j][i]->Piecetype() == ROOK) {std::cout << "R" << " ";}
-//            else if (Board[j][i]->Piecetype() == KING) {std::cout << "K" << " ";}
-//            else if (Board[j][i]->Piecetype() == QUEEN) {std::cout << "Q" << " ";}
-//            else {std::cout << "2" << " ";}
-//        }
-//        std::cout << std::endl;
-//    }
-//}
+void ChessBoard::printBoard() {
+    for (int i = 7; i>=0; i--) {
+        for (int j = 0; j<8; j++) {
+            if (Board[j][i] == nullptr) {
+                std::cout << 0 << " ";
+            }
+            else if (Board[j][i]->Piecetype() == PAWN) {std::cout << "P" << " ";}
+            else if (Board[j][i]->Piecetype() == KNIGHT) {std::cout << "N" << " ";}
+            else if (Board[j][i]->Piecetype() == BISHOP) {std::cout << "B" << " ";}
+            else if (Board[j][i]->Piecetype() == ROOK) {std::cout << "R" << " ";}
+            else if (Board[j][i]->Piecetype() == KING) {std::cout << "K" << " ";}
+            else if (Board[j][i]->Piecetype() == QUEEN) {std::cout << "Q" << " ";}
+            else {std::cout << "2" << " ";}
+        }
+        std::cout << std::endl;
+    }
+}
 
 Piece* ChessBoard::getPiece(Position pos) {
     return Board[pos.getX()][pos.getY()];
