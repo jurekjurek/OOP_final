@@ -57,15 +57,17 @@ public:
 
     bool Maketurn(Move);
 
+    bool Checkmove(Move);
+
 
     // Is Player current attacking spot dest??
-    bool Attack(Position);
+    bool Attack(Position, Player*);
 
     // Is current player checking other player?
     // abaendern!!
-    bool Check();
+    bool Check(Player*, Player*);
 
-    bool CheckMate();
+    bool CheckMate(Player*, Player*);
     // this function is quite similar to the CheckMate function
     // but actually, we have to make sure that no piece can move. Not a single one.
 
