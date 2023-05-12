@@ -30,7 +30,7 @@ private:
     bool Iswhite;
 //    int PieceNo;
     bool Firstmove = true;
-    bool enPassant = false;
+    bool enPassant;
 public:
 
     // constructor

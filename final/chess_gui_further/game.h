@@ -67,6 +67,7 @@ public:
     // abaendern!!
     bool Check(Player*, Player*);
 
+
     bool CheckMate(Player*, Player*);
     // this function is quite similar to the CheckMate function
     // but actually, we have to make sure that no piece can move. Not a single one.

@@ -9,11 +9,13 @@
 Piece::Piece(bool iswhite) {
     this->Iswhite = iswhite;
     this->Isalive = true;
+    this->enPassant = false;
 }
 
 Piece::Piece() {
     this->Iswhite = true;
     this->Isalive = true;
+    this->enPassant = false;
 }
 
 void Piece::setFirstmove(bool firstmove) {
