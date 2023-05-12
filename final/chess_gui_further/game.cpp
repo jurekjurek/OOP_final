@@ -572,7 +572,7 @@ void ChessGame::getInput(QString input)
         // here, manipulate is true.
         bool ok = this->Maketurn(move);
 
-        if (ok) {emit sendResponse("Thank you. This is a valid move given the constellation of pieces on the board.");}
+        if (ok) {qDebug() << "Thank you. This is a valid move given the constellation of pieces on the board.";}
 
         if (!ok) {
             if (this->error == NOVALIDPOS) {
@@ -625,16 +625,6 @@ void ChessGame::getInput(QString input)
             }
         }
 
-        // CHECK
-        bool Checkstate = this->Check(this->Current, this->Other);
-        if (Checkstate) {
-            qDebug() << "CHECK!!!";
-        }
-
-
-        cout << "Test 4" << endl;
-        cout << "Queens position of current player: " << this->Current->getQueen()->getPos().getX() << " " << this->Current->getQueen()->getPos().getY() << endl;
-        cout << "Queens position of other player: " << this->Other->getQueen()->getPos().getX() << " " << this->Other->getQueen()->getPos().getY() << endl;
 
 
 
@@ -666,7 +656,16 @@ void ChessGame::getInput(QString input)
         QString part2 = QString::fromStdString(move2);
         sendStr += part1;
         sendStr += part2;
-        sendResponse(sendStr);
+        emit sendResponse(sendStr);
+
+
+        // CHECK
+        bool Checkstate = this->Check(this->Current, this->Other);
+        if (Checkstate) {
+            qDebug() << "CHECK!!!";
+            QString sendcheck = "Check";
+            emit sendResponse(sendcheck);
+        }
 
 
         this->move_list.push_back(move.getFirst().getX());

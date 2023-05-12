@@ -1,5 +1,6 @@
 #include "display.h"
 
+
 Display::Display()
 {
     // Connect Game signal with Display slot
@@ -118,7 +119,7 @@ void Display::getResponse(QString response)
 
     if (responseString.compare("Check") == 0)
     {
-        qDebug() << "Check";
+        qDebug() << "qdebug in displayfct says: Check";
         check->setPlainText("Check!");
     }
     else
@@ -148,7 +149,7 @@ void Display::getResponse(QString response)
     else
     {
 //        qDebug() << "Display got permission from Game to move icons.";
-//        qDebug() << "The response Game sent back was " << response;
+        qDebug() << "The response Game sent back was " << response;
         if (response == "Castle White Kingside")
         {
             qDebug() << "Display needs to castle white kingside.";
@@ -219,11 +220,13 @@ void Display::getResponse(QString response)
 
         if (turnColor == WHITE)
         {
-            turnColor = BLACK;
+            qDebug() << "Switching turncolor to BLACK";
+            this->turnColor = BLACK;
             turn->setPlainText("Black's Turn");
         }
-        else
+        else if (turnColor == BLACK)
         {
+            qDebug() << "Switching turncolor to WHITE";
             turnColor = WHITE;
             turn->setPlainText("White's Turn");
         }
