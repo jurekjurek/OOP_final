@@ -57,7 +57,7 @@ public:
 
     bool Maketurn(Move);
 
-    bool Checkmove(Move);
+    bool Checkmove(Move, Player*);
 
 
     // Is Player current attacking spot dest??
