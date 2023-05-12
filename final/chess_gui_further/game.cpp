@@ -68,6 +68,7 @@ bool ChessGame::Maketurn(Move move) {
                     if (x1 < x2 and Board.getPiece(Position(5,0)) == nullptr and Board.getPiece(Position(6,0)) == nullptr) {
                         if (!Attack(Position(5,0), this->Other) and !Attack(Position(6,0), this->Other) and !Attack(Position(7,0), this->Other)) {
                             qDebug() << "Castling Kingside, white.";
+                            this->castlestate = WHITEKINGSIDE;
                             Piece* temprook = this->Board.getPiece(Position(7,0));
                             temprook->setPos(Position(5,0));
                             this->Board.setPiece(nullptr, Position(7,0), this->Current);
@@ -79,6 +80,7 @@ bool ChessGame::Maketurn(Move move) {
                     if (x1 > x2 and Board.getPiece(Position(1,0)) == nullptr and Board.getPiece(Position(2,0)) == nullptr and Board.getPiece(Position(3,0)) == nullptr) {
                         if (!Attack(Position(1,0), this->Other) and !Attack(Position(2,0), this->Other) and !Attack(Position(3,0), this->Other) and !Attack(Position(0,0), this->Other)) {
                             qDebug() << "Castling Queenside, white.";
+                            this->castlestate = WHITEQUEENSIDE;
                             Piece* temprook = this->Board.getPiece(Position(0,0));
                             temprook->setPos(Position(3,0));
                             this->Board.setPiece(nullptr, Position(0,0), this->Current);
@@ -95,6 +97,7 @@ bool ChessGame::Maketurn(Move move) {
                     if (x1 < x2 and Board.getPiece(Position(5,7)) == nullptr and Board.getPiece(Position(7,0)) == nullptr) {
                         if (!Attack(Position(5,7), this->Other) and !Attack(Position(6,7), this->Other) and !Attack(Position(7,7), this->Other)) {
                             qDebug() << "Castling Kingside, black.";
+                            this->castlestate = BLACKKINGSIDE;
                             Piece* temprook = this->Board.getPiece(Position(7,7));
                             temprook->setPos(Position(5,7));
                             this->Board.setPiece(nullptr, Position(7,7), this->Current);
@@ -106,6 +109,7 @@ bool ChessGame::Maketurn(Move move) {
                     if (x1 > x2 and Board.getPiece(Position(1,7)) == nullptr and Board.getPiece(Position(2,7)) == nullptr and Board.getPiece(Position(3,7)) == nullptr) {
                         if (!Attack(Position(1,7), this->Other) and !Attack(Position(2,7), this->Other) and !Attack(Position(3,7), this->Other) and !Attack(Position(0,7), this->Other)) {
                             qDebug() << "Castling Queenside, black.";
+                            this->castlestate = BLACKQUEENSIDE;
                             Piece* temprook = this->Board.getPiece(Position(0,7));
                             temprook->setPos(Position(3,7));
                             this->Board.setPiece(nullptr, Position(0,7), this->Current);
@@ -157,6 +161,16 @@ bool ChessGame::Maketurn(Move move) {
 
             // in the case of Rook, Pawn and King it is important to know for specific rules if the piece has moved before (castling, movement of pawn, enpassant)
             pieceOne->setFirstmove(false);
+
+
+            // set enpassant to false for all pieces on the board
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+//                    cout << i << " " << j << endl;
+                    if (Board.getPiece(Position(i,j)) != nullptr) {Board.getPiece(Position(i,j))->setEnPassant(false);}
+                }
+            }
+
 
             // important: if the piece was a pawn, we set its enpassant to false
             if (pieceOne->Piecetype() == PAWN) {
@@ -649,15 +663,29 @@ void ChessGame::getInput(QString input)
 
 
         // the provided move was valid. Tell the gui to show the move on the board.
-
-        // Send QString response containing the two spaces of the valid move
-        QString sendStr = "";
-        QString part1 = QString::fromStdString(move1);
-        QString part2 = QString::fromStdString(move2);
-        sendStr += part1;
-        sendStr += part2;
-        emit sendResponse(sendStr);
-
+        if (this->enpassant) {
+            QString sendStr = "";
+            QString part1 = QString::fromStdString(move1);
+            QString part2 = QString::fromStdString(move2);
+            sendStr += part1;
+            sendStr += part2;
+            QString part3 = ", Enpassant";
+            sendStr += part3;
+            emit sendResponse(sendStr);
+        }
+        if (this->castlestate == WHITEKINGSIDE) {emit sendResponse("Castle White Kingside");}
+        else if (this->castlestate == WHITEQUEENSIDE) {emit sendResponse("Castle White Queenside");}
+        else if (this->castlestate == BLACKQUEENSIDE) {emit sendResponse("Castle Black Kingside");}
+        else if (this->castlestate == BLACKKINGSIDE) {emit sendResponse("Castle Black Queenside");}
+        else {
+            // Send QString response containing the two spaces of the valid move
+            QString sendStr = "";
+            QString part1 = QString::fromStdString(move1);
+            QString part2 = QString::fromStdString(move2);
+            sendStr += part1;
+            sendStr += part2;
+            emit sendResponse(sendStr);
+        }
 
         // CHECK
         bool Checkstate = this->Check(this->Current, this->Other);
@@ -676,6 +704,9 @@ void ChessGame::getInput(QString input)
 
         // set enpassant to false again
         qDebug() << "We set enpassant to false again";
+        this->enpassant = false;
+
+        this->castlestate = NOCASTLES;
         this->enpassant = false;
 
         resetMoves();

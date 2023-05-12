@@ -216,6 +216,22 @@ void Display::getResponse(QString response)
                     spaceList[i]->setImage(temp);
                 }
             }
+
+            if (response[6] == "E") {
+                QString Enpassantspace = "";
+                Enpassantspace += response[2];
+                Enpassantspace += response[1];
+                qDebug() << "The display function says: Enpassant is happening!";
+                QString temp;
+                for (int i=0; i<spaceList.length(); i++ )
+                {
+                    if (spaceList[i]->getName() == Enpassantspace)
+                    {
+                        spaceList[i]->clearImage();
+                    }
+                }
+            }
+
         }
 
         if (turnColor == WHITE)

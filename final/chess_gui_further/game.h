@@ -28,6 +28,15 @@ enum Color
     BLACK
 };
 
+enum Castles
+{
+    NOCASTLES,
+    WHITEKINGSIDE,
+    BLACKKINGSIDE,
+    WHITEQUEENSIDE,
+    BLACKQUEENSIDE
+};
+
 class ChessGame : public QObject{
     Q_OBJECT
 private:
@@ -43,6 +52,7 @@ private:
     int move_count;
     int promotion_count;
     bool enpassant = false;
+    Castles castlestate = NOCASTLES;
     std::string move1;
     std::string move2;
     void resetMoves();
