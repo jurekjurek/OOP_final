@@ -62,10 +62,10 @@ bool ChessGame::Maketurn(Move move) {
             if (pieceOne->Piecetype() == KING and x1x2 == 2) {
                 qDebug() << "IS THIS EXECUTED????? ";
                 // in case white wants to castle
-                if (pieceOne->getIswhite() and pieceOne->getFirstmove() and Board.getPiece(Position(7,0))->getFirstmove()) {
+                if (pieceOne->getIswhite() and pieceOne->getFirstmove()) {
                     // castles kingside
                     // if there is no piece in the way and if the king as well as the rook have not moved so far
-                    if (x1 < x2 and Board.getPiece(Position(5,0)) == nullptr and Board.getPiece(Position(6,0)) == nullptr) {
+                    if (x1 < x2 and Board.getPiece(Position(5,0)) == nullptr and Board.getPiece(Position(6,0)) == nullptr and Board.getPiece(Position(7,0))->getFirstmove()) {
                         if (!Attack(Position(5,0), this->Other) and !Attack(Position(6,0), this->Other) and !Attack(Position(7,0), this->Other)) {
                             qDebug() << "Castling Kingside, white.";
                             this->castlestate = WHITEKINGSIDE;
@@ -77,7 +77,7 @@ bool ChessGame::Maketurn(Move move) {
                         }
                     }
                     // castles queenside
-                    if (x1 > x2 and Board.getPiece(Position(1,0)) == nullptr and Board.getPiece(Position(2,0)) == nullptr and Board.getPiece(Position(3,0)) == nullptr) {
+                    if (x1 > x2 and Board.getPiece(Position(1,0)) == nullptr and Board.getPiece(Position(2,0)) == nullptr and Board.getPiece(Position(3,0)) == nullptr and Board.getPiece(Position(0,0))->getFirstmove()) {
                         if (!Attack(Position(1,0), this->Other) and !Attack(Position(2,0), this->Other) and !Attack(Position(3,0), this->Other) and !Attack(Position(0,0), this->Other)) {
                             qDebug() << "Castling Queenside, white.";
                             this->castlestate = WHITEQUEENSIDE;
@@ -91,11 +91,11 @@ bool ChessGame::Maketurn(Move move) {
                 }
 
                 // in case black wants to castle
-                else if (!pieceOne->getIswhite() and pieceOne->getFirstmove() and Board.getPiece(Position(7,0))->getFirstmove()) {
+                else if (!pieceOne->getIswhite() and pieceOne->getFirstmove()) {
                     // castles kingside
                     // if there is no piece in the way and if the king as well as the rook have not moved so far
-                    if (x1 < x2 and Board.getPiece(Position(5,7)) == nullptr and Board.getPiece(Position(7,0)) == nullptr) {
-                        if (!Attack(Position(5,7), this->Other) and !Attack(Position(6,7), this->Other) and !Attack(Position(7,7), this->Other)) {
+                    if (x1 < x2 and Board.getPiece(Position(5,7)) == nullptr and Board.getPiece(Position(6,7)) == nullptr and Board.getPiece(Position(7,7))->getFirstmove()) {
+                        if (!Attack(Position(5,7), this->Other) and !Attack(Position(6,7), this->Other)) {
                             qDebug() << "Castling Kingside, black.";
                             this->castlestate = BLACKKINGSIDE;
                             Piece* temprook = this->Board.getPiece(Position(7,7));
@@ -106,8 +106,8 @@ bool ChessGame::Maketurn(Move move) {
                         }
                     }
                     // castles queenside
-                    if (x1 > x2 and Board.getPiece(Position(1,7)) == nullptr and Board.getPiece(Position(2,7)) == nullptr and Board.getPiece(Position(3,7)) == nullptr) {
-                        if (!Attack(Position(1,7), this->Other) and !Attack(Position(2,7), this->Other) and !Attack(Position(3,7), this->Other) and !Attack(Position(0,7), this->Other)) {
+                    if (x1 > x2 and Board.getPiece(Position(1,7)) == nullptr and Board.getPiece(Position(2,7)) == nullptr and Board.getPiece(Position(3,7)) == nullptr and Board.getPiece(Position(7,0))->getFirstmove()) {
+                        if (!Attack(Position(1,7), this->Other) and !Attack(Position(2,7), this->Other) and !Attack(Position(3,7), this->Other)) {
                             qDebug() << "Castling Queenside, black.";
                             this->castlestate = BLACKQUEENSIDE;
                             Piece* temprook = this->Board.getPiece(Position(0,7));
@@ -249,7 +249,7 @@ bool ChessGame::Checkmove(Move move, Player* curr) {
         // only if there is a pawn next to it which has the same Y coordinate as he does, its allowed
         // and the same x coord of the final position
         if (pos1.getX() != pos2.getX() and pieceTwo == nullptr) {
-            if (this->Board.getPiece(Position(pos2.getX(), pos1.getY()))->getEnPassant()) {qDebug() << "Enpassant!!"; this->enpassant = true;}
+            if (this->Board.getPiece(Position(pos2.getX(), pos1.getY())) != nullptr and this->Board.getPiece(Position(pos2.getX(), pos1.getY()))->getEnPassant()) {qDebug() << "Enpassant!!"; this->enpassant = true;}
             else {
                 this->error = NOVALIDMOVE;
                 return false;
@@ -675,8 +675,8 @@ void ChessGame::getInput(QString input)
         }
         if (this->castlestate == WHITEKINGSIDE) {emit sendResponse("Castle White Kingside");}
         else if (this->castlestate == WHITEQUEENSIDE) {emit sendResponse("Castle White Queenside");}
-        else if (this->castlestate == BLACKQUEENSIDE) {emit sendResponse("Castle Black Kingside");}
-        else if (this->castlestate == BLACKKINGSIDE) {emit sendResponse("Castle Black Queenside");}
+        else if (this->castlestate == BLACKKINGSIDE) {emit sendResponse("Castle Black Kingside");}
+        else if (this->castlestate == BLACKQUEENSIDE) {emit sendResponse("Castle Black Queenside");}
         else {
             // Send QString response containing the two spaces of the valid move
             QString sendStr = "";
