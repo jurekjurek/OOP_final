@@ -272,9 +272,7 @@ int Bishop::getPieceNo()  {
 // Pawn
 
 
-Pawn::Pawn(bool iswhite) : Piece(iswhite) {
-    this->Iswhite = iswhite;
-}
+Pawn::Pawn(bool iswhite) : Piece(iswhite) {}
 
 Pawn::Pawn() {Piece();}
 
@@ -321,6 +319,21 @@ bool Pawn::move_valid(Position final)  {
     return valid_move;
 }
 
+
+
+bool Pawn::capture_valid(Position final) {
+    if (!final.check_pos()) {std::cout << "final position invalid" << std::endl; return false;}
+    if (!this->Capturepossible) {std::cout << "invalid move, pawn not in position to capture" << std::endl; return false;}
+    bool result = false;
+
+    int x = this->getPos().getX();
+    int y = this->getPos().getY();
+
+    if (x+1 == final.getX() and y+1 == final.getY()) {result = true;}
+    else if (x-1 == final.getX() and y+1 == final.getY()) {result = true;}
+
+    return result;
+}
 
 PieceType Pawn::Piecetype()  {
     return PAWN;

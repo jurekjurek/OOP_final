@@ -52,7 +52,7 @@ bool ChessGame::Maketurn(Move move) {
 
                 this->Board.getPiece(Position(pos2.getX(), pos1.getY()))->setIsalive(false);
                 this->Board.getPiece(Position(pos2.getX(), pos1.getY()))->setPos(Position(8,8));
-                this->Board.setPiece(nullptr, Position(pos2.getX(), pos1.getY()));
+                this->Board.setPiece(nullptr, Position(pos2.getX(), pos1.getY()), this->Current);
             }
 
 //            bool testest = pieceOne->Piecetype() == KING;
@@ -71,8 +71,8 @@ bool ChessGame::Maketurn(Move move) {
                             this->castlestate = WHITEKINGSIDE;
                             Piece* temprook = this->Board.getPiece(Position(7,0));
                             temprook->setPos(Position(5,0));
-                            this->Board.setPiece(nullptr, Position(7,0));
-                            this->Board.setPiece(temprook, Position(5,0));
+                            this->Board.setPiece(nullptr, Position(7,0), this->Current);
+                            this->Board.setPiece(temprook, Position(5,0), this->Current);
 //                            delete temprook;
                         }
                     }
@@ -83,8 +83,8 @@ bool ChessGame::Maketurn(Move move) {
                             this->castlestate = WHITEQUEENSIDE;
                             Piece* temprook = this->Board.getPiece(Position(0,0));
                             temprook->setPos(Position(3,0));
-                            this->Board.setPiece(nullptr, Position(0,0));
-                            this->Board.setPiece(temprook, Position(3,0));
+                            this->Board.setPiece(nullptr, Position(0,0), this->Current);
+                            this->Board.setPiece(temprook, Position(3,0), this->Current);
 //                            delete temprook;
                         }
                     }
@@ -100,8 +100,8 @@ bool ChessGame::Maketurn(Move move) {
                             this->castlestate = BLACKKINGSIDE;
                             Piece* temprook = this->Board.getPiece(Position(7,7));
                             temprook->setPos(Position(5,7));
-                            this->Board.setPiece(nullptr, Position(7,7));
-                            this->Board.setPiece(temprook, Position(5,7));
+                            this->Board.setPiece(nullptr, Position(7,7), this->Current);
+                            this->Board.setPiece(temprook, Position(5,7), this->Current);
 //                            delete temprook;
                         }
                     }
@@ -112,8 +112,8 @@ bool ChessGame::Maketurn(Move move) {
                             this->castlestate = BLACKQUEENSIDE;
                             Piece* temprook = this->Board.getPiece(Position(0,7));
                             temprook->setPos(Position(3,7));
-                            this->Board.setPiece(nullptr, Position(0,7));
-                            this->Board.setPiece(temprook, Position(3,7));
+                            this->Board.setPiece(nullptr, Position(0,7), this->Current);
+                            this->Board.setPiece(temprook, Position(3,7), this->Current);
 //                            delete temprook;
                         }
                     }
@@ -128,8 +128,8 @@ bool ChessGame::Maketurn(Move move) {
 
 
             // THE  BOARD NOW ALSO GETS THE INFORMATION OF THE NEW POSITION OF PIECE ONE
-            this->Board.setPiece(pieceOne, pos2);
-            this->Board.setPiece(nullptr, pos1);
+            this->Board.setPiece(pieceOne, pos2, Current);
+            this->Board.setPiece(nullptr, pos1, Current);
 
             // PIECE ONE GETS A NEW POSITION
             pieceOne->setPos(pos2);
@@ -145,14 +145,14 @@ bool ChessGame::Maketurn(Move move) {
             if (kingUnSafe) {
                 cout << "The king is not safe anymore 1" << endl;
                 pieceOne->setPos(pos1);
-                this->Board.setPiece(pieceOne, pos1);
+                this->Board.setPiece(pieceOne, pos1, Current);
                 if (pieceTwo != nullptr) {
                     pieceTwo->setPos(pos2);
                     pieceTwo->setIsalive(true);
 
-                    this->Board.setPiece(pieceTwo, pos2);
+                    this->Board.setPiece(pieceTwo, pos2, Current);
                 }
-                else {this->Board.setPiece(nullptr, pos2);}
+                else {this->Board.setPiece(nullptr, pos2, Current);}
                 this->error = KINGUNSAFE;
                 return false;
             }
@@ -474,13 +474,13 @@ void ChessGame::promotion(Position pos)  {
     cin >> promotion_type;
     switch (promotion_type) {
     case 1:
-        Board.setPiece(this->Current->getQueen(), pos);
+        Board.setPiece(this->Current->getQueen(), pos, Current);
     case 2:
-        Board.setPiece(this->Current->getRook(0), pos); // Board.setPiece(Current->getRook(this->promotion_count + 3), pos, current);
+        Board.setPiece(this->Current->getRook(0), pos, Current); // Board.setPiece(Current->getRook(this->promotion_count + 3), pos, current);
     case 3:
-        Board.setPiece(this->Current->getKnight(0), pos);
+        Board.setPiece(this->Current->getKnight(0), pos, Current);
     case 4:
-        Board.setPiece(this->Current->getBishop(0), pos);
+        Board.setPiece(this->Current->getBishop(0), pos, Current);
     }
     this->promotion_count += 1;
 }

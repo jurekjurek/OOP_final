@@ -21,12 +21,12 @@ enum GameState {
 class Player {
 private:
     bool Iswhite;
-    King KinG;
-    Queen QueeN;
-    Rook Rooks[2];
-    Bishop Bishops[2];
-    Knight Knights[2];
-    Pawn Pawns[8];
+    King* KinG;
+    Queen* QueeN;
+    Rook* Rooks[2];
+    Bishop* Bishops[2];
+    Knight* Knights[2];
+    Pawn* Pawns[8];
 
 public:
     // default constructor

@@ -27,12 +27,11 @@ class Piece {
 private:
     Position Pos;
     bool Isalive;
-//    bool Iswhite;
+    bool Iswhite;
     bool Firstmove = true;
     bool enPassant;
 protected:
     int PieceNo;
-    bool Iswhite;
 public:
 
     // constructor

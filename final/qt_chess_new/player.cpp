@@ -3,8 +3,8 @@
 
 Player::Player(bool iswhite) {
     this->Iswhite       = iswhite;
-    this->KinG          = new King(iswhite);
-    this->QueeN         = new Queen(iswhite);
+//    this->QueeN         = new Queen(iswhite);
+//    this->KinG          = new King(iswhite);
     this->Rooks[0]      = new Rook(iswhite);
     this->Rooks[1]      = new Rook(iswhite);
     this->Bishops[0]    = new Bishop(iswhite);
@@ -20,11 +20,10 @@ Player::Player(bool iswhite) {
     this->Pawns[6]      = new Pawn(iswhite);
     this->Pawns[7]      = new Pawn(iswhite);
 
-
     if (iswhite) {
-        this->KinG.setPos(Position(4,0));
+//        this->KinG.setPos(Position(4,0));
 
-        this->QueeN.setPos(Position(3,0));
+//        this->QueeN.setPos(Position(3,0));
 
         this->Rooks[0].setPos(Position(0,0));
         this->Rooks[1].setPos(Position(7,0));
@@ -43,36 +42,12 @@ Player::Player(bool iswhite) {
         this->Pawns[5].setPos(Position(5,1));
         this->Pawns[6].setPos(Position(6,1));
         this->Pawns[7].setPos(Position(7,1));
-
-
-        this->KinG.setIswhite(true);
-
-        this->QueeN.setIswhite(true);
-
-        this->Rooks[0].setIswhite(true);
-        this->Rooks[1].setIswhite(true);
-
-        this->Bishops[0].setIswhite(true);
-        this->Bishops[1].setIswhite(true);
-
-        this->Knights[0].setIswhite(true);
-        this->Knights[1].setIswhite(true);
-
-        this->Pawns[0].setIswhite(true);
-        this->Pawns[1].setIswhite(true);
-        this->Pawns[2].setIswhite(true);
-        this->Pawns[3].setIswhite(true);
-        this->Pawns[4].setIswhite(true);
-        this->Pawns[5].setIswhite(true);
-        this->Pawns[6].setIswhite(true);
-        this->Pawns[7].setIswhite(true);
-
     }
 
     else if (!iswhite) {
-        this->KinG.setPos(Position(4,7));
+//        this->KinG.setPos(Position(4,7));
 
-        this->QueeN.setPos(Position(3,7));
+//        this->QueeN.setPos(Position(3,7));
 
         this->Rooks[0].setPos(Position(0,7));
         this->Rooks[1].setPos(Position(7,7));
@@ -91,28 +66,6 @@ Player::Player(bool iswhite) {
         this->Pawns[5].setPos(Position(5,6));
         this->Pawns[6].setPos(Position(6,6));
         this->Pawns[7].setPos(Position(7,6));
-
-        this->KinG.setIswhite(false);
-
-        this->QueeN.setIswhite(false);
-
-        this->Rooks[0].setIswhite(false);
-        this->Rooks[1].setIswhite(false);
-
-        this->Bishops[0].setIswhite(false);
-        this->Bishops[1].setIswhite(false);
-
-        this->Knights[0].setIswhite(false);
-        this->Knights[1].setIswhite(false);
-
-        this->Pawns[0].setIswhite(false);
-        this->Pawns[1].setIswhite(false);
-        this->Pawns[2].setIswhite(false);
-        this->Pawns[3].setIswhite(false);
-        this->Pawns[4].setIswhite(false);
-        this->Pawns[5].setIswhite(false);
-        this->Pawns[6].setIswhite(false);
-        this->Pawns[7].setIswhite(false);
     }
 
 

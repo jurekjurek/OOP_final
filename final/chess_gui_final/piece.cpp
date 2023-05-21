@@ -272,9 +272,7 @@ int Bishop::getPieceNo()  {
 // Pawn
 
 
-Pawn::Pawn(bool iswhite) : Piece(iswhite) {
-    this->Iswhite = iswhite;
-}
+Pawn::Pawn(bool iswhite) : Piece(iswhite) {}
 
 Pawn::Pawn() {Piece();}
 

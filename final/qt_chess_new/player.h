@@ -4,20 +4,6 @@
 #include "piece.h"
 
 
-
-// different GameStates:
-
-enum GameState {
-    ACTIVE,
-    ERROR,
-    CHECK,
-    DRAW,
-    WHITEWINS,
-    BLACKWINS
-};
-
-
-
 class Player {
 private:
     bool Iswhite;
@@ -55,6 +41,14 @@ public:
     Knight* getKnight(int);
 
     Pawn* getPawn(int);
+
+    // we somehow have to get user input.
+    // I will adapt this using the QT framework later. Now only to use cin and see if everything works.
+    // we have to return a move
+    Move getMove();
+
+    // to show the output of the game
+    void showOutput(GameState);
 
 };
 

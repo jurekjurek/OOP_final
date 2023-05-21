@@ -35,7 +35,7 @@ public:
 
 
     // set piece with given color to some position
-    void setPiece(Piece*, Position);
+    void setPiece(Piece*, Position, Player*);
 
 };
 

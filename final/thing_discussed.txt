@@ -1,0 +1,95 @@
+
+
+- Vectors, Arrays - list of alive Pieces, moves played  
+
+- () ? : ... operator for some statements 
+
+- break, continue 
+
+- While, do While - while game is not over, continue oder so 
+
+- namespace
+
+- struct 
+
+2
+
+- Pointers ... used already 
+
+- const! Implement!! If some variables will not change! 
+
+- Good practice to initialize your pointers! So set them to nullptr!! 
+
+- delete the stuff you dont need anymore! !!!"New" must be followed by "Delete"!!!
+
+- Pointer to a pointer?? 
+
+3
+
+- POLYMORPHISM - FUNCTION OVERLOADING!!!
+
+- TEMPLATES
+
+- Add destructors!! 
+
+- operator!! Board operator [A,B] ... 
+
+-  
+
+4
+
+- try, catch, throw 
+
+- private, public, PROTECTED!!!!!! 
+
+- Inheritance 
+
+- Friend status!!! 
+
+- Virtual 
+
+- pointer to base?? 
+
+5
+
+- Templates 
+	Template <class MyType> ... 
+	template <typename T> ... 
+
+- STL, VECTORS!!!! 
+
+- Iterators!!!!
+
+- namespace: 
+namespace first {
+	int x = 5
+}
+using namespace first 
+std::cout << x << std::endl;        -> 5
+
+- Key value pairs in STL: 
+
+map<int, string> Square;
+Square[1] = "A1" oder so .... 
+
+- Function objects?? 
+
+6
+
+- STATIC!! never run out of scope oder so? 
+
+- OSTREAM, wenn ich sagen will du bist von der Postion zu der Position, mach das mit Ostream, bist von (A1) nach (A4)
+
+- AUTO
+
+- RANGE BASED LOOPS
+
+- LAMBDA FUNCTIONS 
+
+- OVERRIDE FINAL!! 
+
+- mutable
+
+- SMART POINTERS, unique_ptr, shared_ptr, weak_ptr
+
+networking ... 
