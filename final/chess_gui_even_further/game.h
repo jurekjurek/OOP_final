@@ -42,17 +42,16 @@ class ChessGame : public QObject{
 private:
     Player White;
     Player Black;
-    Player *Current;
-    Player *Other;
+//    Player *Current;
+//    Player *Other;
     ChessBoard Board;
     bool Whoseturn;         // true for white, false for black
-    GameState state;
     MaketurnError error;
     vector<int> move_list;
-    int move_count;
-    int promotion_count;
     bool enpassant = false;
     Castles castlestate = NOCASTLES;
+
+    // for the QT part
     std::string move1;
     std::string move2;
     void resetMoves();
@@ -61,11 +60,8 @@ public:
     // Black is not white, White is white
     ChessGame();
 
-    Player getPlayerWhite();
-    Player getPlayerBlack();
 
-
-    bool Maketurn(Move);
+    bool Maketurn(Move, Player*, Player*);
 
     bool Checkmove(Move, Player*);
 
@@ -85,7 +81,7 @@ public:
     bool StaleMate();
 
 
-    void promotion(Position);
+    void promotion(Position, Player*);
 
 
 
