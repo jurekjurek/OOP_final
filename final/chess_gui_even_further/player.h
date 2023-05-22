@@ -45,6 +45,8 @@ public:
 
     Pawn* getPawn(int);
 
+    vector<Piece*> getAlivePieces();
+
 };
 
 

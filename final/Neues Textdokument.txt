@@ -33,9 +33,7 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
             int x1x2 = abs(x1-x2);
             int y1y2 = abs(y1-y2);
 
-            Move move = Move(pos1, pos2);
-
-            bool ok = this->Checkmove(move, Current);
+            bool ok = this->Checkmove(pieceOne, pos2);
 
             if (!ok) {qDebug() << "NO VALID MOVE"; return false;}
 
@@ -208,10 +206,15 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
 
 
 // is a certain move valid for a Player curr given a certain constellation of the board?
-bool ChessGame::Checkmove(Move move, Player* Current) {
+bool ChessGame::Checkmove(Piece* pieceOne, Position pos2) {
 
-    Position pos1 = move.getFirst();
-    Position pos2 = move.getLast();
+    Player* Current;
+    Player* Other;
+    if (this->Whoseturn == true) {Current = Board.getPlayerWhite(); Other = Board.getPlayerBlack();}
+    else {Other = Board.getPlayerWhite(); Current = Board.getPlayerBlack();}
+
+    Position pos1 = Position(pieceOne->getPos().getX(), pieceOne->getPos().getY());
+//    Position pos2 = move.getLast();
 
 
     // MAKE A LAMBDA FUNCTION OUT OF THIS
@@ -226,7 +229,7 @@ bool ChessGame::Checkmove(Move move, Player* Current) {
     if (!pos1.getValid() or !pos1.getValid()) {this->error = NOVALIDPOS; return false;}
 
     // get pieces in spot one and two
-    Piece* pieceOne = this->Board.getPiece(pos1);
+//    Piece* pieceOne = this->Board.getPiece(pos1);
     Piece* pieceTwo = this->Board.getPiece(pos2);
 
     // if there is no piece at spot one
@@ -399,31 +402,60 @@ bool ChessGame::Checkmove(Move move, Player* Current) {
 
 // Does the Player Current attack the spot dest?
 // In other words, can the player move a piece, that is NOT a pawn to that spot?
+//bool ChessGame::Attack(Position dest, Player* Current) {
+////    qDebug() << "Attack function executed";
+//    bool attack = false;
+
+//    if (Checkmove(Move(Current->getKing()->getPos(), dest), Current)) {qDebug() << "The other players King can attack this spot."; attack = true;}
+//    // can the queen attack the position dest?
+//    if (Checkmove(Move(Current->getQueen()->getPos(), dest), Current)) {qDebug() << "The other players Queen can attack this spot."; attack = true;}
+//    // can either rook attack the position dest?
+//    if (Checkmove(Move(Current->getRook(0)->getPos(), dest), Current)) {qDebug() << "The other players Rook can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getRook(1)->getPos(), dest), Current)) {qDebug() << "The other players Rook can attack this spot."; attack = true;}
+//    // can either bishop attack the position dest?
+//    if (Checkmove(Move(Current->getBishop(0)->getPos(), dest), Current)) {qDebug() << "The other players Bishop can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getBishop(1)->getPos(), dest), Current)) {qDebug() << "The other players Bishop can attack this spot."; attack = true;}
+//    // can either knight attack the position dest?
+//    if (Checkmove(Move(Current->getKnight(0)->getPos(), dest), Current)) {qDebug() << "The other players Knight can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getKnight(1)->getPos(), dest), Current)) {qDebug() << "The other players Knight can attack this spot."; attack = true;}
+//    // can either pawn attack the position dest? Remember: the pawn is the only piece that has a special capturing direction
+//    if (Checkmove(Move(Current->getPawn(0)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getPawn(1)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getPawn(2)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getPawn(3)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getPawn(4)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getPawn(5)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getPawn(6)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getPawn(7)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+
+//    return attack;
+//}
+
 bool ChessGame::Attack(Position dest, Player* Current) {
 //    qDebug() << "Attack function executed";
     bool attack = false;
 
-    if (Checkmove(Move(Current->getKing()->getPos(), dest), Current)) {qDebug() << "The other players King can attack this spot."; attack = true;}
+    if (Checkmove(Current->getKing(), dest)) {qDebug() << "The other players King can attack this spot."; attack = true;}
     // can the queen attack the position dest?
-    if (Checkmove(Move(Current->getQueen()->getPos(), dest), Current)) {qDebug() << "The other players Queen can attack this spot."; attack = true;}
+    if (Checkmove(Current->getQueen(), dest)) {qDebug() << "The other players Queen can attack this spot."; attack = true;}
     // can either rook attack the position dest?
-    if (Checkmove(Move(Current->getRook(0)->getPos(), dest), Current)) {qDebug() << "The other players Rook can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getRook(1)->getPos(), dest), Current)) {qDebug() << "The other players Rook can attack this spot."; attack = true;}
+    if (Checkmove(Current->getRook(0), dest)) {qDebug() << "The other players Rook can attack this spot."; attack = true;}
+    if (Checkmove(Current->getRook(1), dest)) {qDebug() << "The other players Rook can attack this spot."; attack = true;}
     // can either bishop attack the position dest?
-    if (Checkmove(Move(Current->getBishop(0)->getPos(), dest), Current)) {qDebug() << "The other players Bishop can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getBishop(1)->getPos(), dest), Current)) {qDebug() << "The other players Bishop can attack this spot."; attack = true;}
+    if (Checkmove(Current->getBishop(0), dest)) {qDebug() << "The other players Bishop can attack this spot."; attack = true;}
+    if (Checkmove(Current->getBishop(1), dest)) {qDebug() << "The other players Bishop can attack this spot."; attack = true;}
     // can either knight attack the position dest?
-    if (Checkmove(Move(Current->getKnight(0)->getPos(), dest), Current)) {qDebug() << "The other players Knight can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getKnight(1)->getPos(), dest), Current)) {qDebug() << "The other players Knight can attack this spot."; attack = true;}
+    if (Checkmove(Current->getKnight(0), dest)) {qDebug() << "The other players Knight can attack this spot."; attack = true;}
+    if (Checkmove(Current->getKnight(1), dest)) {qDebug() << "The other players Knight can attack this spot."; attack = true;}
     // can either pawn attack the position dest? Remember: the pawn is the only piece that has a special capturing direction
-    if (Checkmove(Move(Current->getPawn(0)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getPawn(1)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getPawn(2)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getPawn(3)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getPawn(4)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getPawn(5)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getPawn(6)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getPawn(7)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Checkmove(Current->getPawn(0), dest)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Checkmove(Current->getPawn(1), dest)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Checkmove(Current->getPawn(2), dest)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Checkmove(Current->getPawn(3), dest)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Checkmove(Current->getPawn(4), dest)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Checkmove(Current->getPawn(5), dest)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Checkmove(Current->getPawn(6), dest)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Checkmove(Current->getPawn(7), dest)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
 
     return attack;
 }
@@ -742,6 +774,58 @@ void ChessGame::getInput(QString input)
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if (Checkmove(Move(Current->getKing()->getPos(), dest), Board.getPiece(Position(Current->getKing()->getPos())))) {qDebug() << "The other players King can attack this spot."; attack = true;}
+    // can the queen attack the position dest?
+    if (Checkmove(Move(Current->getQueen()->getPos(), dest), Board.getPiece(Position(Current->getQueen()->getPos())))) {qDebug() << "The other players Queen can attack this spot."; attack = true;}
+    // can either rook attack the position dest?
+    if (Checkmove(Move(Current->getRook(0)->getPos(), dest), Board.getPiece(Position(Current->getRook(0)->getPos())))) {qDebug() << "The other players Rook can attack this spot."; attack = true;}
+    if (Checkmove(Move(Current->getRook(1)->getPos(), dest), Board.getPiece(Position(Current->getRook(1)->getPos())))) {qDebug() << "The other players Rook can attack this spot."; attack = true;}
+    // can either bishop attack the position dest?
+    if (Checkmove(Move(Current->getBishop(0)->getPos(), dest), Board.getPiece(Position(Current->getBishop(0)->getPos())))) {qDebug() << "The other players Bishop can attack this spot."; attack = true;}
+    if (Checkmove(Move(Current->getBishop(1)->getPos(), dest), Board.getPiece(Position(Current->getBishop(1)->getPos())))) {qDebug() << "The other players Bishop can attack this spot."; attack = true;}
+    // can either knight attack the position dest?
+    if (Checkmove(Move(Current->getKnight(0)->getPos(), dest), Board.getPiece(Position(Current->getKnight(0)->getPos())))) {qDebug() << "The other players Knight can attack this spot."; attack = true;}
+    if (Checkmove(Move(Current->getKnight(1)->getPos(), dest), Board.getPiece(Position(Current->getKnight(1)->getPos())))) {qDebug() << "The other players Knight can attack this spot."; attack = true;}
+    // can either pawn attack the position dest? Remember: the pawn is the only piece that has a special capturing direction
+    if (Checkmove(Move(Current->getPawn(0)->getPos(), dest), Board.getPiece(Position(Current->getPawn(0)->getPos())))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Checkmove(Move(Current->getPawn(1)->getPos(), dest), Board.getPiece(Position(Current->getPawn(1)->getPos())))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Checkmove(Move(Current->getPawn(2)->getPos(), dest), Board.getPiece(Position(Current->getPawn(2)->getPos())))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Checkmove(Move(Current->getPawn(3)->getPos(), dest), Board.getPiece(Position(Current->getPawn(3)->getPos())))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Checkmove(Move(Current->getPawn(4)->getPos(), dest), Board.getPiece(Position(Current->getPawn(4)->getPos())))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Checkmove(Move(Current->getPawn(5)->getPos(), dest), Board.getPiece(Position(Current->getPawn(5)->getPos())))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Checkmove(Move(Current->getPawn(6)->getPos(), dest), Board.getPiece(Position(Current->getPawn(6)->getPos())))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    if (Checkmove(Move(Current->getPawn(7)->getPos(), dest), Board.getPiece(Position(Current->getPawn(7)->getPos())))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+
+
+
+
+
+
+
+
+
 
 
 

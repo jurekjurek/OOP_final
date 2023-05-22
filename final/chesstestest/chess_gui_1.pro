@@ -10,21 +10,24 @@ CONFIG += c++17
 
 SOURCES += \
     board.cpp \
+    display.cpp \
     game.cpp \
     main.cpp \
     piece.cpp \
     player.cpp \
-    position.cpp
+    position.cpp \
+    space.cpp
 
 HEADERS += \
     board.h \
+    display.h \
     game.h \
     piece.h \
     player.h \
-    position.h
+    position.h \
+    space.h
 
-FORMS += \
-    mainwindow.ui
+FORMS +=
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

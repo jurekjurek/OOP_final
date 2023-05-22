@@ -4,15 +4,18 @@
 #include "piece.h"
 
 
+// Every Player has pointers to all its pieces
+//
+
 class Player {
 private:
     bool Iswhite;
-    King KinG;
-    Queen QueeN;
-    Rook Rooks[2];
-    Bishop Bishops[2];
-    Knight Knights[2];
-    Pawn Pawns[8];
+    King* KinG;
+    Queen* QueeN;
+    Rook* Rooks[2];
+    Bishop* Bishops[2];
+    Knight* Knights[2];
+    Pawn* Pawns[8];
 
 public:
     // default constructor
@@ -42,13 +45,7 @@ public:
 
     Pawn* getPawn(int);
 
-    // we somehow have to get user input.
-    // I will adapt this using the QT framework later. Now only to use cin and see if everything works.
-    // we have to return a move
-    Move getMove();
-
-    // to show the output of the game
-    void showOutput(GameState);
+    vector<Piece*> getAlivePieces();
 
 };
 

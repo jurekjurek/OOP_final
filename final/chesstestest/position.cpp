@@ -40,3 +40,4 @@ Position Position::shiftPos(int x, int y) {
 bool Position::getValid() {
     return this->Valid;
 }
+

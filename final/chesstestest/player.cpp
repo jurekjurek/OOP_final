@@ -132,6 +132,12 @@ Pawn* Player::getPawn(int i) {
 
 vector<Piece*> Player::getAlivePieces() {
     vector<Piece*> AlivePieces;
+    if (this->QueeN->getIsalive()) {
+        AlivePieces.push_back(this->QueeN);
+    }
+    if (this->KinG->getIsalive()) {
+        AlivePieces.push_back(this->KinG);
+    }
     if (this->Rooks[0]->getIsalive()) {
         AlivePieces.push_back(this->Rooks[0]);
     }

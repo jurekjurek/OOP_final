@@ -35,10 +35,17 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
 
             Move move = Move(pos1, pos2);
 
-            bool ok = this->Checkmove(move, Current);
+            bool ok = this->Checkmove(pos2, pieceOne)[0];
 
             if (!ok) {qDebug() << "NO VALID MOVE"; return false;}
 
+            // this is relevant only in the maketurn function because only here we have an actual game flow
+            // we acutally have a player that is moving a piece
+            // if the color of the current player is not equal to the color of the piece
+            if (this->Whoseturn != pieceOne->getIswhite()) {
+                this->error = WRONGCOLOR;
+                return false;
+            }
 
             // THE MOVE HAS BEEN VALIDATED, GO ON TO CAPTURE THE PIECE IN DESTINATION SPOT AND MOVE THE PIECE
 
@@ -67,6 +74,7 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
                 // in case white wants to castle
                 // if the rooks are still on the board, otherwise programm collapses
                 if (Board.getPiece(Position(7,0)) == nullptr or Board.getPiece(Position(0,0)) == nullptr or Board.getPiece(Position(0,7)) == nullptr or Board.getPiece(Position(7,7)) == nullptr) {
+                    cout << "No rooks..." << endl;
                     this->error = NOVALIDMOVE;
                     return false;
                 }
@@ -116,7 +124,7 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
                         }
 
                         // if one of the spots is attacked
-                        else {this->error = NOVALIDMOVE; return false;}
+                        else {cout << "this is the error hopefully" << endl; this->error = NOVALIDMOVE; return false;}
                     }
                     // castles queenside
                     if (x1 > x2 and Board.getPiece(Position(1,7)) == nullptr and Board.getPiece(Position(2,7)) == nullptr and Board.getPiece(Position(3,7)) == nullptr and Board.getPiece(Position(7,0))->getFirstmove()) {
@@ -208,11 +216,15 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
 
 
 // is a certain move valid for a Player curr given a certain constellation of the board?
-bool ChessGame::Checkmove(Move move, Player* Current) {
+// this function returns an array of two booleans, one stating if Pieceone can attack!! pos2, the other if it can move to pos2
+bool* ChessGame::Checkmove(Position pos2, Piece* pieceOne) {
 
-    Position pos1 = move.getFirst();
-    Position pos2 = move.getLast();
+    Position pos1 = pieceOne->getPos();
+//    Position pos2 = move.getLast();
 
+    bool* movearray = new bool[2];
+    movearray[0] = true;
+    movearray[1] = true;
 
     // MAKE A LAMBDA FUNCTION OUT OF THIS
     int x1 = pos1.getX();
@@ -223,23 +235,30 @@ bool ChessGame::Checkmove(Move move, Player* Current) {
     int y1y2 = abs(y1-y2);
 
     // if either start or destination position is not valid -> error
-    if (!pos1.getValid() or !pos1.getValid()) {this->error = NOVALIDPOS; return false;}
+    if (!pos1.getValid() or !pos1.getValid()) {
+        this->error = NOVALIDPOS;
+//        return false;
+        movearray[0] = false;
+        movearray[1] = false;
+    }
 
     // get pieces in spot one and two
-    Piece* pieceOne = this->Board.getPiece(pos1);
+//    Piece* pieceOne = this->Board.getPiece(pos1);
     Piece* pieceTwo = this->Board.getPiece(pos2);
 
     // if there is no piece at spot one
     if (pieceOne == nullptr) {
         this->error = NOPIECE;
-        return false;
+//        return false;
+        movearray[0] = false;
+        movearray[1] = false;
     }
 
-    // if the color of the current player is not equal to the color of the piece
-    if (Current->getIswhite() != pieceOne->getIswhite()) {
-        this->error = WRONGCOLOR;
-        return false;
-    }
+//    // if the color of the current player is not equal to the color of the piece
+//    if (this->Whoseturn != pieceOne->getIswhite()) {
+//        this->error = WRONGCOLOR;
+//        return false;
+//    }
 
     // if piece at destination and piece at source have the same color
     // Only look at case of not Pawn, because for pawn pieceTwo != nullptr can be not allowed, independent of the color of piecetwo
@@ -247,7 +266,9 @@ bool ChessGame::Checkmove(Move move, Player* Current) {
     if (pieceOne->Piecetype() != PAWN) {
         if (pieceTwo != nullptr and pieceTwo->getIswhite() == pieceOne->getIswhite()) {
             this->error = SPOTBLOCKED;
-            return false;
+//            return false;
+            movearray[0] = false;
+            movearray[1] = false;
         }
     }
 
@@ -258,7 +279,9 @@ bool ChessGame::Checkmove(Move move, Player* Current) {
     // if the move is not valid -> exit
     if (!checkMove) {
         this->error = NOVALIDMOVE;
-        return false;
+//        return false;
+        movearray[0] = false;
+        movearray[1] = false;
     }
 
     // EXTRA RULES FOR PAWN - HITTING DIAGONALLY, ENPASSANT
@@ -273,25 +296,37 @@ bool ChessGame::Checkmove(Move move, Player* Current) {
             if (this->Board.getPiece(Position(pos2.getX(), pos1.getY())) != nullptr and this->Board.getPiece(Position(pos2.getX(), pos1.getY()))->getEnPassant()) {
                 qDebug() << "Enpassant!!";
                 this->enpassant = true;
+//                movearray[0] = true;
+//                movearray[1] = true;
             }
 
             // All other cases not allowed
             else {
                 this->error = NOVALIDMOVE;
-                return false;
+//                return false;
+                movearray[0] = false;
+//                movearray[1] = true;
             }
         }
         // Pawn cannot hit in a straigt line, if theres a piece in front of the pawn, the pawn cannot move
-        else if (pos1.getX() == pos2.getX() and pieceTwo != nullptr) {
+        else if (pos1.getX() == pos2.getX()) {
             this->error = NOVALIDMOVE;
-            return false;
+//            return false;
+
+            // can never attack if not diagonal
+            movearray[1] = false;
+            if (pieceTwo != nullptr) {movearray[0] = false;}
         }
 
         // Pawn cannot hit pieces of its own color
         else if (pos1.getX() != pos2.getX() and pieceTwo->getIswhite() == pieceOne->getIswhite()) {
             this->error = NOVALIDMOVE;
-            return false;
+//            return false;
+            movearray[0] = false;
+            movearray[1] = false;
         }
+
+
     }
 
 
@@ -354,44 +389,12 @@ bool ChessGame::Checkmove(Move move, Player* Current) {
 
     if (!freeway) {
         this->error = PIECEINWAY;
-        return false;
+        movearray[0] = false;
+        movearray[1] = false;
+//        return false;
     }
 
-
-//    // THE  BOARD NOW ALSO GETS THE INFORMATION OF THE NEW POSITION OF PIECE ONE
-//    this->Board.setPiece(pieceOne, pos2, Current);
-//    this->Board.setPiece(nullptr, pos1, Current);
-
-//    // PIECE ONE GETS A NEW POSITION
-//    pieceOne->setPos(pos2);
-
-
-//    // KINGUNSAFE
-
-//    // now, this move that we just made is only valid if our king (so the king of the current player) is still safe
-//    // so not in check
-//    bool kingUnSafe = Check(this->Other, this->Current);
-
-//    // if king is not safe -> abort
-//    if (kingUnSafe) {
-//        cout << "The king is not safe anymore 1" << endl;
-//        pieceOne->setPos(pos1);
-//        this->Board.setPiece(pieceOne, pos1, Current);
-//        if (pieceTwo != nullptr) {
-////            pieceTwo->setPos(pos2);
-////            pieceTwo->setIsalive(true);
-
-//            this->Board.setPiece(pieceTwo, pos2, Current);
-//        }
-//        else {this->Board.setPiece(nullptr, pos2, Current);}
-//        return false;
-//    }
-
-//    pieceOne->setPos(pos1);
-//    this->Board.setPiece(pieceOne, pos1, Current);
-//    this->Board.setPiece(pieceTwo, pos2, Current);
-
-    return true;
+    return movearray;
 }
 
 
@@ -401,29 +404,37 @@ bool ChessGame::Checkmove(Move move, Player* Current) {
 // In other words, can the player move a piece, that is NOT a pawn to that spot?
 bool ChessGame::Attack(Position dest, Player* Current) {
 //    qDebug() << "Attack function executed";
+    vector<Piece*> AlivePieces = Current->getAlivePieces();
+
     bool attack = false;
 
-    if (Checkmove(Move(Current->getKing()->getPos(), dest), Current)) {qDebug() << "The other players King can attack this spot."; attack = true;}
-    // can the queen attack the position dest?
-    if (Checkmove(Move(Current->getQueen()->getPos(), dest), Current)) {qDebug() << "The other players Queen can attack this spot."; attack = true;}
-    // can either rook attack the position dest?
-    if (Checkmove(Move(Current->getRook(0)->getPos(), dest), Current)) {qDebug() << "The other players Rook can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getRook(1)->getPos(), dest), Current)) {qDebug() << "The other players Rook can attack this spot."; attack = true;}
-    // can either bishop attack the position dest?
-    if (Checkmove(Move(Current->getBishop(0)->getPos(), dest), Current)) {qDebug() << "The other players Bishop can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getBishop(1)->getPos(), dest), Current)) {qDebug() << "The other players Bishop can attack this spot."; attack = true;}
-    // can either knight attack the position dest?
-    if (Checkmove(Move(Current->getKnight(0)->getPos(), dest), Current)) {qDebug() << "The other players Knight can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getKnight(1)->getPos(), dest), Current)) {qDebug() << "The other players Knight can attack this spot."; attack = true;}
-    // can either pawn attack the position dest? Remember: the pawn is the only piece that has a special capturing direction
-    if (Checkmove(Move(Current->getPawn(0)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getPawn(1)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getPawn(2)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getPawn(3)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getPawn(4)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getPawn(5)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getPawn(6)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
-    if (Checkmove(Move(Current->getPawn(7)->getPos(), dest), Current)) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+    for (Piece* alivepiece : AlivePieces) {
+        if (Checkmove(dest, alivepiece)[1]) {attack = true;}
+    }
+
+
+
+//    if (Checkmove(Move(Current->getKing()->getPos(), dest), Current->getKing())) {qDebug() << "The other players King can attack this spot."; attack = true;}
+//    // can the queen attack the position dest?
+//    if (Checkmove(Move(Current->getQueen()->getPos(), dest), Current->getQueen())) {qDebug() << "The other players Queen can attack this spot."; attack = true;}
+//    // can either rook attack the position dest?
+//    if (Checkmove(Move(Current->getRook(0)->getPos(), dest), Current->getRook(0))) {qDebug() << "The other players Rook can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getRook(1)->getPos(), dest), Current->getRook(1))) {qDebug() << "The other players Rook can attack this spot."; attack = true;}
+//    // can either bishop attack the position dest?
+//    if (Checkmove(Move(Current->getBishop(0)->getPos(), dest), Current->getBishop(0))) {qDebug() << "The other players Bishop can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getBishop(1)->getPos(), dest), Current->getBishop(1))) {qDebug() << "The other players Bishop can attack this spot."; attack = true;}
+//    // can either knight attack the position dest?
+//    if (Checkmove(Move(Current->getKnight(0)->getPos(), dest), Current->getKnight(0))) {qDebug() << "The other players Knight can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getKnight(1)->getPos(), dest), Current->getKnight(1))) {qDebug() << "The other players Knight can attack this spot."; attack = true;}
+//    // can either pawn attack the position dest? Remember: the pawn is the only piece that has a special capturing direction
+//    if (Checkmove(Move(Current->getPawn(0)->getPos(), dest), Current->getPawn(0))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getPawn(1)->getPos(), dest), Current->getPawn(1))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getPawn(2)->getPos(), dest), Current->getPawn(2))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getPawn(3)->getPos(), dest), Current->getPawn(3))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getPawn(4)->getPos(), dest), Current->getPawn(4))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getPawn(5)->getPos(), dest), Current->getPawn(5))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getPawn(6)->getPos(), dest), Current->getPawn(6))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
+//    if (Checkmove(Move(Current->getPawn(7)->getPos(), dest), Current->getPawn(7))) {qDebug() << "The other players Pawn can attack this spot."; attack = true;}
 
     return attack;
 }

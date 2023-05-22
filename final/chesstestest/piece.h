@@ -27,11 +27,12 @@ class Piece {
 private:
     Position Pos;
     bool Isalive;
-    bool Iswhite;
+//    bool Iswhite;
     bool Firstmove = true;
     bool enPassant;
 protected:
     int PieceNo;
+    bool Iswhite;
 public:
 
     // constructor
@@ -99,6 +100,8 @@ public:
 
 
 class Rook: public Piece {
+private:
+//    int PieceNo;
 public:
     Rook(bool);
     Rook();
@@ -116,6 +119,8 @@ public:
 
 
 class Knight: public Piece {
+private:
+//    int PieceNo;
 public:
     Knight(bool);
     Knight();
@@ -132,6 +137,8 @@ public:
 
 
 class Bishop: public Piece {
+private:
+//    int PieceNo;
 public:
     Bishop(bool);
     Bishop();
@@ -151,6 +158,7 @@ public:
 class Pawn: public Piece {
 private:
     bool Capturepossible = false;
+//    int PieceNo;
     bool promotion = false;
 public:
 
@@ -162,9 +170,6 @@ public:
 
     // check, when a certain move is valid!
     bool move_valid(Position) override;
-
-    // Pawn is the only piece that has a capture_valid class!
-    bool capture_valid(Position);
 
 
     PieceType Piecetype() override;

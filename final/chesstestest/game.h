@@ -63,7 +63,7 @@ public:
 
     bool Maketurn(Piece*, Position);
 
-    bool Checkmove(Move, Player*);
+    bool* Checkmove(Position, Piece*);
 
 
     // Is Player current attacking spot dest??
