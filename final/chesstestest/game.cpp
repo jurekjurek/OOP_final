@@ -351,7 +351,7 @@ bool* ChessGame::Checkmove(Position pos2, Piece* pieceOne) {
         // and 0 also, a piece is not allowed to not move
         for (int i = 1; i < x1x2; i++) {
             // look at all the squares between x1 and x2 and see if theres a piece on that spot
-            if (Board.getPiece(Position(min(x1,x2)+i , y1)) != nullptr) {cout << "Problem: Straight 1, " << "i" << endl; freeway = false;}
+            if (Board.getPiece(Position(min(x1,x2)+i , y1)) != nullptr) {freeway = false;}
         }
     }
     //  pieces are on the same column
@@ -368,28 +368,28 @@ bool* ChessGame::Checkmove(Position pos2, Piece* pieceOne) {
     else if (x1<x2 and y1<y2) {
         for (int i = 1; i < x1x2; i++) {
             // look at all the squares between x1 and x2 and see if theres a piece on that spot
-            if (Board.getPiece(Position(x1+i , y1+i)) != nullptr) {cout << "Problem: Diagonal 1, " << i << endl; freeway = false;}
+            if (Board.getPiece(Position(x1+i , y1+i)) != nullptr) {freeway = false;}
         }
     }
     //  piece one on the upper right of piece two
     else if (x2<x1 and y2<y1) {
         for (int i = 1; i < x1x2; i++) {
             // look at all the squares between x1 and x2 and see if theres a piece on that spot
-            if (Board.getPiece(Position(x2+i , y2+i)) != nullptr) {cout << "Problem: Diagonal 2, " << i << endl; freeway = false;}
+            if (Board.getPiece(Position(x2+i , y2+i)) != nullptr) {freeway = false;}
         }
     }
     //  piece one on the lower right of piece two
     else if (x2<x1 and y1<y2) {
         for (int i = 1; i < x1x2; i++) {
             // look at all the squares between x1 and x2 and see if theres a piece on that spot
-            if (Board.getPiece(Position(x2+i , y2-i)) != nullptr) {cout << "Problem: Diagonal 3, " << i << endl; freeway = false;}
+            if (Board.getPiece(Position(x2+i , y2-i)) != nullptr) {freeway = false;}
         }
     }
     //  piece one on the upper left of piece two
     else if (x1<x2 and y2<y1) {
         for (int i = 1; i < x1x2; i++) {
             // look at all the squares between x1 and x2 and see if theres a piece on that spot
-            if (Board.getPiece(Position(x1+i , y1-i)) != nullptr) {cout << "Problem: Diagonal 4, " << i << endl; freeway = false;}
+            if (Board.getPiece(Position(x1+i , y1-i)) != nullptr) {freeway = false;}
         }
     }
 
