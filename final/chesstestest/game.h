@@ -61,7 +61,7 @@ public:
     ChessGame();
 
 
-    bool Maketurn(Piece*, Position);
+    bool Maketurn(Piece*, Position, bool);
 
     bool* Checkmove(Position, Piece*);
 
