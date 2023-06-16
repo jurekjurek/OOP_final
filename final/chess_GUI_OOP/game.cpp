@@ -11,7 +11,7 @@ ChessGame::ChessGame() : Black(false), White(true), Board(&White, &Black) {
 }
 
 // The maketurn function merely makes the move that was approved by the checkmove function
-bool ChessGame::Maketurn(Piece* pieceOne, Position pos2, bool manipulate) {
+bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
 
             ChessBoard Board_copy = this->Board;
             Position pos1_copy = pieceOne->getPos();
@@ -27,13 +27,13 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2, bool manipulate) {
 //            Piece* pieceOne = this->Board.getPiece(pos1);
             Piece* pieceTwo = this->Board.getPiece(pos2);
 
-            if (manipulate and pieceOne != nullptr and this->Whoseturn != pieceOne->getIswhite()) {
+            if (pieceOne != nullptr and this->Whoseturn != pieceOne->getIswhite()) {
                 this->error = WRONGCOLOR;
                 return false;
             }
 
 
-            if (pieceOne->getIswhite() == true) {Current = Board.getPlayerWhite(); Other = Board.getPlayerBlack();}
+            if (this->Whoseturn == true) {Current = Board.getPlayerWhite(); Other = Board.getPlayerBlack();}
             else {Other = Board.getPlayerWhite(); Current = Board.getPlayerBlack();}
 
 
@@ -223,15 +223,6 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2, bool manipulate) {
 
 //            cout << "This is a test, where is the Queen of the current Player?? " << this->Current->getQueen()->getPos().getX() << " " << this->Current->getQueen()->getPos().getY() << endl;
 //            cout << "This is a test, where is the Queen of the current Player?? " << this->White.getQueen()->getPos().getX() << " " << this->White.getQueen()->getPos().getY() << endl;
-
-            if (!manipulate) {
-                this->Board = Board_copy;
-                pieceOne->setPos(pos1_copy);
-                if (pieceTwo != nullptr) {
-                    pieceTwo->setIsalive(true);
-                    pieceTwo->setPos(pos2);
-                }
-            }
 
             Board.printBoard();
             return true;
@@ -468,6 +459,9 @@ bool ChessGame::Check(Player* Current, Player* Other)  {
 
 
 bool ChessGame::CheckMate(Player* Current, Player* Other)  {
+    // okay, so what we'll do here is create a copy of the board, manipulate this copy and look if certain moves can be made.
+    // If they cannot be made, checkmate
+
     // only check for the case that current is checking other, because other can not be in check at this point
     if (!Check(Current, Other)) {return false;}
 //    Position kingPos = Other->getKing()->getPos();
@@ -489,11 +483,14 @@ bool ChessGame::CheckMate(Player* Current, Player* Other)  {
             //if (Current->getQueen()->getPos().getX() == 6 and  Current->getQueen()->getPos().getY() == 7) {i = 6; j =5; cout << "now" << endl;}
                 for (Piece* alivepiece : AlivePieces) {
                     if (Checkmove(Position(i,j), alivepiece)[0]) {
-                        if (Current->getQueen()->getPos().getX() == 6 and  Current->getQueen()->getPos().getY() == 7) {
+                        if (Current->getQueen()->getPos().getX() == 6 and  Current->getQueen()->getPos().getY() == 7 and i == 7 and j == 3) {
                             cout << "test" << endl;
                         }
-                        bool ok = Maketurn(alivepiece, Position(i,j), false);
+                        bool ok = Maketurn(alivepiece, Position(i,j));
                         if (ok) {
+//                            if (Current->getQueen()->getPos().getX() == 6 and  Current->getQueen()->getPos().getY() == 7) {
+//                                cout << "test" << endl;
+//                            }
                             cout << "" << endl;
                             return false;
                         }
@@ -502,9 +499,13 @@ bool ChessGame::CheckMate(Player* Current, Player* Other)  {
                 }
         }
     }
+//    if (Current->getQueen()->getPos().getX() == 6 and  Current->getQueen()->getPos().getY() == 7) {
+//        cout << "test" << endl;
+//    }
     cout << "this is after the for loop" << endl;
     // otherwise, it is
-    return true;
+    return false;
+//    return true;
 
 }
 
@@ -651,7 +652,7 @@ void ChessGame::getInput(QString input)
 
         // here, manipulate is true.
 
-        bool ok = this->Maketurn(pieceOne, pos2, true);
+        bool ok = this->Maketurn(pieceOne, pos2);
 
         if (ok) {qDebug() << "Thank you. This is a valid move given the constellation of pieces on the board.";}
 
