@@ -14,10 +14,11 @@ ChessGame::ChessGame() : Black(false), White(true), Board(&White, &Black) {
 bool ChessGame::Maketurn(Piece* pieceOne, Position pos2, bool manipulate) {
 
             ChessBoard Board_copy = this->Board;
+            Position pos1_copy = pieceOne->getPos();
             Player* Current;
             Player* Other;
-            if (this->Whoseturn == true) {Current = Board.getPlayerWhite(); Other = Board.getPlayerBlack();}
-            else {Other = Board.getPlayerWhite(); Current = Board.getPlayerBlack();}
+
+
 
             Position pos1 = Position(pieceOne->getPos().getX(), pieceOne->getPos().getY());
 //            Position pos2 = move.getLast();
@@ -25,6 +26,17 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2, bool manipulate) {
             // get pieces in spot one and two
 //            Piece* pieceOne = this->Board.getPiece(pos1);
             Piece* pieceTwo = this->Board.getPiece(pos2);
+
+            if (manipulate and pieceOne != nullptr and this->Whoseturn != pieceOne->getIswhite()) {
+                this->error = WRONGCOLOR;
+                return false;
+            }
+
+
+            if (pieceOne->getIswhite() == true) {Current = Board.getPlayerWhite(); Other = Board.getPlayerBlack();}
+            else {Other = Board.getPlayerWhite(); Current = Board.getPlayerBlack();}
+
+
 
             // for enpassant and castles later
             int x1 = pos1.getX();
@@ -36,6 +48,7 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2, bool manipulate) {
 
             Move move = Move(pos1, pos2);
 
+            // here, we want to know not if a certain piece can attack this spot, but if a given piece can move to this spot, so we choose [0]
             bool ok = this->Checkmove(pos2, pieceOne)[0];
 
             if (!ok) {qDebug() << "NO VALID MOVE"; return false;}
@@ -43,10 +56,10 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2, bool manipulate) {
             // this is relevant only in the maketurn function because only here we have an actual game flow
             // we acutally have a player that is moving a piece
             // if the color of the current player is not equal to the color of the piece
-            if (pieceOne != nullptr and this->Whoseturn != pieceOne->getIswhite()) {
-                this->error = WRONGCOLOR;
-                return false;
-            }
+//            if (manipulate and pieceOne != nullptr and this->Whoseturn != pieceOne->getIswhite()) {
+//                this->error = WRONGCOLOR;
+//                return false;
+//            }
 
             // THE MOVE HAS BEEN VALIDATED, GO ON TO CAPTURE THE PIECE IN DESTINATION SPOT AND MOVE THE PIECE
 
@@ -166,11 +179,11 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2, bool manipulate) {
             bool kingUnSafe = Check(Other, Current);
 
             // if king is not safe -> abort
-            if (kingUnSafe) {
+             if (kingUnSafe) {
                 pieceOne->setPos(pos1);
                 this->Board.setPiece(pieceOne, pos1);
                 if (pieceTwo != nullptr) {
-//                    pieceTwo->setPos(pos2);
+                    pieceTwo->setPos(pos2);
                     pieceTwo->setIsalive(true);
 
                     this->Board.setPiece(pieceTwo, pos2);
@@ -213,6 +226,11 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2, bool manipulate) {
 
             if (!manipulate) {
                 this->Board = Board_copy;
+                pieceOne->setPos(pos1_copy);
+                if (pieceTwo != nullptr) {
+                    pieceTwo->setIsalive(true);
+                    pieceTwo->setPos(pos2);
+                }
             }
 
             Board.printBoard();
@@ -229,7 +247,11 @@ bool* ChessGame::Checkmove(Position pos2, Piece* pieceOne) {
 //    Position pos2 = move.getLast();
 
     bool* movearray = new bool[2];
+    // is this move allowed to make?
     movearray[0] = true;
+
+    // vs. Can the piece attack this spot?
+    // So, for the pawns, if the spot on the diagonal is empty, the pawn cannot move there, but is attacking the spot!
     movearray[1] = true;
 
     // MAKE A LAMBDA FUNCTION OUT OF THIS
@@ -453,13 +475,23 @@ bool ChessGame::CheckMate(Player* Current, Player* Other)  {
 
     bool attack = false;
 
+    cout << "is this checkmate?" << endl;
 
     cout << "ThiSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASIDGKDFKGJK" << endl;
     // here maybe a lambda function to iterate over all possible positions the king can be in
+
+//    if (Current->getQueen()->getPos().getX() == 7 and  Current->getQueen()->getPos().getY() == 4) {
+//        cout << "Now" << endl;
+//    }
+
     for (int i = 0; i<8; i++) {
         for (int j = 0; j<8; j++) {
+            //if (Current->getQueen()->getPos().getX() == 6 and  Current->getQueen()->getPos().getY() == 7) {i = 6; j =5; cout << "now" << endl;}
                 for (Piece* alivepiece : AlivePieces) {
                     if (Checkmove(Position(i,j), alivepiece)[0]) {
+                        if (Current->getQueen()->getPos().getX() == 6 and  Current->getQueen()->getPos().getY() == 7) {
+                            cout << "test" << endl;
+                        }
                         bool ok = Maketurn(alivepiece, Position(i,j), false);
                         if (ok) {
                             cout << "" << endl;
@@ -596,6 +628,10 @@ void ChessGame::getInput(QString input)
         Position pos1 = Position(x1,y1);
         Position pos2 = Position(x2,y2);
 
+        if (pos1.getX() == 6 and pos1.getY() == 6) {
+            cout << "test" << endl;
+        }
+
         Piece* pieceOne = Board.getPiece(pos1);
 //        this->White = Board.getPlayerWhite();
 //        this->Black = Board.getPlayerBlack();
@@ -614,6 +650,7 @@ void ChessGame::getInput(QString input)
 
 
         // here, manipulate is true.
+
         bool ok = this->Maketurn(pieceOne, pos2, true);
 
         if (ok) {qDebug() << "Thank you. This is a valid move given the constellation of pieces on the board.";}
@@ -740,6 +777,7 @@ void ChessGame::getInput(QString input)
         this->enpassant = false;
 
         resetMoves();
+        this->Board.printBoard();
     }
 
 }
