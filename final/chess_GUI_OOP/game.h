@@ -50,6 +50,7 @@ private:
     vector<int> move_list;
     bool enpassant = false;
     Castles castlestate = NOCASTLES;
+    bool Promotion = false;
 
     // for the QT part
     std::string move1;

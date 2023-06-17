@@ -20,7 +20,7 @@ void Display::setup()
     {
         QString spacename = spaces[i];
         Space * s = new Space(j,k);
-        s->setRect(j,k,50,50); //x loc, y loc, width, height
+        s->setRect(j,k,60,60); //x loc, y loc, width, height
 
         // Color squares
         if (i % 8 == 0)
@@ -30,7 +30,7 @@ void Display::setup()
 
         if (black)
         {
-            s->setBrush(Qt::lightGray);
+            s->setBrush(Qt::darkGreen);
         }
         black = !black;
 
@@ -40,69 +40,70 @@ void Display::setup()
         // Connect Space signal with Game slot
         QObject::connect(s, SIGNAL(sendSignal(QString)), &game, SLOT(getInput(QString)));
 
-        j += 50;
-        if (j == 400)
+        j += 60;
+        if (j == 480)
         {
             j = 0;
-            k += 50;
+            k += 60;
         }
     }
 
     QString matchText = "This is a chessgame!";
     QGraphicsTextItem * match = new QGraphicsTextItem();
     match->setPlainText(matchText);
-    match->setPos(425, 0);
+    match->setPos(500, 0);
     DisplayScene->addItem(match);
 
     QString toMove = "White's turn";
     turn = new QGraphicsTextItem();
     turn->setPlainText(toMove);
-    turn->setPos(425, 100);
+    turn->setPos(500, 100);
     DisplayScene->addItem(turn);
 
     QString state = "";
     check = new QGraphicsTextItem();
     check->setPlainText(state);
-    check->setPos(425, 200);
+    check->setPos(500, 200);
     DisplayScene->addItem(check);
 }
 
 void Display::placePieces()
 {
+    // pictures from https://github.com/EmmanuelleBouchard/chessGame/tree/master/image
     qDebug() << "Placing Pieces";
-    spaceList[0]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/BlackRook.png");
-    spaceList[1]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/BlackKnight.png");
-    spaceList[2]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/BlackBishop.png");
-    spaceList[3]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/BlackQueen.png");
-    spaceList[4]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/BlackKing.png");
-    spaceList[5]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/BlackBishop.png");
-    spaceList[6]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/BlackKnight.png");
-    spaceList[7]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/BlackRook.png");
-    spaceList[8]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/BlackPawn.png");
-    spaceList[9]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/BlackPawn.png");
-    spaceList[10]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/BlackPawn.png");
-    spaceList[11]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/BlackPawn.png");
-    spaceList[12]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/BlackPawn.png");
-    spaceList[13]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/BlackPawn.png");
-    spaceList[14]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/BlackPawn.png");
-    spaceList[15]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/BlackPawn.png");
+    spaceList[0]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_rook.png");
+    spaceList[1]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_knight.png");
+    spaceList[2]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_bishop.png");
+    spaceList[3]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_queen.png");
+    spaceList[4]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_king.png");
+    spaceList[5]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_bishop.png");
+    spaceList[6]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_knight.png");
+    spaceList[7]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_rook.png");
+    spaceList[8]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
+    spaceList[9]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
+    spaceList[10]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
+    spaceList[11]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
+    spaceList[12]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
+    spaceList[13]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
+    spaceList[14]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
+    spaceList[15]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
 
-    spaceList[48]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/WhitePawn.png");
-    spaceList[49]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/WhitePawn.png");
-    spaceList[50]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/WhitePawn.png");
-    spaceList[51]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/WhitePawn.png");
-    spaceList[52]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/WhitePawn.png");
-    spaceList[53]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/WhitePawn.png");
-    spaceList[54]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/WhitePawn.png");
-    spaceList[55]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/WhitePawn.png");
-    spaceList[56]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/WhiteRook.png");
-    spaceList[57]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/WhiteKnight.png");
-    spaceList[58]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/WhiteBishop.png");
-    spaceList[59]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/WhiteQueen.png");
-    spaceList[60]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/WhiteKing.png");
-    spaceList[61]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/WhiteBishop.png");
-    spaceList[62]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/WhiteKnight.png");
-    spaceList[63]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/WhiteRook.png");
+    spaceList[48]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
+    spaceList[49]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
+    spaceList[50]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
+    spaceList[51]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
+    spaceList[52]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
+    spaceList[53]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
+    spaceList[54]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
+    spaceList[55]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
+    spaceList[56]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_rook.png");
+    spaceList[57]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_knight.png");
+    spaceList[58]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_bishop.png");
+    spaceList[59]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_queen.png");
+    spaceList[60]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_king.png");
+    spaceList[61]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_bishop.png");
+    spaceList[62]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_knight.png");
+    spaceList[63]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_rook.png");
 }
 
 
@@ -191,6 +192,7 @@ void Display::getResponse(QString response)
             spaceList[2]->setImage(tempKing);
             spaceList[3]->setImage(tempRook);
         }
+
         else
         {
             QString firstSpace = "";
@@ -217,8 +219,10 @@ void Display::getResponse(QString response)
                 }
             }
 
+            // check if enpassant, format 1111, Enpassant
             if (response[6] == "E") {
                 QString Enpassantspace = "";
+                // the enpassant space, so the space of the piece that is going to be erased from the board is the x component of the second square (response(2)) and the y component of the first square (response[1])
                 Enpassantspace += response[2];
                 Enpassantspace += response[1];
                 qDebug() << "The display function says: Enpassant is happening!";
@@ -228,6 +232,25 @@ void Display::getResponse(QString response)
                     if (spaceList[i]->getName() == Enpassantspace)
                     {
                         spaceList[i]->clearImage();
+                    }
+                }
+            }
+            if (response[6] == "P") {
+                QString Promotionspace = "";
+                Promotionspace += response[2];
+                Promotionspace += response[3];
+                qDebug() << "The display function says: Enpassant is happening!";
+                QString temp;
+                for (int i=0; i<spaceList.length(); i++ )
+                {
+                    if (spaceList[i]->getName() == Promotionspace)
+                    {
+                        if (turnColor == WHITE) {
+                            spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/BlackQueen.png");
+                        }
+                        else {
+                            spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/WhiteQueen.png");
+                        }
                     }
                 }
             }

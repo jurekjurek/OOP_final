@@ -741,6 +741,19 @@ void ChessGame::getInput(QString input)
             sendStr += part3;
             emit sendResponse(sendStr);
         }
+
+        if (this->Promotion) {
+            qDebug() << "There is a promotion happening.";
+            QString sendStr = "";
+            QString part1 = QString::fromStdString(move1);
+            QString part2 = QString::fromStdString(move2);
+            sendStr += part1;
+            sendStr += part2;
+            QString part3 = ", Promotion";
+            sendStr += part3;
+            emit sendResponse(sendStr);
+        }
+
         if (this->castlestate == WHITEKINGSIDE) {emit sendResponse("Castle White Kingside");}
         else if (this->castlestate == WHITEQUEENSIDE) {emit sendResponse("Castle White Queenside");}
         else if (this->castlestate == BLACKKINGSIDE) {emit sendResponse("Castle Black Kingside");}
@@ -764,6 +777,7 @@ void ChessGame::getInput(QString input)
         }
 
 
+
         this->move_list.push_back(move.getFirst().getX());
         this->move_list.push_back(move.getFirst().getY());
         this->move_list.push_back(move.getLast().getX());
@@ -773,6 +787,7 @@ void ChessGame::getInput(QString input)
         // set enpassant to false again
         qDebug() << "We set enpassant to false again";
         this->enpassant = false;
+        this->Promotion = false;
 
         this->castlestate = NOCASTLES;
         this->enpassant = false;
