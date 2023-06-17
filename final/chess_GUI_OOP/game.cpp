@@ -217,8 +217,9 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
     //            this->Board = Board;
 
             // check if Pawn can be promoted
-            if (pieceOne->Piecetype() == PAWN and pieceOne->getPromotion()) {
+            if (pieceOne->Piecetype() == PAWN and pos2.getY() == 7) {
                 this->promotion(pos2, Current);
+                this->Promotion = true;
             }
 
 //            cout << "This is a test, where is the Queen of the current Player?? " << this->Current->getQueen()->getPos().getX() << " " << this->Current->getQueen()->getPos().getY() << endl;
@@ -537,20 +538,22 @@ bool ChessGame::StaleMate() {
 
 
 void ChessGame::promotion(Position pos, Player* Current)  {
-    int promotion_type;
+//    int promotion_type;
     cout << "Your pawn can be promoted. Please provide the peace you want to promote to. Provide a number as follows: " << endl;
     cout << "Queen: 1" << endl << "Rook: 2" << endl << "Knight: 3" << endl << "Bishop: 4" << endl;
-    cin >> promotion_type;
-    switch (promotion_type) {
-    case 1:
-        Board.setPiece(Current->getQueen(), pos);
-    case 2:
-        Board.setPiece(Current->getRook(0), pos); // Board.setPiece(Current->getRook(this->promotion_count + 3), pos, current);
-    case 3:
-        Board.setPiece(Current->getKnight(0), pos);
-    case 4:
-        Board.setPiece(Current->getBishop(0), pos);
-    }
+//    cin >> promotion_type;
+//    switch (promotion_type) {
+//    case 1:
+//        Board.setPiece(Current->getQueen(), pos);
+//    case 2:
+//        Board.setPiece(Current->getRook(0), pos); // Board.setPiece(Current->getRook(this->promotion_count + 3), pos, current);
+//    case 3:
+//        Board.setPiece(Current->getKnight(0), pos);
+//    case 4:
+//        Board.setPiece(Current->getBishop(0), pos);
+//    }
+    // for now, only promote to a queen:
+    Board.setPiece(Current->getQueen(), pos);
 }
 
 
@@ -729,6 +732,7 @@ void ChessGame::getInput(QString input)
         // after white, it's black and after black, it's white.
         this->Whoseturn = !Whoseturn;
 
+        cout << "TESTESTESTESTESTESTEST:::" << this->enpassant << this->Promotion << endl;
 
         // the provided move was valid. Tell the gui to show the move on the board.
         if (this->enpassant) {
@@ -742,7 +746,7 @@ void ChessGame::getInput(QString input)
             emit sendResponse(sendStr);
         }
 
-        if (this->Promotion) {
+        else if (this->Promotion) {
             qDebug() << "There is a promotion happening.";
             QString sendStr = "";
             QString part1 = QString::fromStdString(move1);
@@ -754,7 +758,7 @@ void ChessGame::getInput(QString input)
             emit sendResponse(sendStr);
         }
 
-        if (this->castlestate == WHITEKINGSIDE) {emit sendResponse("Castle White Kingside");}
+        else if (this->castlestate == WHITEKINGSIDE) {emit sendResponse("Castle White Kingside");}
         else if (this->castlestate == WHITEQUEENSIDE) {emit sendResponse("Castle White Queenside");}
         else if (this->castlestate == BLACKKINGSIDE) {emit sendResponse("Castle Black Kingside");}
         else if (this->castlestate == BLACKQUEENSIDE) {emit sendResponse("Castle Black Queenside");}

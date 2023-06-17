@@ -246,10 +246,10 @@ void Display::getResponse(QString response)
                     if (spaceList[i]->getName() == Promotionspace)
                     {
                         if (turnColor == WHITE) {
-                            spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/BlackQueen.png");
+                            spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_queen.png");
                         }
                         else {
-                            spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/gui_first_try/50px/WhiteQueen.png");
+                            spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_queen.png");
                         }
                     }
                 }

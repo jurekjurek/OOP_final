@@ -14,6 +14,8 @@ void Space::mousePressEvent(QGraphicsSceneMouseEvent *ev){
     if(ev->buttons() == Qt::LeftButton){
         qDebug() << "You clicked " << name;
     }
+    // this sendSignal command directly gets transfered to the game
+    // so I could also
     emit sendSignal(name);
 }
 
