@@ -22,7 +22,7 @@ ChessBoard::ChessBoard(Player *white, Player *black)  {
     Board[0][0] = White->getRook(0);
     Board[1][0] = White->getKnight(0);
     Board[2][0] = White->getBishop(0);
-    Board[3][0] = White->getQueen();
+    Board[3][0] = White->getQueen(0);
     Board[4][0] = White->getKing();
     Board[5][0] = White->getBishop(1);
     Board[6][0] = White->getKnight(1);
@@ -43,7 +43,7 @@ ChessBoard::ChessBoard(Player *white, Player *black)  {
     Board[0][7] = Black->getRook(0);
     Board[1][7] = Black->getKnight(0);
     Board[2][7] = Black->getBishop(0);
-    Board[3][7] = Black->getQueen();
+    Board[3][7] = Black->getQueen(0);
     Board[4][7] = Black->getKing();
     Board[5][7] = Black->getBishop(1);
     Board[6][7] = Black->getKnight(1);
@@ -76,7 +76,7 @@ ChessBoard::ChessBoard()  {
     Board[0][0] = White->getRook(0);
     Board[1][0] = White->getKnight(0);
     Board[2][0] = White->getBishop(0);
-    Board[3][0] = White->getQueen();
+    Board[3][0] = White->getQueen(0);
     Board[4][0] = White->getKing();
     Board[5][0] = White->getBishop(1);
     Board[6][0] = White->getKnight(1);
@@ -97,7 +97,7 @@ ChessBoard::ChessBoard()  {
     Board[0][7] = Black->getRook(0);
     Board[1][7] = Black->getKnight(0);
     Board[2][7] = Black->getBishop(0);
-    Board[3][7] = Black->getQueen();
+    Board[3][7] = Black->getQueen(0);
     Board[4][7] = Black->getKing();
     Board[5][7] = Black->getBishop(1);
     Board[6][7] = Black->getKnight(1);
@@ -175,27 +175,27 @@ void ChessBoard::setPiece(Piece* piece, Position pos) {
     else if (piece->getIswhite()) {
         if (piece->Piecetype() == KING) {
             this->Board[pos.getX()][pos.getY()] = this->White->getKing();
-            this->White->getKing()->setPos(pos);
+//            this->White->getKing()->setPos(pos);
         }
         else if (piece->Piecetype() == QUEEN) {
-            this->Board[pos.getX()][pos.getY()] = this->White->getQueen();
-            this->White->getQueen()->setPos(pos);
+            this->Board[pos.getX()][pos.getY()] = this->White->getQueen(0);
+//            this->White->getQueen(0)->setPos(pos);
         }
         else if (piece->Piecetype() == ROOK) {
             this->Board[pos.getX()][pos.getY()] = this->White->getRook(piece->getPieceNo());
-            this->White->getRook(piece->getPieceNo())->setPos(pos);
+//            this->White->getRook(piece->getPieceNo())->setPos(pos);
         }
         else if (piece->Piecetype() == KNIGHT) {
             this->Board[pos.getX()][pos.getY()] = this->White->getKnight(piece->getPieceNo());
-            this->White->getKnight(piece->getPieceNo())->setPos(pos);
+//            this->White->getKnight(piece->getPieceNo())->setPos(pos);
         }
         else if (piece->Piecetype() == BISHOP) {
             this->Board[pos.getX()][pos.getY()] = this->White->getBishop(piece->getPieceNo());
-            this->White->getBishop(piece->getPieceNo())->setPos(pos);
+//            this->White->getBishop(piece->getPieceNo())->setPos(pos);
         }
         else if (piece->Piecetype() == PAWN) {
             this->Board[pos.getX()][pos.getY()] = this->White->getPawn(piece->getPieceNo());
-            this->White->getPawn(piece->getPieceNo())->setPos(pos);
+//            this->White->getPawn(piece->getPieceNo())->setPos(pos);
         }
     }
 
@@ -205,8 +205,8 @@ void ChessBoard::setPiece(Piece* piece, Position pos) {
             this->Black->getKing()->setPos(pos);
         }
         else if (piece->Piecetype() == QUEEN) {
-            this->Board[pos.getX()][pos.getY()] = this->Black->getQueen();
-            this->Black->getQueen()->setPos(pos);
+            this->Board[pos.getX()][pos.getY()] = this->Black->getQueen(0);
+            this->Black->getQueen(0)->setPos(pos);
         }
         else if (piece->Piecetype() == ROOK) {
             this->Board[pos.getX()][pos.getY()] = this->Black->getRook(piece->getPieceNo());

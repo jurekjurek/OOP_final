@@ -11,10 +11,10 @@ class Player {
 private:
     bool Iswhite;
     King* KinG;
-    Queen* QueeN;
-    Rook* Rooks[2];
-    Bishop* Bishops[2];
-    Knight* Knights[2];
+    Queen* Queens[3];
+    Rook* Rooks[4];
+    Bishop* Bishops[4];
+    Knight* Knights[4];
     Pawn* Pawns[8];
 
 public:
@@ -34,7 +34,7 @@ public:
 
     King* getKing();
 
-    Queen* getQueen();
+    Queen* getQueen(int);
 
     // For these Pieces, we have two, so we have to pick a piece, each piece has a number assigned to it
     Rook* getRook(int);

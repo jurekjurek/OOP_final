@@ -6,33 +6,29 @@
 
 #include <QGraphicsScene>
 #include <QObject>
+#include <QPushButton>
+#include <QWidget>
 
 
 class Display: public QObject
 {
+    // if this line of code is included, it tells us that we can use signals and slots for our widgets
+    // Basically, this is here so C++ understands all the stuff that we write
     Q_OBJECT
 private:
+    // All QT logic goes inside the scene, we always need a scene
     QGraphicsScene * DisplayScene;
+    // Of course we have to connect the game to QT somehow, get Game in there
     ChessGame game;
+    // A list containing all the spaces, derived from class Space
     QList<Space *> spaceList;
     QString move;
     void setup();
     void placePieces();
+    void resetColor();
     Color turnColor;
     QGraphicsTextItem * turn;
-    QGraphicsTextItem * check;
-
-//    const QString spaces[64] =
-//    {
-//        "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8",
-//        "a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6",
-//        "a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6",
-//        "a5", "b5", "c5", "d5", "e5", "f5", "g5", "h5",
-//        "a4", "b4", "c4", "d4", "e4", "f4", "g4", "h4",
-//        "a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3",
-//        "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2",
-//        "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"
-//    };
+    QGraphicsTextItem * alert;
 
     const QString spaces[64] =
     {
@@ -46,7 +42,15 @@ private:
         "00", "10", "20", "30", "40", "50", "60", "70"
     };
 
+
+    // for the different promotion possibilities
+    Space *button1;
+    Space *button2;
+    Space *button3;
+    Space *button4;
+
 public:
+    // constructor
     Display();
     QGraphicsScene* getScene();
 

@@ -96,6 +96,10 @@ public:
 
     PieceType Piecetype() override;
 
+    void setPieceNo(int) override;
+
+    int getPieceNo() override;
+
 };
 
 

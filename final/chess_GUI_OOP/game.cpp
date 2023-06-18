@@ -13,8 +13,13 @@ ChessGame::ChessGame() : Black(false), White(true), Board(&White, &Black) {
 // The maketurn function merely makes the move that was approved by the checkmove function
 bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
 
-            ChessBoard Board_copy = this->Board;
-            Position pos1_copy = pieceOne->getPos();
+            if (pieceOne == nullptr) {
+                this->error = NOPIECE;
+                return false;
+            }
+
+//            ChessBoard Board_copy = this->Board;
+//            Position pos1_copy = pieceOne->getPos();
             Player* Current;
             Player* Other;
 
@@ -26,11 +31,6 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
             // get pieces in spot one and two
 //            Piece* pieceOne = this->Board.getPiece(pos1);
             Piece* pieceTwo = this->Board.getPiece(pos2);
-
-            if (pieceOne != nullptr and this->Whoseturn != pieceOne->getIswhite()) {
-                this->error = WRONGCOLOR;
-                return false;
-            }
 
 
             if (this->Whoseturn == true) {Current = Board.getPlayerWhite(); Other = Board.getPlayerBlack();}
@@ -51,21 +51,20 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
             // here, we want to know not if a certain piece can attack this spot, but if a given piece can move to this spot, so we choose [0]
             bool ok = this->Checkmove(pos2, pieceOne)[0];
 
+
+
             if (!ok) {qDebug() << "NO VALID MOVE"; return false;}
 
-            // this is relevant only in the maketurn function because only here we have an actual game flow
-            // we acutally have a player that is moving a piece
-            // if the color of the current player is not equal to the color of the piece
-//            if (manipulate and pieceOne != nullptr and this->Whoseturn != pieceOne->getIswhite()) {
-//                this->error = WRONGCOLOR;
-//                return false;
-//            }
+            if (this->Whoseturn != pieceOne->getIswhite()) {
+                this->error = WRONGCOLOR;
+                return false;
+            }
 
             // THE MOVE HAS BEEN VALIDATED, GO ON TO CAPTURE THE PIECE IN DESTINATION SPOT AND MOVE THE PIECE
 
             //  if there is a piece at the second spot, kill it
             if (pieceTwo != nullptr) {
-                pieceTwo->setPos(Position(8,8));
+//                pieceTwo->setPos(Position(8,8));
                 pieceTwo->setIsalive(false);
 //                Board.setPiece(nullptr, pos2, Current);
             }
@@ -168,8 +167,7 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
             this->Board.setPiece(pieceOne, pos2);
             this->Board.setPiece(nullptr, pos1);
 
-            // PIECE ONE GETS A NEW POSITION
-//            pieceOne->setPos(pos2);
+            pieceOne->setPos(pos2);
 
 
             // KINGUNSAFE
@@ -183,12 +181,14 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
                 pieceOne->setPos(pos1);
                 this->Board.setPiece(pieceOne, pos1);
                 if (pieceTwo != nullptr) {
-                    pieceTwo->setPos(pos2);
+//                    pieceTwo->setPos(pos2);
                     pieceTwo->setIsalive(true);
 
                     this->Board.setPiece(pieceTwo, pos2);
                 }
-                else {this->Board.setPiece(nullptr, pos2);}
+                else {
+                    this->Board.setPiece(nullptr, pos2);
+                }
                 this->error = KINGUNSAFE;
                 return false;
             }
@@ -218,12 +218,9 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
 
             // check if Pawn can be promoted
             if (pieceOne->Piecetype() == PAWN and pos2.getY() == 7) {
-                this->promotion(pos2, Current);
+                this->promotion(pos2, Current, "");
                 this->Promotion = true;
             }
-
-//            cout << "This is a test, where is the Queen of the current Player?? " << this->Current->getQueen()->getPos().getX() << " " << this->Current->getQueen()->getPos().getY() << endl;
-//            cout << "This is a test, where is the Queen of the current Player?? " << this->White.getQueen()->getPos().getX() << " " << this->White.getQueen()->getPos().getY() << endl;
 
             Board.printBoard();
             return true;
@@ -266,13 +263,13 @@ bool* ChessGame::Checkmove(Position pos2, Piece* pieceOne) {
 //    Piece* pieceOne = this->Board.getPiece(pos1);
     Piece* pieceTwo = this->Board.getPiece(pos2);
 
-    // if there is no piece at spot one
-    if (pieceOne == nullptr) {
-        this->error = NOPIECE;
-//        return false;
-        movearray[0] = false;
-        movearray[1] = false;
-    }
+//    // if there is no piece at spot one
+//    if (pieceOne == nullptr) {
+//        this->error = NOPIECE;
+////        return false;
+//        movearray[0] = false;
+//        movearray[1] = false;
+//    }
 
 //    // if the color of the current player is not equal to the color of the piece
 //    if (this->Whoseturn != pieceOne->getIswhite()) {
@@ -465,49 +462,50 @@ bool ChessGame::CheckMate(Player* Current, Player* Other)  {
 
     // only check for the case that current is checking other, because other can not be in check at this point
     if (!Check(Current, Other)) {return false;}
-//    Position kingPos = Other->getKing()->getPos();
     vector<Piece*> AlivePieces = Other->getAlivePieces();
 
-    bool attack = false;
-
-    cout << "is this checkmate?" << endl;
-
-    cout << "ThiSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASIDGKDFKGJK" << endl;
-    // here maybe a lambda function to iterate over all possible positions the king can be in
-
-//    if (Current->getQueen()->getPos().getX() == 7 and  Current->getQueen()->getPos().getY() == 4) {
-//        cout << "Now" << endl;
-//    }
+    bool checkMate = true;
 
     for (int i = 0; i<8; i++) {
         for (int j = 0; j<8; j++) {
-            //if (Current->getQueen()->getPos().getX() == 6 and  Current->getQueen()->getPos().getY() == 7) {i = 6; j =5; cout << "now" << endl;}
                 for (Piece* alivepiece : AlivePieces) {
+                    if (i == 4 and j == 6 and Current->getQueen(0)->getPos().getX() == 4 and Current->getQueen(0)->getPos().getY() == 6) {
+                        cout << "test" << endl;
+                    }
+                    Position alivepiece_pos = alivepiece->getPos();
                     if (Checkmove(Position(i,j), alivepiece)[0]) {
-                        if (Current->getQueen()->getPos().getX() == 6 and  Current->getQueen()->getPos().getY() == 7 and i == 7 and j == 3) {
-                            cout << "test" << endl;
+
+                        Piece* pieceTwo = this->Board.getPiece(Position(i,j));
+                        if (pieceTwo != nullptr) {
+                            pieceTwo->setIsalive(false);
                         }
-                        bool ok = Maketurn(alivepiece, Position(i,j));
-                        if (ok) {
-//                            if (Current->getQueen()->getPos().getX() == 6 and  Current->getQueen()->getPos().getY() == 7) {
-//                                cout << "test" << endl;
-//                            }
-                            cout << "" << endl;
-                            return false;
+//                        Current->
+                        // erase the space that the piece is in and put it to the other space
+                        this->Board.setPiece(nullptr, alivepiece->getPos());
+                        this->Board.setPiece(alivepiece, Position(i,j));
+//                        alivepiece->setPos(Position(i,j));
+
+                        if (!Check(Current, Other)) {
+                            checkMate = false;
                         }
 
+
+
+                        Board.setPiece(alivepiece, alivepiece_pos);
+
+                        if (pieceTwo != nullptr) {
+                            Board.setPiece(pieceTwo, Position(i,j));
+                            pieceTwo->setIsalive(true);
+                        }
+                        else {
+                            Board.setPiece(nullptr, Position(i,j));
+                        }
                     }
                 }
         }
     }
-//    if (Current->getQueen()->getPos().getX() == 6 and  Current->getQueen()->getPos().getY() == 7) {
-//        cout << "test" << endl;
-//    }
-    cout << "this is after the for loop" << endl;
-    // otherwise, it is
-    return false;
-//    return true;
-
+    return checkMate;
+//    return false;
 }
 
 
@@ -537,23 +535,23 @@ bool ChessGame::StaleMate() {
 
 
 
-void ChessGame::promotion(Position pos, Player* Current)  {
-//    int promotion_type;
-    cout << "Your pawn can be promoted. Please provide the peace you want to promote to. Provide a number as follows: " << endl;
-    cout << "Queen: 1" << endl << "Rook: 2" << endl << "Knight: 3" << endl << "Bishop: 4" << endl;
-//    cin >> promotion_type;
-//    switch (promotion_type) {
-//    case 1:
-//        Board.setPiece(Current->getQueen(), pos);
-//    case 2:
-//        Board.setPiece(Current->getRook(0), pos); // Board.setPiece(Current->getRook(this->promotion_count + 3), pos, current);
-//    case 3:
-//        Board.setPiece(Current->getKnight(0), pos);
-//    case 4:
-//        Board.setPiece(Current->getBishop(0), pos);
-//    }
-    // for now, only promote to a queen:
-    Board.setPiece(Current->getQueen(), pos);
+void ChessGame::promotion(Position pos, Player* Current, QString inputstring)  {
+
+    // set default to Queen
+    Board.setPiece(Current->getQueen(1), pos);
+    if (inputstring == "Queen") {
+        Board.setPiece(Current->getQueen(1), pos);
+    }
+    if (inputstring == "Knight") {
+        Board.setPiece(Current->getKnight(2), pos);
+    }
+    if (inputstring == "Bishop") {
+        Board.setPiece(Current->getBishop(2), pos);
+    }
+    if (inputstring == "Rook") {
+        Board.setPiece(Current->getRook(2), pos);
+    }
+
 }
 
 
@@ -585,7 +583,7 @@ void ChessGame::getInput(QString input)
         move1 = input.toStdString();
     }
     // If this is the second click, store it in move2
-    else
+    else if (move2 == "")
     {
 //        qDebug() << "Second position recognized.";
         move2 = input.toStdString();
@@ -655,6 +653,7 @@ void ChessGame::getInput(QString input)
 
         // here, manipulate is true.
 
+
         bool ok = this->Maketurn(pieceOne, pos2);
 
         if (ok) {qDebug() << "Thank you. This is a valid move given the constellation of pieces on the board.";}
@@ -714,12 +713,7 @@ void ChessGame::getInput(QString input)
 
 
 
-//         CHECKMATE
-        bool gameOver = this->CheckMate(Current, Other);
-        if (gameOver) {
-            if (this->Whoseturn) {emit sendResponse("Checkmate."); return;}
-            else {emit sendResponse("Checkmate. Black wins."); return;}
-        }
+
 
 
 
@@ -781,6 +775,14 @@ void ChessGame::getInput(QString input)
         }
 
 
+        //         CHECKMATE
+        bool gameOver = this->CheckMate(Current, Other);
+        if (gameOver) {
+            if (this->Whoseturn) {emit sendResponse("Checkmate"); resetMoves(); return;}
+            else {emit sendResponse("Checkmate"); resetMoves(); return;}
+        }
+
+
 
         this->move_list.push_back(move.getFirst().getX());
         this->move_list.push_back(move.getFirst().getY());
@@ -798,6 +800,11 @@ void ChessGame::getInput(QString input)
 
         resetMoves();
         this->Board.printBoard();
+    }
+    else {
+        if (input == "Queen") {
+//            this->promotion();
+        }
     }
 
 }

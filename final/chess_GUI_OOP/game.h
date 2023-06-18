@@ -82,7 +82,7 @@ public:
     bool StaleMate();
 
 
-    void promotion(Position, Player*);
+    void promotion(Position, Player*, QString inputstring);
 
 
 

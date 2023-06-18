@@ -150,6 +150,15 @@ PieceType Queen::Piecetype()  {
     return QUEEN;
 }
 
+void Queen::setPieceNo(int i)  {
+    this->PieceNo = i;
+}
+
+
+int Queen::getPieceNo()  {
+    return this->PieceNo;
+}
+
 
 // Rook
 

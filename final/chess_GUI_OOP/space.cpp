@@ -1,5 +1,6 @@
 #include "space.h"
 
+// Everytime we construct an instance of Space we assign a certain X and Y coordinate to it
 Space::Space(int x, int y)
 {
     xCoord = x;
@@ -9,13 +10,13 @@ Space::Space(int x, int y)
     piece.setParentItem(this);
 }
 
-// When clicked, space name is sent to Display's slot
+// When clicked, space name is sent to Display slot
 void Space::mousePressEvent(QGraphicsSceneMouseEvent *ev){
     if(ev->buttons() == Qt::LeftButton){
         qDebug() << "You clicked " << name;
+        this->setBrush(Qt::red);
     }
     // this sendSignal command directly gets transfered to the game
-    // so I could also
     emit sendSignal(name);
 }
 
