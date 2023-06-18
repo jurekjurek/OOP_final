@@ -469,9 +469,6 @@ bool ChessGame::CheckMate(Player* Current, Player* Other)  {
     for (int i = 0; i<8; i++) {
         for (int j = 0; j<8; j++) {
                 for (Piece* alivepiece : AlivePieces) {
-                    if (i == 4 and j == 6 and Current->getQueen(0)->getPos().getX() == 4 and Current->getQueen(0)->getPos().getY() == 6) {
-                        cout << "test" << endl;
-                    }
                     Position alivepiece_pos = alivepiece->getPos();
                     if (Checkmove(Position(i,j), alivepiece)[0]) {
 
@@ -538,20 +535,26 @@ bool ChessGame::StaleMate() {
 void ChessGame::promotion(Position pos, Player* Current, QString inputstring)  {
 
     // set default to Queen
-    Board.setPiece(Current->getQueen(1), pos);
-    if (inputstring == "Queen") {
-        Board.setPiece(Current->getQueen(1), pos);
-    }
+
     if (inputstring == "Knight") {
         Board.setPiece(Current->getKnight(2), pos);
+//        Current->getKnight(2)->setPos(pos);
+        Current->getKnight(2)->setIsalive(true);
     }
     if (inputstring == "Bishop") {
         Board.setPiece(Current->getBishop(2), pos);
+        Current->getBishop(2)->setIsalive(true);
     }
     if (inputstring == "Rook") {
         Board.setPiece(Current->getRook(2), pos);
+        Current->getRook(2)->setIsalive(true);
     }
-
+    else {
+        Board.setPiece(Current->getQueen(1), pos);
+//        Current->getQueen(1)->setPos(pos);
+        Board.getPiece(pos)->setPos(pos);
+        Current->getQueen(1)->setIsalive(true);
+    }
 }
 
 
@@ -634,6 +637,8 @@ void ChessGame::getInput(QString input)
             cout << "test" << endl;
         }
 
+
+
         Piece* pieceOne = Board.getPiece(pos1);
 //        this->White = Board.getPlayerWhite();
 //        this->Black = Board.getPlayerBlack();
@@ -648,7 +653,9 @@ void ChessGame::getInput(QString input)
 //        if (this->Whoseturn == true) {cout << "WHITEE" << endl; this->White = this->Current; this->Black = this->Other;}
 //        else {cout << "BLACKK" << endl; this->White = this->Other; this->Black = this->Current;}
 
-
+        if (Current->getQueen(1)->getIsalive()) {
+            cout << "test" << endl;
+        }
 
 
         // here, manipulate is true.
@@ -801,11 +808,11 @@ void ChessGame::getInput(QString input)
         resetMoves();
         this->Board.printBoard();
     }
-    else {
-        if (input == "Queen") {
-//            this->promotion();
-        }
-    }
+//    else {
+//        if (input == "Queen") {
+////            this->promotion();
+//        }
+//    }
 
 }
 

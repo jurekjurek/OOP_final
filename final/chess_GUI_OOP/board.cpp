@@ -175,27 +175,27 @@ void ChessBoard::setPiece(Piece* piece, Position pos) {
     else if (piece->getIswhite()) {
         if (piece->Piecetype() == KING) {
             this->Board[pos.getX()][pos.getY()] = this->White->getKing();
-//            this->White->getKing()->setPos(pos);
+            this->White->getKing()->setPos(pos);
         }
         else if (piece->Piecetype() == QUEEN) {
-            this->Board[pos.getX()][pos.getY()] = this->White->getQueen(0);
-//            this->White->getQueen(0)->setPos(pos);
+            this->Board[pos.getX()][pos.getY()] = this->White->getQueen(piece->getPieceNo());
+            this->White->getQueen(piece->getPieceNo())->setPos(pos);
         }
         else if (piece->Piecetype() == ROOK) {
             this->Board[pos.getX()][pos.getY()] = this->White->getRook(piece->getPieceNo());
-//            this->White->getRook(piece->getPieceNo())->setPos(pos);
+            this->White->getRook(piece->getPieceNo())->setPos(pos);
         }
         else if (piece->Piecetype() == KNIGHT) {
             this->Board[pos.getX()][pos.getY()] = this->White->getKnight(piece->getPieceNo());
-//            this->White->getKnight(piece->getPieceNo())->setPos(pos);
+            this->White->getKnight(piece->getPieceNo())->setPos(pos);
         }
         else if (piece->Piecetype() == BISHOP) {
             this->Board[pos.getX()][pos.getY()] = this->White->getBishop(piece->getPieceNo());
-//            this->White->getBishop(piece->getPieceNo())->setPos(pos);
+            this->White->getBishop(piece->getPieceNo())->setPos(pos);
         }
         else if (piece->Piecetype() == PAWN) {
             this->Board[pos.getX()][pos.getY()] = this->White->getPawn(piece->getPieceNo());
-//            this->White->getPawn(piece->getPieceNo())->setPos(pos);
+            this->White->getPawn(piece->getPieceNo())->setPos(pos);
         }
     }
 
@@ -205,8 +205,8 @@ void ChessBoard::setPiece(Piece* piece, Position pos) {
             this->Black->getKing()->setPos(pos);
         }
         else if (piece->Piecetype() == QUEEN) {
-            this->Board[pos.getX()][pos.getY()] = this->Black->getQueen(0);
-            this->Black->getQueen(0)->setPos(pos);
+            this->Board[pos.getX()][pos.getY()] = this->Black->getQueen(piece->getPieceNo());
+            this->Black->getQueen(piece->getPieceNo())->setPos(pos);
         }
         else if (piece->Piecetype() == ROOK) {
             this->Board[pos.getX()][pos.getY()] = this->Black->getRook(piece->getPieceNo());
