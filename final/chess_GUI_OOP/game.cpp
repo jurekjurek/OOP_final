@@ -533,19 +533,21 @@ bool ChessGame::StaleMate() {
 
 
 void ChessGame::promotion(Position pos, Player* Current, QString inputstring)  {
-
+    qDebug() << "PROMOTING!!! To a " << inputstring;
+    std::string promotiontype = inputstring.toStdString();
     // set default to Queen
 
-    if (inputstring == "Knight") {
+    if (promotiontype == "Knight") {
         Board.setPiece(Current->getKnight(2), pos);
 //        Current->getKnight(2)->setPos(pos);
         Current->getKnight(2)->setIsalive(true);
     }
-    if (inputstring == "Bishop") {
+    else if (promotiontype == "Bishop") {
+        qDebug() << "Is this executed??";
         Board.setPiece(Current->getBishop(2), pos);
         Current->getBishop(2)->setIsalive(true);
     }
-    if (inputstring == "Rook") {
+    else if (promotiontype == "Rook") {
         Board.setPiece(Current->getRook(2), pos);
         Current->getRook(2)->setIsalive(true);
     }
@@ -574,21 +576,38 @@ void ChessGame::resetMoves()
 // two spaces, the move can be executed if it is valid, or ignored if not.
 void ChessGame::getInput(QString input)
 {
-//    this->move_count = 0;
-    if (this->Whoseturn) {qDebug() << "White's move";}
-    if (!this->Whoseturn) {qDebug() << "Blacks turn";}
-//    qDebug() << "Game saw that " << input << "was clicked, and will now respond.";
+    qDebug() << "String received from Display: " << input;
 
-    // If this is the first click, store it in move1
-    if (move1 == "")
+    // First, here: Handle promotions
+
+    if (input == "Queen" or input == "Bishop" or input == "Knight" or input == "Rook") {
+        int moves_played = move_list.size();
+        Position promotionpos = Position(move_list[moves_played-2], move_list[moves_played-1]);
+        if (this->Whoseturn) {
+            this->promotion(promotionpos, this->Board.getPlayerBlack(), input);
+        }
+        else {
+            this->promotion(promotionpos, this->Board.getPlayerWhite(), input);
+        }
+        Board.printBoard();
+        std::string position_string_1 = std::to_string(move_list[moves_played-2]);
+        std::string position_string_2 = std::to_string(move_list[moves_played-1]);
+
+        const std::string sendstring = "P" + position_string_1 + position_string_2 + input.toStdString();
+        QString qstr = QString::fromStdString(sendstring);
+
+        sendResponse(qstr);
+    }
+
+
+
+    else if (move1 == "")
     {
-//        qDebug() << "First position recognized.";
         move1 = input.toStdString();
     }
     // If this is the second click, store it in move2
     else if (move2 == "")
     {
-//        qDebug() << "Second position recognized.";
         move2 = input.toStdString();
 
         // We can now pass the move to the Game
@@ -808,11 +827,7 @@ void ChessGame::getInput(QString input)
         resetMoves();
         this->Board.printBoard();
     }
-//    else {
-//        if (input == "Queen") {
-////            this->promotion();
-//        }
-//    }
+
 
 }
 

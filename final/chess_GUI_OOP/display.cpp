@@ -100,19 +100,19 @@ void Display::setup()
     button2->setRect(550,300,40,40);
 //    DisplayScene->addItem(button2);
     button2->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_rook_40px.png");
-    button1->setName("Rook");
+    button2->setName("Rook");
 
     button3 = new Space(500, 350);
     button3->setRect(500,350,40,40);
 //    DisplayScene->addItem(button3);
     button3->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_queen_40px.png");
-    button1->setName("Queen");
+    button3->setName("Queen");
 
     button4 = new Space(550, 350);
     button4->setRect(550,350,40,40);
 //    DisplayScene->addItem(button4);
     button4->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_bishop_40px.png");
-    button1->setName("Bishop");
+    button4->setName("Bishop");
 
 }
 
@@ -253,6 +253,57 @@ void Display::getResponse(QString response)
         resetColor();
         return;
     }
+
+
+    // handle the signal we get back after promoting
+    else if (response[0] == "P") {
+        qDebug() << "Ist das executed?";
+        QString secondSpace = "";
+        secondSpace += response[1];
+        secondSpace += response[2];
+
+
+        for (int i=0; i<spaceList.length(); i++ )
+        {
+            // if we have found the space corresponding to a certain position
+            if (spaceList[i]->getName() == secondSpace)
+            {
+                // If it's white to move that means that the turn before it was black to move.
+                // We are promoting the piece of the player whose turn it is not!!
+                if (turnColor == BLACK) {
+                    if (response[3] == "Q") {
+                        spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_queen.png");
+                    }
+                    if (response[3] == "B") {
+                        spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_bishop.png");
+                    }
+                    if (response[3] == "K") {
+                        spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_knight.png");
+                    }
+                    if (response[3] == "R") {
+                        spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_rook.png");
+                    }
+                }
+                if (turnColor == WHITE) {
+                    if (response[3] == "Q") {
+                        spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_queen.png");
+                    }
+                    if (response[3] == "B") {
+                        spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_bishop.png");
+                    }
+                    if (response[3] == "K") {
+                        spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_knight.png");
+                    }
+                    if (response[3] == "R") {
+                        spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_rook.png");
+                    }
+                }
+
+            }
+        }
+
+    }
+
     // Otherwise, use the response from Game to move the correct pieces
     else
     {
@@ -381,13 +432,14 @@ void Display::getResponse(QString response)
 
         resetColor();
 
-        if (turnColor == WHITE)
+        // If we set a promoted piece, we are only promoting, its not a real move, so if we set a piece due to promotion, the colors do not switch
+        if (turnColor == WHITE and response[0] != "P")
         {
             qDebug() << "Switching turncolor to BLACK";
             this->turnColor = BLACK;
             turn->setPlainText("Black to move");
         }
-        else if (turnColor == BLACK)
+        else if (turnColor == BLACK and response[0] != "P")
         {
             qDebug() << "Switching turncolor to WHITE";
             turnColor = WHITE;
