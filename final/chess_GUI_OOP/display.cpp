@@ -6,7 +6,7 @@ Display::Display()
     // Connect Game signal with Display slot
     // who is the sender? (What part of what QObject sends?) Game. What is the signal that Game sends? Always SIGNAL(actual signal)
     // who is the receiver? This displayclass. The slot is the getresonse function of the display class
-    QObject::connect(&game, SIGNAL(sendResponse(QString)), this, SLOT(getResponse(QString)));
+    QObject::connect(&game, SIGNAL(sendResultingBoard(QString)), this, SLOT(getResultingBoard(QString)));
 
     // create the scene that the whole chessgame takes place in
     DisplayScene = new QGraphicsScene();
@@ -58,7 +58,7 @@ void Display::setup()
 
         // We connect the space QObject, which sends signals via sendSignal
         // with the game QObject which gets this Input as a Qstring
-        QObject::connect(s, SIGNAL(sendSignal(QString)), &game, SLOT(getInput(QString)));
+        QObject::connect(s, SIGNAL(sendPosition(QString)), &game, SLOT(Game(QString)));
 
 
         // Change this, easy
@@ -88,7 +88,7 @@ void Display::setup()
     QString state = "";
     alert = new QGraphicsTextItem();
     alert->setPlainText(state);
-    alert->setPos(300, 50);
+    alert->setPos(170, 50);
     alert->setFont(font);
     alert->setDefaultTextColor(Qt::red);
     DisplayScene->addItem(alert);
@@ -125,6 +125,10 @@ void Display::setup()
     prom->setPos(120, 630);
     prom->setFont(font);
 //    DisplayScene->addItem(prom);
+
+
+//    QObject::connect(this, SIGNAL(itemDrop(QString)), &game, SLOT(getInput(QString)));
+
 
 }
 
@@ -216,7 +220,7 @@ QGraphicsScene* Display::getScene()
 
 // Get a response from game.cpp and change the
 // images of pieces on the board appropriately
-void Display::getResponse(QString response)
+void Display::getResultingBoard(QString response)
 {
 
     // if there was a promotion the turn before, remove items
@@ -242,14 +246,70 @@ void Display::getResponse(QString response)
     }
 
     // If response was "Invalid Move", ignore it
-    if (responseString.compare("Invalid Move") == 0)
+    if (response == "Invalid Move")
     {
         qDebug() << "Invalid Move";
         alert->setPlainText("Not a valid move.");
         resetColor();
         return;
     }
-    else if (responseString.compare("Checkmate") == 0)
+    else if (response == "This piece has the wrong color.")
+    {
+        qDebug() << "Invalid Move";
+        alert->setPlainText(response);
+        resetColor();
+        return;
+    }
+
+    else if (response == "You have not selected a piece.")
+    {
+        qDebug() << "Invalid Move";
+        alert->setPlainText(response);
+        resetColor();
+        return;
+    }
+
+    else if (response == "There is a piece in the way.")
+    {
+        qDebug() << "Invalid Move";
+        alert->setPlainText(response);
+        resetColor();
+        return;
+    }
+
+    else if (response == "This spot is blocked.")
+    {
+        qDebug() << "Invalid Move";
+        alert->setPlainText(response);
+        resetColor();
+        return;
+    }
+
+    else if (response == "The Pawn can only hit diagonally.")
+    {
+        qDebug() << "Invalid Move";
+        alert->setPlainText(response);
+        resetColor();
+        return;
+    }
+
+    else if (response == "This is not a valid move for this piece.")
+    {
+        qDebug() << "Invalid Move";
+        alert->setPlainText(response);
+        resetColor();
+        return;
+    }
+
+    else if (response == "This move would leave your king in check.")
+    {
+        qDebug() << "Invalid Move";
+        alert->setPlainText(response);
+        resetColor();
+        return;
+    }
+
+    else if (response == "Checkmate")
     {
         qDebug() << "Checkmate!";
         alert->setPlainText("Checkmate!");
@@ -421,10 +481,10 @@ void Display::getResponse(QString response)
 
                 DisplayScene->addItem(prom);
 
-                QObject::connect(button1, SIGNAL(sendSignal(QString)), &game, SLOT(getInput(QString)));
-                QObject::connect(button2, SIGNAL(sendSignal(QString)), &game, SLOT(getInput(QString)));
-                QObject::connect(button3, SIGNAL(sendSignal(QString)), &game, SLOT(getInput(QString)));
-                QObject::connect(button4, SIGNAL(sendSignal(QString)), &game, SLOT(getInput(QString)));
+                QObject::connect(button1, SIGNAL(sendPosition(QString)), &game, SLOT(Game(QString)));
+                QObject::connect(button2, SIGNAL(sendPosition(QString)), &game, SLOT(Game(QString)));
+                QObject::connect(button3, SIGNAL(sendPosition(QString)), &game, SLOT(Game(QString)));
+                QObject::connect(button4, SIGNAL(sendPosition(QString)), &game, SLOT(Game(QString)));
 
 //                QString Promotionspace = secondSpace;
 //                for (int i=0; i<spaceList.length(); i++ )

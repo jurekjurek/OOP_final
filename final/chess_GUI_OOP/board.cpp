@@ -154,6 +154,7 @@ void ChessBoard::setPiece(Piece* piece, Position pos) {
         }
     }
 
+    // Set the Black Pieces
     else if (!piece->getColor()) {
         if (piece->Piecetype() == KING) {
             this->Board[pos.getX()][pos.getY()] = this->Black->getKing();

@@ -8,6 +8,10 @@ Space::Space(int x, int y)
 //    setFlag(QGraphicsItem::ItemIsFocusable);
 //    setFocus();
     piece.setParentItem(this);
+
+    // for drag and drop
+    setAcceptDrops(true);
+
 }
 
 // When clicked, space name is sent to Display slot
@@ -17,8 +21,10 @@ void Space::mousePressEvent(QGraphicsSceneMouseEvent *ev){
         this->setBrush(Qt::red);
     }
     // this sendSignal command directly gets transfered to the game
-    emit sendSignal(name);
+    emit sendPosition(name);
 }
+
+
 
 void Space::setName(QString n){
     name = n;

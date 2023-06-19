@@ -1,18 +1,19 @@
 #include "game.h"
 
-// Chessgame has two players, Black and White. Black has color Black and White has color white
-// Those two players are the players White and Black on the Chessboard
+// Initialize the Players with the respective colors and set up the board with these players
 ChessGame::ChessGame() : Black(false), White(true), Board(&White, &Black) {
-    this->Whoseturn = true;
-//    this->White = &Board.getPlayerWhite();
-//    this->Black = &Board.getPlayerBlack();
-//    this->Board.setPlayerWhite(this->White);
-//    this->Board.setPlayerBlack(this->Black);
+
+    // Upon initialization, it's whites turn
+    this->Turn= true;
 }
 
-// The maketurn function merely makes the move that was approved by the checkmove function
+// This function actually sets pieces and deletes pieces on the chessboard. For this, it has to get the permission of the Checkmove function
+// which checks if a certain move is allowed or not.
+// The maketurn function gets called as soon as the two positions that were provided by the GUI are available
+// This function takes as input a pointer to the piece at the first position and the second position
 bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
 
+            // if there is no piece at the first position, the move is not valid
             if (pieceOne == nullptr) {
                 this->error = NOPIECE;
                 return false;
@@ -33,7 +34,7 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
             Piece* pieceTwo = this->Board.getPiece(pos2);
 
 
-            if (this->Whoseturn == true) {Current = Board.getPlayerWhite(); Other = Board.getPlayerBlack();}
+            if (this->Turn== true) {Current = Board.getPlayerWhite(); Other = Board.getPlayerBlack();}
             else {Other = Board.getPlayerWhite(); Current = Board.getPlayerBlack();}
 
 
@@ -55,7 +56,7 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
 
             if (!ok) {qDebug() << "NO VALID MOVE"; return false;}
 
-            if (this->Whoseturn != pieceOne->getColor()) {
+            if (this->Turn!= pieceOne->getColor()) {
                 this->error = WRONGCOLOR;
                 return false;
             }
@@ -140,7 +141,7 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
                             this->Board.setPiece(this->Board.getPiece(Position(0,0)), Position(3,0));
                             this->Board.setPiece(this->Board.getPiece(Position(4,0)), Position(2,0));
                             this->Board.setPiece(nullptr, Position(0,0));
-                            this->Board.setPiece(nullptr, Position(0,0));
+                            this->Board.setPiece(nullptr, Position(4,0));
 
                             // immediately return true
                             return true;
@@ -205,7 +206,7 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
                             this->Board.setPiece(this->Board.getPiece(Position(0,7)), Position(3,7));
                             this->Board.setPiece(this->Board.getPiece(Position(4,7)), Position(2,7));
                             this->Board.setPiece(nullptr, Position(0,7));
-                            this->Board.setPiece(nullptr, Position(0,7));
+                            this->Board.setPiece(nullptr, Position(4,7));
 
                             // immediately return true
                             return true;
@@ -334,7 +335,7 @@ bool* ChessGame::Checkmove(Position pos2, Piece* pieceOne) {
 //    }
 
 //    // if the color of the current player is not equal to the color of the piece
-//    if (this->Whoseturn != pieceOne->getIswhite()) {
+//    if (this->Turn!= pieceOne->getIswhite()) {
 //        this->error = WRONGCOLOR;
 //        return false;
 //    }
@@ -583,6 +584,14 @@ bool ChessGame::StaleMate(Player* Current, Player *Other) {
                     Position alivepiece_pos = alivepiece->getPos();
                     if (Checkmove(Position(i,j), alivepiece)[0]) {
 
+                        // if the piece is a king, the checkmove function will return true if the king moves two to the right or left
+                        // because of castles. This is not a valid move.
+                        if (alivepiece->Piecetype() == KING and abs(alivepiece->getPos().getX() - i) == 2) {
+                            continue;
+                        }
+
+
+
                         Piece* pieceTwo = this->Board.getPiece(Position(i,j));
                         if (pieceTwo != nullptr) {
                             pieceTwo->setAlive(false);
@@ -664,7 +673,7 @@ void ChessGame::resetMoves()
 // This function is a Qt slot, a function designed to receive QObject signals.
 // It receives a signal from the Display whenever a space is clicked. Upon collecting
 // two spaces, the move can be executed if it is valid, or ignored if not.
-void ChessGame::getInput(QString input)
+void ChessGame::Game(QString input)
 {
     qDebug() << "String received from Display: " << input;
 
@@ -673,7 +682,7 @@ void ChessGame::getInput(QString input)
     if (input == "Queen" or input == "Bishop" or input == "Knight" or input == "Rook") {
         int moves_played = move_list.size();
         Position promotionpos = Position(move_list[moves_played-2], move_list[moves_played-1]);
-        if (this->Whoseturn) {
+        if (this->Turn) {
             this->promotion(promotionpos, this->Board.getPlayerBlack(), input);
         }
         else {
@@ -686,11 +695,11 @@ void ChessGame::getInput(QString input)
         const std::string sendstring = "P" + position_string_1 + position_string_2 + input.toStdString();
         QString qstr = QString::fromStdString(sendstring);
 
-        sendResponse(qstr);
+        sendResultingBoard(qstr);
 
         // If either Player is checking either player, send Check to the display function
         if (this->Check(Board.getPlayerBlack(), Board.getPlayerWhite()) or this->Check(Board.getPlayerWhite(), Board.getPlayerBlack())) {
-            sendResponse("Check");
+            sendResultingBoard("Check");
         }
     }
 
@@ -760,11 +769,11 @@ void ChessGame::getInput(QString input)
 
         Player* Current;
         Player* Other;
-//        if (this->Whoseturn == true) {this->Current = this->White; this->Other = this->Black;}
+//        if (this->Turn== true) {this->Current = this->White; this->Other = this->Black;}
 //        else {this->Other = this->White; this->Current = this->Black;}
-        if (this->Whoseturn == true) {Current = Board.getPlayerWhite(); Other = Board.getPlayerBlack();}
+        if (this->Turn== true) {Current = Board.getPlayerWhite(); Other = Board.getPlayerBlack();}
         else {Other = Board.getPlayerWhite(); Current = Board.getPlayerBlack();}
-//        if (this->Whoseturn == true) {cout << "WHITEE" << endl; this->White = this->Current; this->Black = this->Other;}
+//        if (this->Turn== true) {cout << "WHITEE" << endl; this->White = this->Current; this->Black = this->Other;}
 //        else {cout << "BLACKK" << endl; this->White = this->Other; this->Black = this->Current;}
 
         if (Current->getRook(2)->getAlive()) {
@@ -782,49 +791,49 @@ void ChessGame::getInput(QString input)
         if (!ok) {
             if (this->error == NOVALIDPOS) {
                 qDebug() << "You did not provide a valid position.";
-                emit sendResponse("Invalid Move");
+                emit sendResultingBoard("Invalid Move");
                 resetMoves();
                 return;
             }
             else if (this->error == NOPIECE) {
                 qDebug() << "There is no piece at the spot you want to move from. ";
-                emit sendResponse("Invalid Move");
+                emit sendResultingBoard("You have not selected a piece.");
                 resetMoves();
                 return;
             }
             else if (this->error == PIECEINWAY) {
                 qDebug() << "There is a piece in the way and your piece cannot jump, since it is not a knight. ";
-                emit sendResponse("Invalid Move");
+                emit sendResultingBoard("There is a piece in the way.");
                 resetMoves();
                 return;
             }
             else if (this->error == WRONGCOLOR) {
                 qDebug() << "This piece has the wrong color.";
-                emit sendResponse("Invalid Move");
+                emit sendResultingBoard("This piece has the wrong color.");
                 resetMoves();
                 return;
             }
             else if (this->error == SPOTBLOCKED) {
                 qDebug() << "The spot you are trying to move to is blocked by a piece of your color. ";
-                emit sendResponse("Invalid Move");
+                emit sendResultingBoard("This spot is blocked.");
                 resetMoves();
                 return;
             }
             else if (this->error == SPOTBLOCKED_PAWN) {
                 qDebug() << "The spot you are trying to move to is blocked by a piece of your color. The Pawn can only hit diagonally. ";
-                emit sendResponse("Invalid Move");
+                emit sendResultingBoard("The Pawn can only hit diagonally.");
                 resetMoves();
                 return;
             }
             else if (this->error == NOVALIDMOVE) {
                 qDebug() <<  "The move you provided is against the rules of moving for this piece. " ;
-                emit sendResponse("Invalid Move");
+                emit sendResultingBoard("This is not a valid move for this piece.");
                 resetMoves();
                 return;
             }
             else if (this->error == KINGUNSAFE) {
                 qDebug() << "The move you are trying to make would leave your king in check. ";
-                emit sendResponse("Invalid Move");
+                emit sendResultingBoard("This move would leave your king in check.");
                 resetMoves();
                 return;
             }
@@ -842,7 +851,7 @@ void ChessGame::getInput(QString input)
 
 
         // after white, it's black and after black, it's white.
-        this->Whoseturn = !Whoseturn;
+        this->Turn= !Turn;
 
         cout << "TESTESTESTESTESTESTEST:::" << this->enpassant << this->Promotion << endl;
 
@@ -855,7 +864,7 @@ void ChessGame::getInput(QString input)
             sendStr += part2;
             QString part3 = ", Enpassant";
             sendStr += part3;
-            emit sendResponse(sendStr);
+            emit sendResultingBoard(sendStr);
         }
 
         else if (this->Promotion) {
@@ -867,14 +876,14 @@ void ChessGame::getInput(QString input)
             sendStr += part2;
             QString part3 = ", Promotion";
             sendStr += part3;
-            emit sendResponse("Promotion");
-            emit sendResponse(sendStr);
+            emit sendResultingBoard("Promotion");
+            emit sendResultingBoard(sendStr);
         }
 
-        else if (this->castlestate == WHITEKINGSIDE) {emit sendResponse("Castle White Kingside");}
-        else if (this->castlestate == WHITEQUEENSIDE) {emit sendResponse("Castle White Queenside");}
-        else if (this->castlestate == BLACKKINGSIDE) {emit sendResponse("Castle Black Kingside");}
-        else if (this->castlestate == BLACKQUEENSIDE) {emit sendResponse("Castle Black Queenside");}
+        else if (this->castlestate == WHITEKINGSIDE) {emit sendResultingBoard("Castle White Kingside");}
+        else if (this->castlestate == WHITEQUEENSIDE) {emit sendResultingBoard("Castle White Queenside");}
+        else if (this->castlestate == BLACKKINGSIDE) {emit sendResultingBoard("Castle Black Kingside");}
+        else if (this->castlestate == BLACKQUEENSIDE) {emit sendResultingBoard("Castle Black Queenside");}
         else {
             // Send QString response containing the two spaces of the valid move
             QString sendStr = "";
@@ -882,7 +891,7 @@ void ChessGame::getInput(QString input)
             QString part2 = QString::fromStdString(move2);
             sendStr += part1;
             sendStr += part2;
-            emit sendResponse(sendStr);
+            emit sendResultingBoard(sendStr);
         }
 
         // CHECK
@@ -890,30 +899,30 @@ void ChessGame::getInput(QString input)
         if (Checkstate) {
             qDebug() << "CHECK!!!";
             QString sendcheck = "Check";
-            emit sendResponse(sendcheck);
+            emit sendResultingBoard(sendcheck);
         }
 
         // We want to let the player know that they can choose a piece
 //        if (this->Promotion) {
-//            emit sendResponse("Promotion");
+//            emit sendResultingBoard("Promotion");
 //        }
 
 
         //         DRAW
         bool draw = this->StaleMate(Current, Other);
         if (draw) {
-            sendResponse("Draw");
+            sendResultingBoard("Draw");
             return;
         }
 //        if (!draw) {
-//            sendResponse("No stalemate. The game goes on. ");
+//            sendResultingBoard("No stalemate. The game goes on. ");
 //        }
 
         //         CHECKMATE
         bool gameOver = this->CheckMate(Current, Other);
         if (gameOver) {
-            if (this->Whoseturn) {emit sendResponse("Checkmate"); resetMoves(); return;}
-            else {emit sendResponse("Checkmate"); resetMoves(); return;}
+            if (this->Turn) {emit sendResultingBoard("Checkmate"); resetMoves(); return;}
+            else {emit sendResultingBoard("Checkmate"); resetMoves(); return;}
         }
 
 

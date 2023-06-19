@@ -8,9 +8,22 @@
 #include <QObject>
 #include <QPushButton>
 #include <QWidget>
+//#include <QGraphicsView>
+//#include <QDragEnterEvent>
+//#include <QDragMoveEvent>
+//#include <QDragLeaveEvent>
+//#include <QDropEvent>
 
 
-class Display: public QObject
+// A chesspiece in the GUI can have two colors
+enum Color
+{
+    WHITE,
+    BLACK
+};
+
+
+class Display: public QObject //, public QGraphicsView
 {
     // if this line of code is included, it tells us that we can use signals and slots for our widgets
     // Basically, this is here so C++ understands all the stuff that we write
@@ -55,8 +68,15 @@ public:
     Display();
     QGraphicsScene* getScene();
 
+//protected:
+//    void dropEvent(QDropEvent *event);
+//    void dragEnterEvent(QDragEnterEvent *event);
+//    void dragMoveEvent(QDragMoveEvent *event);
+//    void dragLeaveEvent(QDragLeaveEvent *event);
+
 public slots:
-    void getResponse(QString response);
+    void getResultingBoard(QString response);
+
 
 };
 

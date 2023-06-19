@@ -10,6 +10,8 @@
 #include <string>
 #include <QGraphicsScene>
 
+
+
 // Space inherits from QObject and QGrapphicsRectItem to handle signals and Slots and of course, A space is on the chessBoard just a Rectangle
 class Space: public QObject, public QGraphicsRectItem
 {
@@ -17,7 +19,7 @@ class Space: public QObject, public QGraphicsRectItem
 public:
     // constructor
     Space(int x, int y);
-    void mousePressEvent(QGraphicsSceneMouseEvent *e);
+
     void setName(QString );
     QString getName();
     void setImage(QString path);
@@ -37,11 +39,14 @@ private:
     int yCoord;
 
 
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *e);
+
     // We want to connect the space to the Game
     // If we click on a certain space, the Game should get the information (x and y coordinate of the space )
     // and do something to it
 signals:
-    QString sendSignal(QString name);
+    QString sendPosition(QString name);
 };
 
 #endif // SPACE_H
