@@ -426,19 +426,19 @@ void Display::getResponse(QString response)
                 QObject::connect(button3, SIGNAL(sendSignal(QString)), &game, SLOT(getInput(QString)));
                 QObject::connect(button4, SIGNAL(sendSignal(QString)), &game, SLOT(getInput(QString)));
 
-                QString Promotionspace = secondSpace;
-                for (int i=0; i<spaceList.length(); i++ )
-                {
-                    if (spaceList[i]->getName() == Promotionspace)
-                    {
-                        if (turnColor == WHITE) {
-                            spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_queen.png");
-                        }
-                        else {
-                            spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_queen.png");
-                        }
-                    }
-                }
+//                QString Promotionspace = secondSpace;
+//                for (int i=0; i<spaceList.length(); i++ )
+//                {
+//                    if (spaceList[i]->getName() == Promotionspace)
+//                    {
+//                        if (turnColor == WHITE) {
+//                            spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_queen.png");
+//                        }
+//                        else {
+//                            spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_queen.png");
+//                        }
+//                    }
+//                }
             }
 
         }

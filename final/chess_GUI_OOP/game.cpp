@@ -687,6 +687,11 @@ void ChessGame::getInput(QString input)
         QString qstr = QString::fromStdString(sendstring);
 
         sendResponse(qstr);
+
+        // If either Player is checking either player, send Check to the display function
+        if (this->Check(Board.getPlayerBlack(), Board.getPlayerWhite()) or this->Check(Board.getPlayerWhite(), Board.getPlayerBlack())) {
+            sendResponse("Check");
+        }
     }
 
 
