@@ -10,22 +10,22 @@ CONFIG += c++17
 
 SOURCES += \
     board.cpp \
-    display.cpp \
     game.cpp \
     main.cpp \
+    main_GUI.cpp \
     piece.cpp \
     player.cpp \
     position.cpp \
-    space.cpp
+    square.cpp
 
 HEADERS += \
     board.h \
-    display.h \
     game.h \
+    main_GUI.h \
     piece.h \
     player.h \
     position.h \
-    space.h
+    square.h
 
 FORMS +=
 

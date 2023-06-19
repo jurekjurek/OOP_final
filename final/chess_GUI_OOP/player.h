@@ -12,10 +12,10 @@ class Player {
 private:
     bool Color;
     King* KinG;
-    Queen* Queens[3];
-    Rook* Rooks[4];
-    Bishop* Bishops[4];
-    Knight* Knights[4];
+    Queen* Queens[2];
+    Rook* Rooks[3];
+    Bishop* Bishops[3];
+    Knight* Knights[3];
     Pawn* Pawns[8];
 
 public:

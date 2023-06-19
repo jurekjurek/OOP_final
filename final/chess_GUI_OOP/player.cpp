@@ -7,19 +7,15 @@ Player::Player(bool color) {
     KinG          = new King(Color);
     Queens[0]     = new Queen(Color);
     Queens[1]     = new Queen(Color);
-    Queens[2]     = new Queen(Color);
     Rooks[0]      = new Rook(Color);
     Rooks[1]      = new Rook(Color);
     Rooks[2]      = new Rook(Color);
-    Rooks[3]      = new Rook(Color);
     Bishops[0]    = new Bishop(Color);
     Bishops[1]    = new Bishop(Color);
     Bishops[2]    = new Bishop(Color);
-    Bishops[3]    = new Bishop(Color);
     Knights[0]    = new Knight(Color);
     Knights[1]    = new Knight(Color);
     Knights[2]    = new Knight(Color);
-    Knights[3]    = new Knight(Color);
     Pawns[0]      = new Pawn(Color);
     Pawns[1]      = new Pawn(Color);
     Pawns[2]      = new Pawn(Color);
@@ -31,14 +27,9 @@ Player::Player(bool color) {
 
     // the ones used for promotion are set to not be alive
     Queens[1]->setAlive(false);
-    Queens[2]->setAlive(false);
-    Queens[3]->setAlive(false);
     Rooks[2]->setAlive(false);
-    Rooks[3]->setAlive(false);
     Knights[2]->setAlive(false);
-    Knights[3]->setAlive(false);
     Bishops[2]->setAlive(false);
-    Bishops[3]->setAlive(false);
 
 
     // We set the position of the pieces of the players to positions on the ChessBoard (which we will introduce in the class Board.h)

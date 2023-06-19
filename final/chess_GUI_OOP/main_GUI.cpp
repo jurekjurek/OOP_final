@@ -1,4 +1,4 @@
-#include "display.h"
+#include "main_GUI.h"
 
 
 Display::Display()
@@ -14,11 +14,11 @@ Display::Display()
     // setup the board, create the QT Layout
     setup();
 
-    // Place the pictures of the pieces on the respective Squares
+    // Place the pictures of the pieces on the respective squares
     placePieces();
 
     // White goes first
-    turnColor = WHITE;
+    this->Color = true;
 }
 
 void Display::setup()
@@ -29,10 +29,10 @@ void Display::setup()
     for(int i=0; i<64; i++)
     {
         // spaces holds the names of the squares, get the first out of those spaces (07)
-        QString spacename = spaces[i];
+        QString spacename = positions[i];
         // create an instance of Space(), for the first one Space(0,7)
-        Space * s = new Space(j,k);
-        // Space derives from QTRectangle(), so we set a rectangle of size 60x60 pixles with its upper left corner in the position (0,0) for all 64 Squares
+        Square * s = new Square(j,k);
+        // Space derives from QTRectangle(), so we set a rectangle of size 60x60 pixles with its upper left corner in the position (0,0) for all 64 squares
         s->setRect(j,k,60,60); //x loc, y loc, width, height
 
         // Each of those squares gets a specific color
@@ -49,8 +49,8 @@ void Display::setup()
         black = !black;
 
         // we assign the name "07" to the particular space
-        s->setName(spacename);
-        spaceList.append(s);
+        s->setPosition(spacename);
+        squares.append(s);
 
         // Here is where we add the PixMapItem to the scene!
         DisplayScene->addItem(s);
@@ -88,36 +88,36 @@ void Display::setup()
     QString state = "";
     alert = new QGraphicsTextItem();
     alert->setPlainText(state);
-    alert->setPos(170, 50);
+    alert->setPos(150, 50);
     alert->setFont(font);
     alert->setDefaultTextColor(Qt::red);
     DisplayScene->addItem(alert);
 
 
     // add promotion interface
-    button1 = new Space(300, 600);
+    button1 = new Square(300, 600);
     button1->setRect(300,600,40,40);
 //    DisplayScene->addItem(button1);
     button1->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_knight_40px.png");
-    button1->setName("Knight");
+    button1->setPosition("Knight");
 
-    button2 = new Space(350, 600);
+    button2 = new Square(350, 600);
     button2->setRect(350,600,40,40);
 //    DisplayScene->addItem(button2);
     button2->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_rook_40px.png");
-    button2->setName("Rook");
+    button2->setPosition("Rook");
 
-    button3 = new Space(300, 650);
+    button3 = new Square(300, 650);
     button3->setRect(300,650,40,40);
 //    DisplayScene->addItem(button3);
     button3->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_queen_40px.png");
-    button3->setName("Queen");
+    button3->setPosition("Queen");
 
-    button4 = new Space(350, 650);
+    button4 = new Square(350, 650);
     button4->setRect(350,650,40,40);
 //    DisplayScene->addItem(button4);
     button4->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_bishop_40px.png");
-    button4->setName("Bishop");
+    button4->setPosition("Bishop");
 
     QString choice = "Choose a piece";
     prom = new QGraphicsTextItem();
@@ -147,12 +147,12 @@ void Display::resetColor() {
         }
 
         if (!black) {
-            spaceList[i]->setBrush(Qt::white);
+            squares[i]->setBrush(Qt::white);
         }
 
         if (black)
         {
-            spaceList[i]->setBrush(Qt::darkGreen);
+            squares[i]->setBrush(Qt::darkGreen);
         }
         black = !black;
 
@@ -176,39 +176,39 @@ void Display::placePieces()
 
     // pictures from https://github.com/EmmanuelleBouchard/chessGame/tree/master/image
     qDebug() << "Placing Pieces";
-    spaceList[0]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_rook.png");
-    spaceList[1]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_knight.png");
-    spaceList[2]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_bishop.png");
-    spaceList[3]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_queen.png");
-    spaceList[4]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_king.png");
-    spaceList[5]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_bishop.png");
-    spaceList[6]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_knight.png");
-    spaceList[7]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_rook.png");
-    spaceList[8]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
-    spaceList[9]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
-    spaceList[10]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
-    spaceList[11]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
-    spaceList[12]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
-    spaceList[13]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
-    spaceList[14]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
-    spaceList[15]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
+    squares[0]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_rook.png");
+    squares[1]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_knight.png");
+    squares[2]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_bishop.png");
+    squares[3]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_queen.png");
+    squares[4]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_king.png");
+    squares[5]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_bishop.png");
+    squares[6]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_knight.png");
+    squares[7]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_rook.png");
+    squares[8]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
+    squares[9]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
+    squares[10]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
+    squares[11]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
+    squares[12]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
+    squares[13]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
+    squares[14]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
+    squares[15]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
 
-    spaceList[48]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
-    spaceList[49]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
-    spaceList[50]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
-    spaceList[51]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
-    spaceList[52]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
-    spaceList[53]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
-    spaceList[54]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
-    spaceList[55]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
-    spaceList[56]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_rook.png");
-    spaceList[57]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_knight.png");
-    spaceList[58]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_bishop.png");
-    spaceList[59]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_queen.png");
-    spaceList[60]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_king.png");
-    spaceList[61]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_bishop.png");
-    spaceList[62]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_knight.png");
-    spaceList[63]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_rook.png");
+    squares[48]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
+    squares[49]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
+    squares[50]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
+    squares[51]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
+    squares[52]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
+    squares[53]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
+    squares[54]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
+    squares[55]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
+    squares[56]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_rook.png");
+    squares[57]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_knight.png");
+    squares[58]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_bishop.png");
+    squares[59]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_queen.png");
+    squares[60]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_king.png");
+    squares[61]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_bishop.png");
+    squares[62]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_knight.png");
+    squares[63]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_rook.png");
 }
 
 
@@ -337,39 +337,39 @@ void Display::getResultingBoard(QString response)
         secondSpace += response[2];
 
 
-        for (int i=0; i<spaceList.length(); i++ )
+        for (int i=0; i<squares.length(); i++ )
         {
             // if we have found the space corresponding to a certain position
-            if (spaceList[i]->getName() == secondSpace)
+            if (squares[i]->getPosition() == secondSpace)
             {
                 // If it's white to move that means that the turn before it was black to move.
                 // We are promoting the piece of the player whose turn it is not!!
-                if (turnColor == BLACK) {
+                if (!this->Color) {
                     if (response[3] == "Q") {
-                        spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_queen.png");
+                        squares[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_queen.png");
                     }
                     if (response[3] == "B") {
-                        spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_bishop.png");
+                        squares[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_bishop.png");
                     }
                     if (response[3] == "K") {
-                        spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_knight.png");
+                        squares[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_knight.png");
                     }
                     if (response[3] == "R") {
-                        spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_rook.png");
+                        squares[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_rook.png");
                     }
                 }
-                if (turnColor == WHITE) {
+                if (this->Color) {
                     if (response[3] == "Q") {
-                        spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_queen.png");
+                        squares[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_queen.png");
                     }
                     if (response[3] == "B") {
-                        spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_bishop.png");
+                        squares[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_bishop.png");
                     }
                     if (response[3] == "K") {
-                        spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_knight.png");
+                        squares[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_knight.png");
                     }
                     if (response[3] == "R") {
-                        spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_rook.png");
+                        squares[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_rook.png");
                     }
                 }
 
@@ -382,42 +382,42 @@ void Display::getResultingBoard(QString response)
     else
     {
         qDebug() << "The response Game sent back was " << response;
-        if (response == "Castle White Kingside")
+        if (response == "Castle White, Kingside")
         {
-            QString tempKing = spaceList[60]->getImage();
-            spaceList[60]->clearImage();
-            QString tempRook = spaceList[63]->getImage();
-            spaceList[63]->clearImage();
+            QString tempKing = squares[60]->getImage();
+            squares[60]->clearImage();
+            QString tempRook = squares[63]->getImage();
+            squares[63]->clearImage();
 
-            spaceList[62]->setImage(tempKing);
-            spaceList[61]->setImage(tempRook);
-        } else if (response == "Castle White Queenside")
+            squares[62]->setImage(tempKing);
+            squares[61]->setImage(tempRook);
+        } else if (response == "Castle White, Queenside")
         {
-            QString tempKing = spaceList[60]->getImage();
-            spaceList[60]->clearImage();
-            QString tempRook = spaceList[56]->getImage();
-            spaceList[56]->clearImage();
+            QString tempKing = squares[60]->getImage();
+            squares[60]->clearImage();
+            QString tempRook = squares[56]->getImage();
+            squares[56]->clearImage();
 
-            spaceList[58]->setImage(tempKing);
-            spaceList[59]->setImage(tempRook);
-        } else if (response == "Castle Black Kingside")
+            squares[58]->setImage(tempKing);
+            squares[59]->setImage(tempRook);
+        } else if (response == "Castle Black, Kingside")
         {
-            QString tempKing = spaceList[4]->getImage();
-            spaceList[4]->clearImage();
-            QString tempRook = spaceList[7]->getImage();
-            spaceList[7]->clearImage();
+            QString tempKing = squares[4]->getImage();
+            squares[4]->clearImage();
+            QString tempRook = squares[7]->getImage();
+            squares[7]->clearImage();
 
-            spaceList[6]->setImage(tempKing);
-            spaceList[5]->setImage(tempRook);
-        } else if (response == "Castle Black Queenside")
+            squares[6]->setImage(tempKing);
+            squares[5]->setImage(tempRook);
+        } else if (response == "Castle Black, Queenside")
         {
-            QString tempKing = spaceList[4]->getImage();
-            spaceList[4]->clearImage();
-            QString tempRook = spaceList[0]->getImage();
-            spaceList[0]->clearImage();
+            QString tempKing = squares[4]->getImage();
+            squares[4]->clearImage();
+            QString tempRook = squares[0]->getImage();
+            squares[0]->clearImage();
 
-            spaceList[2]->setImage(tempKing);
-            spaceList[3]->setImage(tempRook);
+            squares[2]->setImage(tempKing);
+            squares[3]->setImage(tempRook);
         }
 
         else
@@ -430,23 +430,23 @@ void Display::getResultingBoard(QString response)
             secondSpace += response[3];
 
             QString temp;
-            for (int i=0; i<spaceList.length(); i++ )
+            for (int i=0; i<squares.length(); i++ )
             {
                 // if we have found the space corresponding to a certain position
-                if (spaceList[i]->getName() == firstSpace)
+                if (squares[i]->getPosition() == firstSpace)
                 {
                     // we clear the image of the piece that is moved
                     // temp is just a string, so is image. Image is a Qstring holding the path of an image
-                    temp = spaceList[i]->getImage();
-                    spaceList[i]->clearImage();
+                    temp = squares[i]->getImage();
+                    squares[i]->clearImage();
                 }
             }
-            for (int i=0; i<spaceList.length(); i++ )
+            for (int i=0; i<squares.length(); i++ )
             {
-                if (spaceList[i]->getName() == secondSpace)
+                if (squares[i]->getPosition() == secondSpace)
                 {
                     // and we set that image of the piece we removed from the first square to the second square!
-                    spaceList[i]->setImage(temp);
+                    squares[i]->setImage(temp);
                 }
             }
 
@@ -457,11 +457,11 @@ void Display::getResultingBoard(QString response)
                 Enpassantspace += response[2];
                 Enpassantspace += response[1];
 //                qDebug() << "The display function says: Enpassant is happening!";
-                for (int i=0; i<spaceList.length(); i++ )
+                for (int i=0; i<squares.length(); i++ )
                 {
-                    if (spaceList[i]->getName() == Enpassantspace)
+                    if (squares[i]->getPosition() == Enpassantspace)
                     {
-                        spaceList[i]->clearImage();
+                        squares[i]->clearImage();
                     }
                 }
             }
@@ -487,15 +487,15 @@ void Display::getResultingBoard(QString response)
                 QObject::connect(button4, SIGNAL(sendPosition(QString)), &game, SLOT(Game(QString)));
 
 //                QString Promotionspace = secondSpace;
-//                for (int i=0; i<spaceList.length(); i++ )
+//                for (int i=0; i<squares.length(); i++ )
 //                {
-//                    if (spaceList[i]->getName() == Promotionspace)
+//                    if (squares[i]->getName() == Promotionspace)
 //                    {
 //                        if (turnColor == WHITE) {
-//                            spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_queen.png");
+//                            squares[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_queen.png");
 //                        }
 //                        else {
-//                            spaceList[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_queen.png");
+//                            squares[i]->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_queen.png");
 //                        }
 //                    }
 //                }
@@ -509,19 +509,29 @@ void Display::getResultingBoard(QString response)
         resetColor();
 
 
-        // If we set a promoted piece, we are only promoting, its not a real move, so if we set a piece due to promotion, the colors do not switch
-        if (turnColor == WHITE and response[0] != "P" and response != "Promotion" and response != "Check")
-        {
-            qDebug() << "Switching turncolor to BLACK";
-            this->turnColor = BLACK;
-            turn->setPlainText("Black to move");
+        if (response[0] != "P" and response != "Promotion" and response != "Check") {
+            this->Color = !Color;
+            if (this->Color == 0) {
+                turn->setPlainText("Black to move");
+            }
+            else {
+                turn->setPlainText("White to move");
+            }
         }
-        else if (turnColor == BLACK and response[0] != "P" and response != "Promotion" and response != "Check" )
-        {
-            qDebug() << "Switching turncolor to WHITE";
-            turnColor = WHITE;
-            turn->setPlainText("White to move");
-        }
+
+//        // If we set a promoted piece, we are only promoting, its not a real move, so if we set a piece due to promotion, the colors do not switch
+//        if (this->Color and response[0] != "P" and response != "Promotion" and response != "Check")
+//        {
+//            qDebug() << "Switching turncolor to BLACK";
+//            this->turnColor = BLACK;
+//            turn->setPlainText("Black to move");
+//        }
+//        else if (turnColor == BLACK and response[0] != "P" and response != "Promotion" and response != "Check" )
+//        {
+//            qDebug() << "Switching turncolor to WHITE";
+//            turnColor = WHITE;
+//            turn->setPlainText("White to move");
+//        }
     }
 
 }

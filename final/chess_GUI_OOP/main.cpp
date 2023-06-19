@@ -1,5 +1,5 @@
-#include "space.h"
-#include "display.h"
+#include "square.h"
+#include "main_GUI.h"
 #include "game.h"
 #include <QApplication>
 #include <QGraphicsScene>

@@ -70,11 +70,8 @@ private:
     bool Promotion = false;
 
     // for the QT part, both moves are going to be saved as strings
-    std::string move1;
-    std::string move2;
-
-    // after each move, the strings are reset to be empty
-    void resetMoves();
+    std::string position1;
+    std::string position2;
 
 public:
     // Constructor
@@ -82,7 +79,7 @@ public:
 
     //  the maketurn function checks if a certain move can be made by a certain player
     // if so, it places the pieces on the board
-    bool Maketurn(Piece*, Position);
+    bool Maketurn(Position, Position);
 
     // the Checkmove function checks if, only given the constellation of the board, a move can be made.
     // It does not consider if the player is in check after the move is made
