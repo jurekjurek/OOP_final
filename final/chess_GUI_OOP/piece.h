@@ -4,13 +4,13 @@
 #include "position.h"
 
 /*
- *  The piece class will be able to hold the general eigenschaften eines Pieces.
- *
+ *  The Piece class holds the chess pieces.
+ *  Every Piece has a Position, a color and a Piecenumber.
  *
  *
 */
 
-
+// Enum for all the piecetypes
 enum PieceType {
     KING,
     QUEEN,
@@ -22,63 +22,80 @@ enum PieceType {
 };
 
 
-
+// this is a virtual class. We will only use and create instances of classes that inherit from the piece class.
 class Piece {
 private:
+    // Every pieve has a position
     Position Pos;
-    bool Isalive;
-//    bool Iswhite;
+
+    // It is alive or not
+    bool Alive;
+
+    // Attribute called firstmove for castling or the Pawn move
     bool Firstmove = true;
+
+    // An attribute for the Pawn
     bool enPassant;
+
+
 protected:
-    int PieceNo;
-    bool Iswhite;
+    // Every piece besides the king has a piecenumber
+    int  PieceNo;
+
+    // Every piece has a color, true for white, false for black
+    bool Color;
+
 public:
 
     // constructor
-    Piece(bool);
+    Piece(bool color);
     // default constructor
     Piece();
+
+    // after a piece has moved, we will set its firstmove attribute to zero
     void setFirstmove(bool);
     bool getFirstmove();
 
-    // setters and getters for all the variables, but I don't know if we will actually need all of these
+    // setters and getters for all the variables
 
     void setPos(Position);
-    void setIswhite(bool);
-    void setIsalive(bool);
+    void setColor(bool);
+    void setAlive(bool);
     Position getPos();
-    bool getIswhite();
-    bool getIsalive();
+    bool getColor();
+    bool getAlive();
 
-    virtual bool move_valid(Position final);    // this function checks, depending on the move rules for every piece, if a move is valid to a certain position
+    // this is a virtual function, because we will never implement this for a piece without an assignment.
+    // All of the individual move_valid functions will override this function
+    // This function checks if a given move on the board is valid given *only* the rules of moving for this piece. It does not take into account the constellation on the board
+    virtual bool move_valid(Position final);
 
+    // Every piece has a piecetype besides the virtual class piece.
     virtual PieceType Piecetype();
 
+    // getter and setter for the pieceNo.
     virtual void setPieceNo(int);
-
     virtual int getPieceNo();
 
+    // only relevant for the pawn class
     virtual bool getPromotion();
-
     bool getEnPassant();
-
     void setEnPassant(bool);
+
+    // We do not need a setPromotion method. We will see why later
 
 };
 
 
 
 // now for all the subpieces that inherit from the mother class Piece
-
-// the king is a special piece, once it is attacked with no possibility of being rescued, the game is over.
-
+// KING
 class King: public Piece {
 public:
     King(bool);
     King();
 
-    // check, when a certain move is valid!
+    // check wether a certain move is valid!
     bool move_valid(Position) override;
 
     PieceType Piecetype() override;
@@ -91,26 +108,25 @@ public:
     Queen(bool);
     Queen();
 
-    // check, when a certain move is valid!
+    // check wether a certain move is valid!
     bool move_valid(Position) override;
 
     PieceType Piecetype() override;
 
+    // the Queen has a piecenumber
     void setPieceNo(int) override;
 
     int getPieceNo() override;
 
 };
 
-
+// ROOK
 class Rook: public Piece {
-private:
-//    int PieceNo;
 public:
     Rook(bool);
     Rook();
 
-    // check, when a certain move is valid!
+    // check wether a certain move is valid!
     bool move_valid(Position) override;
 
     PieceType Piecetype() override;
@@ -121,10 +137,8 @@ public:
 
 };
 
-
+// KNIGHT
 class Knight: public Piece {
-private:
-//    int PieceNo;
 public:
     Knight(bool);
     Knight();
@@ -139,10 +153,8 @@ public:
 
 };
 
-
+// BISHOP
 class Bishop: public Piece {
-private:
-//    int PieceNo;
 public:
     Bishop(bool);
     Bishop();
@@ -158,16 +170,12 @@ public:
 
 };
 
-
+// PAWN
 class Pawn: public Piece {
 private:
     bool Capturepossible = false;
-//    int PieceNo;
     bool promotion = false;
 public:
-
-//    void setFirstmove(bool firstmove) {this->Firstmove = firstmove;}
-//    bool getFirstmove() {return this->Firstmove;}
 
     Pawn(bool);
     Pawn();

@@ -55,7 +55,7 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
 
             if (!ok) {qDebug() << "NO VALID MOVE"; return false;}
 
-            if (this->Whoseturn != pieceOne->getIswhite()) {
+            if (this->Whoseturn != pieceOne->getColor()) {
                 this->error = WRONGCOLOR;
                 return false;
             }
@@ -65,7 +65,7 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
             //  if there is a piece at the second spot, kill it
             if (pieceTwo != nullptr) {
 //                pieceTwo->setPos(Position(8,8));
-                pieceTwo->setIsalive(false);
+                pieceTwo->setAlive(false);
 //                Board.setPiece(nullptr, pos2, Current);
             }
 
@@ -74,7 +74,7 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
             if (this->enpassant)  {
                 cout << "Position of the enpassanted piece: " << pos2.getX() << " " << pos1.getY() << endl;
 
-                this->Board.getPiece(Position(pos2.getX(), pos1.getY()))->setIsalive(false);
+                this->Board.getPiece(Position(pos2.getX(), pos1.getY()))->setAlive(false);
                 this->Board.getPiece(Position(pos2.getX(), pos1.getY()))->setPos(Position(8,8));
                 this->Board.setPiece(nullptr, Position(pos2.getX(), pos1.getY()));
             }
@@ -83,78 +83,140 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
             // CASTLES //
             // /////// //
             if (pieceOne->Piecetype() == KING and x1x2 == 2) {
-                qDebug() << "IS THIS EXECUTED????? ";
-                // in case white wants to castle
-                // if the rooks are still on the board, otherwise programm collapses
-//                if (Board.getPiece(Position(7,0)) == nullptr or Board.getPiece(Position(0,0)) == nullptr or  or Board.getPiece(Position(7,7)) == nullptr) {
-//                    cout << "No rooks..." << endl;
-//                    this->error = NOVALIDMOVE;
-//                    return false;
-//                }
-                if (pieceOne->getIswhite() and pieceOne->getFirstmove()) {
-                    // castles kingside
-                    // if there is no piece in the way and if the king as well as the rook have not moved so far
-                    if (x1 < x2 and Board.getPiece(Position(5,0)) == nullptr and Board.getPiece(Position(6,0)) == nullptr and Board.getPiece(Position(0,7)) != nullptr and Board.getPiece(Position(7,0))->getFirstmove()) {
-                        if (!Attack(Position(5,0), Other) and !Attack(Position(6,0), Other) and !Attack(Position(7,0), Other)) {
+
+                // WHITE and it has to be the Kings first move
+                if (pieceOne->getColor() and pieceOne->getFirstmove()) {
+
+                    // KINGSIDE, WHITE
+                    if (x1 < x2 and Board.getPiece(Position(5,0)) == nullptr and Board.getPiece(Position(6,0)) == nullptr and Board.getPiece(Position(7,0)) != nullptr) {
+
+                        // if the rook has already moved before
+                        if (!Board.getPiece(Position(7,0))->getFirstmove() or Board.getPiece(Position(7,0))->Piecetype() != ROOK) {
+                            this->error = NOVALIDMOVE;
+                            return false;
+                        }
+
+                        // The king cannot be attacked, neither can the squares the king is moving over
+                        if (!Attack(Position(4,0), Other) and !Attack(Position(5,0), Other) and !Attack(Position(6,0), Other)) {
                             qDebug() << "Castling Kingside, white.";
                             this->castlestate = WHITEKINGSIDE;
-                            Piece* temprook = this->Board.getPiece(Position(7,0));
-                            temprook->setPos(Position(5,0));
+
+                            // change position of rook and king
+                            this->Board.getPiece(Position(7,0))->setPos(Position(5,0));
+                            this->Board.getPiece(Position(4,0))->setPos(Position(6,0));
+
+                            // change position of rook and king on the board
+                            this->Board.setPiece(this->Board.getPiece(Position(7,0)), Position(5,0));
+                            this->Board.setPiece(this->Board.getPiece(Position(4,0)), Position(6,0));
                             this->Board.setPiece(nullptr, Position(7,0));
-                            this->Board.setPiece(temprook, Position(5,0));
-//                            delete temprook;
+                            this->Board.setPiece(nullptr, Position(4,0));
+
+                            // immediately return true, we don't have to check anything else. We know that the king is not in check, since
+                            // neither of the squares the king moved over or is in can be attacked by the other player, as ensured above
+                            return true;
                         }
                         else {this->error = NOVALIDMOVE; return false;}
                     }
-                    // castles queenside
-                    if (x1 > x2 and Board.getPiece(Position(1,0)) == nullptr and Board.getPiece(Position(2,0)) == nullptr and Board.getPiece(Position(3,0)) == nullptr and Board.getPiece(Position(0,0)) != nullptr and Board.getPiece(Position(0,0))->getFirstmove()) {
-                        if (!Attack(Position(1,0), Other) and !Attack(Position(2,0), Other) and !Attack(Position(3,0), Other) and !Attack(Position(0,0), Other)) {
+
+                    // QUEENSIDE, WHITE
+                    if (x1 > x2 and Board.getPiece(Position(1,0)) == nullptr and Board.getPiece(Position(2,0)) == nullptr and Board.getPiece(Position(3,0)) == nullptr and Board.getPiece(Position(0,0)) != nullptr) {
+
+                        // If the rook has moved before
+                        if (!Board.getPiece(Position(0,0))->getFirstmove() or Board.getPiece(Position(0,0))->Piecetype() != ROOK) {
+                            this->error = NOVALIDMOVE;
+                            return false;
+                        }
+
+                        // If the king is not in check and the squares the king is going to move over are not attacked:
+                        if (!Attack(Position(1,0), Other) and !Attack(Position(2,0), Other) and !Attack(Position(3,0), Other) and !Attack(Position(4,0), Other)) {
                             qDebug() << "Castling Queenside, white.";
                             this->castlestate = WHITEQUEENSIDE;
-                            Piece* temprook = this->Board.getPiece(Position(0,0));
-                            temprook->setPos(Position(3,0));
+
+                            // change position of rook and king
+                            this->Board.getPiece(Position(0,0))->setPos(Position(3,0));
+                            this->Board.getPiece(Position(4,0))->setPos(Position(2,0));
+
+                            // change position of rook and king on the board
+                            this->Board.setPiece(this->Board.getPiece(Position(0,0)), Position(3,0));
+                            this->Board.setPiece(this->Board.getPiece(Position(4,0)), Position(2,0));
                             this->Board.setPiece(nullptr, Position(0,0));
-                            this->Board.setPiece(temprook, Position(3,0));
-//                            delete temprook;
+                            this->Board.setPiece(nullptr, Position(0,0));
+
+                            // immediately return true
+                            return true;
                         }
                         else {this->error = NOVALIDMOVE; return false;}
                     }
-                }
+                } // white over
 
-                // in case black wants to castle
-                else if (!pieceOne->getIswhite() and pieceOne->getFirstmove()) {
-                    // castles kingside
-                    // if there is no piece in the way and if the king as well as the rook have not moved so far
-                    if (x1 < x2 and Board.getPiece(Position(5,7)) == nullptr and Board.getPiece(Position(6,7)) == nullptr and Board.getPiece(Position(7,7)) != nullptr and Board.getPiece(Position(7,7))->getFirstmove()) {
-                        if (!Attack(Position(5,7), Other) and !Attack(Position(6,7), Other)) {
-                            qDebug() << "Castling Kingside, black.";
+                // BLACK and it has to be the Kings first move
+                else if (!pieceOne->getColor() and pieceOne->getFirstmove()) {
+
+                    // KINGSIDE, BLACK
+                    if (x1 < x2 and Board.getPiece(Position(5,7)) == nullptr and Board.getPiece(Position(6,7)) == nullptr and Board.getPiece(Position(7,7)) != nullptr) {
+
+                        // if the rook has already moved before
+                        if (!Board.getPiece(Position(7,7))->getFirstmove() or Board.getPiece(Position(7,7))->Piecetype() != ROOK) {
+                            this->error = NOVALIDMOVE;
+                            return false;
+                        }
+
+                        // The king cannot be attacked, neither can the squares the king is moving over
+                        if (!Attack(Position(4,7), Other) and !Attack(Position(5,7), Other) and !Attack(Position(6,7), Other)) {
+                            qDebug() << "Castling Kingside, white.";
                             this->castlestate = BLACKKINGSIDE;
-                            Piece* temprook = this->Board.getPiece(Position(7,7));
-                            temprook->setPos(Position(5,7));
-                            this->Board.setPiece(nullptr, Position(7,7));
-                            this->Board.setPiece(temprook, Position(5,7));
-//                            delete temprook;
-                        }
 
-                        // if one of the spots is attacked
-                        else {cout << "this is the error hopefully" << endl; this->error = NOVALIDMOVE; return false;}
-                    }
-                    // castles queenside
-                    if (x1 > x2 and Board.getPiece(Position(1,7)) == nullptr and Board.getPiece(Position(2,7)) == nullptr and Board.getPiece(Position(3,7)) == nullptr and Board.getPiece(Position(7,0)) != nullptr and Board.getPiece(Position(7,0))->getFirstmove()) {
-                        if (!Attack(Position(1,7), Other) and !Attack(Position(2,7), Other) and !Attack(Position(3,7), Other)) {
-                            qDebug() << "Castling Queenside, black.";
-                            this->castlestate = BLACKQUEENSIDE;
-                            Piece* temprook = this->Board.getPiece(Position(0,7));
-                            temprook->setPos(Position(3,7));
-                            this->Board.setPiece(nullptr, Position(0,7));
-                            this->Board.setPiece(temprook, Position(3,7));
-//                            delete temprook;
+                            // change position of rook and king
+                            this->Board.getPiece(Position(7,7))->setPos(Position(5,7));
+                            this->Board.getPiece(Position(4,7))->setPos(Position(6,7));
+
+                            // change position of rook and king on the board
+                            this->Board.setPiece(this->Board.getPiece(Position(7,7)), Position(5,7));
+                            this->Board.setPiece(this->Board.getPiece(Position(4,7)), Position(6,7));
+                            this->Board.setPiece(nullptr, Position(7,7));
+                            this->Board.setPiece(nullptr, Position(4,7));
+
+                            // immediately return true, we don't have to check anything else. We know that the king is not in check, since
+                            // neither of the squares the king moved over or is in can be attacked by the other player, as ensured above
+                            return true;
                         }
                         else {this->error = NOVALIDMOVE; return false;}
                     }
-                }
 
-                else {this->error = NOVALIDMOVE; return false;}
+                    // QUEENSIDE, BLACK
+                    if (x1 > x2 and Board.getPiece(Position(1,7)) == nullptr and Board.getPiece(Position(2,7)) == nullptr and Board.getPiece(Position(3,7)) == nullptr and Board.getPiece(Position(0,7)) != nullptr) {
+
+                        // If the rook has moved before
+                        if (!Board.getPiece(Position(0,7))->getFirstmove() or Board.getPiece(Position(0,7))->Piecetype() != ROOK) {
+                            this->error = NOVALIDMOVE;
+                            return false;
+                        }
+
+                        // If the king is not in check and the squares the king is going to move over are not attacked:
+                        if (!Attack(Position(1,7), Other) and !Attack(Position(2,7), Other) and !Attack(Position(3,7), Other) and !Attack(Position(4,7), Other)) {
+                            qDebug() << "Castling Queenside, white.";
+                            this->castlestate = BLACKQUEENSIDE;
+
+                            // change position of rook and king
+                            this->Board.getPiece(Position(0,7))->setPos(Position(3,7));
+                            this->Board.getPiece(Position(4,7))->setPos(Position(2,7));
+
+                            // change position of rook and king on the board
+                            this->Board.setPiece(this->Board.getPiece(Position(0,7)), Position(3,7));
+                            this->Board.setPiece(this->Board.getPiece(Position(4,7)), Position(2,7));
+                            this->Board.setPiece(nullptr, Position(0,7));
+                            this->Board.setPiece(nullptr, Position(0,7));
+
+                            // immediately return true
+                            return true;
+                        }
+                        else {this->error = NOVALIDMOVE; return false;}
+                    }
+                } // black over
+                else {
+                        this->error = NOVALIDMOVE;
+                        return false;
+                    }
 
             }
 
@@ -182,7 +244,7 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
                 this->Board.setPiece(pieceOne, pos1);
                 if (pieceTwo != nullptr) {
 //                    pieceTwo->setPos(pos2);
-                    pieceTwo->setIsalive(true);
+                    pieceTwo->setAlive(true);
 
                     this->Board.setPiece(pieceTwo, pos2);
                 }
@@ -281,7 +343,7 @@ bool* ChessGame::Checkmove(Position pos2, Piece* pieceOne) {
     // Only look at case of not Pawn, because for pawn pieceTwo != nullptr can be not allowed, independent of the color of piecetwo
     // Pawn can only hit diagonally
     if (pieceOne->Piecetype() != PAWN) {
-        if (pieceTwo != nullptr and pieceTwo->getIswhite() == pieceOne->getIswhite()) {
+        if (pieceTwo != nullptr and pieceTwo->getColor() == pieceOne->getColor()) {
             this->error = SPOTBLOCKED;
 //            return false;
             movearray[0] = false;
@@ -336,7 +398,7 @@ bool* ChessGame::Checkmove(Position pos2, Piece* pieceOne) {
         }
 
         // Pawn cannot hit pieces of its own color
-        else if (pos1.getX() != pos2.getX() and pieceTwo != nullptr and pieceTwo->getIswhite() == pieceOne->getIswhite()) {
+        else if (pos1.getX() != pos2.getX() and pieceTwo != nullptr and pieceTwo->getColor() == pieceOne->getColor()) {
             this->error = NOVALIDMOVE;
 //            return false;
             movearray[0] = false;
@@ -411,6 +473,13 @@ bool* ChessGame::Checkmove(Position pos2, Piece* pieceOne) {
 //        return false;
     }
 
+    // if the piece is a king, moving two squares could be generally allowed (due to castles), *but* a king will never be able to attack this spot
+    if (pieceOne->Piecetype() == KING and x1x2 == 2) {
+        movearray[1] = false;
+        movearray[0] = true;
+
+    }
+
     return movearray;
 }
 
@@ -458,9 +527,16 @@ bool ChessGame::CheckMate(Player* Current, Player* Other)  {
                     Position alivepiece_pos = alivepiece->getPos();
                     if (Checkmove(Position(i,j), alivepiece)[0]) {
 
+
+                        // if the piece is a king, the checkmove function will return true if the king moves two to the right or left
+                        // because of castles. This is not a valid move.
+                        if (alivepiece->Piecetype() == KING and abs(alivepiece->getPos().getX() - i) == 2) {
+                            continue;
+                        }
+
                         Piece* pieceTwo = this->Board.getPiece(Position(i,j));
                         if (pieceTwo != nullptr) {
-                            pieceTwo->setIsalive(false);
+                            pieceTwo->setAlive(false);
                         }
 //                        Current->
                         // erase the space that the piece is in and put it to the other space
@@ -469,6 +545,8 @@ bool ChessGame::CheckMate(Player* Current, Player* Other)  {
 //                        alivepiece->setPos(Position(i,j));
 
                         if (!Check(Current, Other)) {
+                            qDebug() << "In this Boardconstellation it is not checkmate apparently:";
+                            Board.printBoard();
                             checkMate = false;
                         }
 
@@ -478,7 +556,7 @@ bool ChessGame::CheckMate(Player* Current, Player* Other)  {
 
                         if (pieceTwo != nullptr) {
                             Board.setPiece(pieceTwo, Position(i,j));
-                            pieceTwo->setIsalive(true);
+                            pieceTwo->setAlive(true);
                         }
                         else {
                             Board.setPiece(nullptr, Position(i,j));
@@ -507,7 +585,7 @@ bool ChessGame::StaleMate(Player* Current, Player *Other) {
 
                         Piece* pieceTwo = this->Board.getPiece(Position(i,j));
                         if (pieceTwo != nullptr) {
-                            pieceTwo->setIsalive(false);
+                            pieceTwo->setAlive(false);
                         }
 //                        Current->
                         // erase the space that the piece is in and put it to the other space
@@ -525,7 +603,7 @@ bool ChessGame::StaleMate(Player* Current, Player *Other) {
 
                         if (pieceTwo != nullptr) {
                             Board.setPiece(pieceTwo, Position(i,j));
-                            pieceTwo->setIsalive(true);
+                            pieceTwo->setAlive(true);
                         }
                         else {
                             Board.setPiece(nullptr, Position(i,j));
@@ -553,22 +631,21 @@ void ChessGame::promotion(Position pos, Player* Current, QString inputstring)  {
     if (promotiontype == "Knight") {
         Board.setPiece(Current->getKnight(2), pos);
 //        Current->getKnight(2)->setPos(pos);
-        Current->getKnight(2)->setIsalive(true);
+        Current->getKnight(2)->setAlive(true);
     }
     else if (promotiontype == "Bishop") {
-        qDebug() << "Is this executed??";
         Board.setPiece(Current->getBishop(2), pos);
-        Current->getBishop(2)->setIsalive(true);
+        Current->getBishop(2)->setAlive(true);
     }
     else if (promotiontype == "Rook") {
         Board.setPiece(Current->getRook(2), pos);
-        Current->getRook(2)->setIsalive(true);
+        Current->getRook(2)->setAlive(true);
     }
-    else {
+    else if (promotiontype == "Queen") {
         Board.setPiece(Current->getQueen(1), pos);
 //        Current->getQueen(1)->setPos(pos);
         Board.getPiece(pos)->setPos(pos);
-        Current->getQueen(1)->setIsalive(true);
+        Current->getQueen(1)->setAlive(true);
     }
 }
 
@@ -685,7 +762,7 @@ void ChessGame::getInput(QString input)
 //        if (this->Whoseturn == true) {cout << "WHITEE" << endl; this->White = this->Current; this->Black = this->Other;}
 //        else {cout << "BLACKK" << endl; this->White = this->Other; this->Black = this->Current;}
 
-        if (Current->getQueen(1)->getIsalive()) {
+        if (Current->getRook(2)->getAlive()) {
             cout << "test" << endl;
         }
 
@@ -836,10 +913,10 @@ void ChessGame::getInput(QString input)
 
 
 
-        this->move_list.push_back(move.getFirst().getX());
-        this->move_list.push_back(move.getFirst().getY());
-        this->move_list.push_back(move.getLast().getX());
-        this->move_list.push_back(move.getLast().getY());
+        this->move_list.push_back(move.getFrom().getX());
+        this->move_list.push_back(move.getFrom().getY());
+        this->move_list.push_back(move.getTo().getX());
+        this->move_list.push_back(move.getTo().getY());
 //        this->move_count += 1;
 
         // set enpassant to false again

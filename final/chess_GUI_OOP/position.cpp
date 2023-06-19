@@ -30,14 +30,40 @@ bool Position::check_pos() {
     else {return false;}
 }
 
-Position Position::shiftPos(int x, int y) {
-    this->X += x;
-    this->Y += y;
-    return Position(this->X, this->Y);
-}
-
 
 bool Position::getValid() {
     return this->Valid;
 }
+
+
+
+
+Move::Move(Position from, Position to) {
+    this->From = from; this->To = to;
+}
+
+Move::Move() {
+
+}
+
+void Move::setFrom(Position from) {
+    this->From = from;
+}
+
+Position Move::getFrom() {
+    return this->From;
+}
+
+void Move::setTo(Position to) {
+    this->To = to;
+}
+
+Position Move::getTo() {
+    return this->To;
+}
+
+
+
+
+
 

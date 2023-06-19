@@ -3,15 +3,15 @@
 
 
 // constructor
-Piece::Piece(bool iswhite) {
-    this->Iswhite = iswhite;
-    this->Isalive = true;
+Piece::Piece(bool color) {
+    this->Color = color;
+    this->Alive = true;
     this->enPassant = false;
 }
 
 Piece::Piece() {
-    this->Iswhite = true;
-    this->Isalive = true;
+    this->Color = true;
+    this->Alive = true;
     this->enPassant = false;
 }
 
@@ -34,21 +34,21 @@ Position Piece::getPos() {
 }
 
 // Color
-void Piece::setIswhite(bool iswhite) {
-    this->Iswhite = iswhite;
+void Piece::setColor(bool color) {
+    this->Color = color;
 }
 
-bool Piece::getIswhite() {
-    return this->Iswhite;
+bool Piece::getColor() {
+    return this->Color;
 }
 
 // Is alive
-void Piece::setIsalive(bool isalive) {
-    this->Isalive = isalive;
+void Piece::setAlive(bool alive) {
+    this->Alive = alive;
 }
 
-bool Piece::getIsalive() {
-    return this->Isalive;
+bool Piece::getAlive() {
+    return this->Alive;
 }
 
 
@@ -93,20 +93,23 @@ void Piece::setEnPassant(bool ep) {
 
 // King:
 
-
-King::King(bool iswhite) : Piece(iswhite) {}
+// the constructor for King is just the constructor for Piece
+King::King(bool color) : Piece(color) {}
 
 King::King() {Piece();}
 
+
+// Can the King who has a certain position pos move from pos to the position final?
 bool King::move_valid(Position final){
     if (!final.check_pos()) {std::cout << "final position invalid" << std::endl; return false;}
 
     // consider here all the moves that a king can make in a chess game
     // for example, a king can also move 2 to the left or right in case of castles
     int tx[] = {1, 1, -1, -1, 1, -1, 0, 0, -2, 2};
-    int ty[] = {-1, 1, -1, 1, 0, 0, 1, -1, 0, 0};
+    int ty[] = {-1, 1, -1, 1, 0, 0, 1, -1,  0, 0};
     bool valid_move = false;
 
+    // iterate over all the possible combinations, if the given position is encountered, return true
     for (int i =0; i<10; i++) {
         int x = this->getPos().getX();
         int y = this->getPos().getY();
@@ -123,10 +126,12 @@ PieceType King::Piecetype()  {
 
 // Queen
 
-Queen::Queen(bool iswhite) : Piece(iswhite) {}
+// Constructor
+Queen::Queen(bool color) : Piece(color) {}
 
 Queen::Queen() {Piece();}
 
+// Can the Queen who has the Position pos move from pos to final?
 bool Queen::move_valid(Position final)  {
     if (!final.check_pos()) {std::cout << "final position invalid" << std::endl; return false;}
 
@@ -137,6 +142,8 @@ bool Queen::move_valid(Position final)  {
     for (int i =0; i<8; i++) {
         int x = this->getPos().getX();
         int y = this->getPos().getY();
+
+        // The Queen can move to left and right, up and down. And not limited in stepsize (only limited by the board dimension)
         for (int j = 0; j<8; j++) {
             if (x+j*tx[i] == final.getX() and y+j*ty[i] == final.getY()) {valid_move = true;}
         }
@@ -162,10 +169,11 @@ int Queen::getPieceNo()  {
 
 // Rook
 
-Rook::Rook(bool iswhite) : Piece(iswhite) {}
+Rook::Rook(bool color) : Piece(color) {}
 
 Rook::Rook() {Piece();}
 
+// Can a Rook at position pos move from pos to final?
 bool Rook::move_valid(Position final)  {
     if (!final.check_pos()) {std::cout << "final position invalid" << std::endl; return false;}
 
@@ -202,11 +210,11 @@ int Rook::getPieceNo()  {
 
 // Knight
 
-Knight::Knight(bool iswhite) : Piece(iswhite) {}
+Knight::Knight(bool color) : Piece(color) {}
 
 Knight::Knight() {Piece();}
 
-
+// Can a Knight at Position pos move from pos to final?
 bool Knight::move_valid(Position final)  {
     if (!final.check_pos()) {return false;}
 
@@ -240,11 +248,11 @@ int Knight::getPieceNo()  {
 
 // Bishop
 
-Bishop::Bishop(bool iswhite) : Piece(iswhite) {}
+Bishop::Bishop(bool color) : Piece(color) {}
 
 Bishop::Bishop() {Piece();}
 
-
+// Can a Bishop at position pos move from pos to final?
 bool Bishop::move_valid(Position final)  {
     if (!final.check_pos()) {std::cout << "final position invalid" << std::endl; return false;}
 
@@ -281,14 +289,15 @@ int Bishop::getPieceNo()  {
 // Pawn
 
 
-Pawn::Pawn(bool iswhite) : Piece(iswhite) {
-    this->Iswhite = iswhite;
+Pawn::Pawn(bool color) : Piece(color) {
+//    this->Color = color;
 }
 
 Pawn::Pawn() {Piece();}
 
 
-
+// For the Pawn, there are a lot of moves that are allowed.
+// We will allow all the general moves a pawn can make and then disallow them according to the board constellation
 bool Pawn::move_valid(Position final)  {
     if (!final.check_pos()) {return false;}
     bool valid_move = false;
@@ -299,7 +308,7 @@ bool Pawn::move_valid(Position final)  {
 
     // differentiate between two cases:
     // Pawn is white, can only move up the board.
-    if (this->getIswhite()) {
+    if (this->getColor()) {
 
         // for its first move, it can take two steps
         if (this->getFirstmove() and x == final.getX() and y+2 == final.getY()) {valid_move = true;}
@@ -318,7 +327,7 @@ bool Pawn::move_valid(Position final)  {
     }
 
     // Pawn is black, can only move down the board
-    if (!this->getIswhite()) {
+    if (!this->getColor()) {
         // the cases are all the same as for white
         if (this->getFirstmove() and x == final.getX() and y-2 == final.getY()) {valid_move = true;}
         else if (x == final.getX() and y-1 == final.getY()) {valid_move = true;}
@@ -336,10 +345,6 @@ PieceType Pawn::Piecetype()  {
 }
 
 void Pawn::setPieceNo(int i)  {
-    if (i>7) {
-        cout << "You are trying to set a non-valid piecenumber. Not doing that" << endl;
-        return;
-    }
     this->PieceNo = i;
 }
 
@@ -347,6 +352,7 @@ int Pawn::getPieceNo()  {
     return this->PieceNo;
 }
 
+// Is this pawn up for a promotion?
 bool Pawn::getPromotion() {
     return this->promotion;
 }

@@ -450,13 +450,13 @@ void Display::getResponse(QString response)
 
 
         // If we set a promoted piece, we are only promoting, its not a real move, so if we set a piece due to promotion, the colors do not switch
-        if (turnColor == WHITE and response[0] != "P")
+        if (turnColor == WHITE and response[0] != "P" and response != "Promotion" and response != "Check")
         {
             qDebug() << "Switching turncolor to BLACK";
             this->turnColor = BLACK;
             turn->setPlainText("Black to move");
         }
-        else if (turnColor == BLACK and response[0] != "P")
+        else if (turnColor == BLACK and response[0] != "P" and response != "Promotion" and response != "Check" )
         {
             qDebug() << "Switching turncolor to WHITE";
             turnColor = WHITE;

@@ -9,9 +9,9 @@
 using namespace std;
 
 /*
- *  This class can hold a position, characterised by an X- and a Y-value
- *  Every class name will be uppercase!
- *  The class move will be containing a move from a position to another one
+ *  The whole Project is structured using certain classes.
+ *  Firstly, there is a position class. This class holds Positions on the chessboard, characterized by X and Y.
+ *  The Square E4 on a Chessboard for example corresponds to the position Position(4, 3) (Position(0, 0) is A1)
 */
 
 class Position {
@@ -21,13 +21,7 @@ private:
 public:
     // constructor
     Position(int, int);
-//        if (x >= 0 and y >= 0 and x < 8 and y < 8) {
-//            this->X = x;
-//            this->Y = y;
-//            this->Valid = true;
-//        }
-//        else {this->X = 0; this->Y = 0; this->Valid=false;}
-//    }
+
     // default constructor, FINDE NOCHMAL RAUS, WARUM!!
     Position();
     // setter and getter for the private variables X, Y
@@ -36,32 +30,34 @@ public:
     int getX();
     int getY();
 
+    // A position can be valid or not, this is what we check here
     bool check_pos();
-//        if (this->X >= 0 and this->Y >= 0 and this->X < 8 and this->Y < 8) {return true;}
-//        else {return false;}
-//    }
 
     bool getValid();
 
-    Position shiftPos(int, int); // {this->X += x; this->Y += y; return Position(this->X, this->Y);}
-
 };
 
-// the class Move is handy, because it can hold two positions
+/*
+ * Furthermore, we use the class Move. This class hold two positions. One position to move from and one position to move to.
+*/
 
 class Move {
 private:
-    Position First;
-    Position Last;
+    Position From;
+    Position To;
 public:
-    Move(Position first, Position last) {this->First = first; this->Last = last;}
-    // default one, no idea why
-    Move() {}
+
+    // constructor
+    Move(Position from, Position to);
+
+    // default constructor
+    Move();
+
     // getter and setter for the positions first and last
-    void setFirst(Position first) {this->First = first;}
-    void setLast(Position last) {this->Last = last;}
-    Position getFirst() {return this->First;}
-    Position getLast() {return this->Last;}
+    void setFrom(Position from);
+    void setTo(Position to);
+    Position getFrom();
+    Position getTo();
 };
 
 #endif // POSITION_H

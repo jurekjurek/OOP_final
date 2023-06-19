@@ -1,46 +1,48 @@
 #include "player.h"
 
 
-Player::Player(bool iswhite) {
-    this->Iswhite       = iswhite;
-    KinG          = new King(iswhite);
-    Queens[0]     = new Queen(iswhite);
-    Queens[1]     = new Queen(iswhite);
-    Queens[2]     = new Queen(iswhite);
-    Rooks[0]      = new Rook(iswhite);
-    Rooks[1]      = new Rook(iswhite);
-    Rooks[2]      = new Rook(iswhite);
-    Rooks[3]      = new Rook(iswhite);
-    Bishops[0]    = new Bishop(iswhite);
-    Bishops[1]    = new Bishop(iswhite);
-    Bishops[2]    = new Bishop(iswhite);
-    Bishops[3]    = new Bishop(iswhite);
-    Knights[0]    = new Knight(iswhite);
-    Knights[1]    = new Knight(iswhite);
-    Knights[2]    = new Knight(iswhite);
-    Knights[3]    = new Knight(iswhite);
-    Pawns[0]      = new Pawn(iswhite);
-    Pawns[1]      = new Pawn(iswhite);
-    Pawns[2]      = new Pawn(iswhite);
-    Pawns[3]      = new Pawn(iswhite);
-    Pawns[4]      = new Pawn(iswhite);
-    Pawns[5]      = new Pawn(iswhite);
-    Pawns[6]      = new Pawn(iswhite);
-    Pawns[7]      = new Pawn(iswhite);
+Player::Player(bool color) {
+    // A player gets a certain list of new pieces
+    this->Color       = color;
+    KinG          = new King(Color);
+    Queens[0]     = new Queen(Color);
+    Queens[1]     = new Queen(Color);
+    Queens[2]     = new Queen(Color);
+    Rooks[0]      = new Rook(Color);
+    Rooks[1]      = new Rook(Color);
+    Rooks[2]      = new Rook(Color);
+    Rooks[3]      = new Rook(Color);
+    Bishops[0]    = new Bishop(Color);
+    Bishops[1]    = new Bishop(Color);
+    Bishops[2]    = new Bishop(Color);
+    Bishops[3]    = new Bishop(Color);
+    Knights[0]    = new Knight(Color);
+    Knights[1]    = new Knight(Color);
+    Knights[2]    = new Knight(Color);
+    Knights[3]    = new Knight(Color);
+    Pawns[0]      = new Pawn(Color);
+    Pawns[1]      = new Pawn(Color);
+    Pawns[2]      = new Pawn(Color);
+    Pawns[3]      = new Pawn(Color);
+    Pawns[4]      = new Pawn(Color);
+    Pawns[5]      = new Pawn(Color);
+    Pawns[6]      = new Pawn(Color);
+    Pawns[7]      = new Pawn(Color);
 
-    Queens[1]->setIsalive(false);
-    Queens[2]->setIsalive(false);
-    Queens[3]->setIsalive(false);
-    Rooks[2]->setIsalive(false);
-    Rooks[3]->setIsalive(false);
-    Knights[2]->setIsalive(false);
-    Knights[3]->setIsalive(false);
-    Bishops[2]->setIsalive(false);
-    Bishops[3]->setIsalive(false);
+    // the ones used for promotion are set to not be alive
+    Queens[1]->setAlive(false);
+    Queens[2]->setAlive(false);
+    Queens[3]->setAlive(false);
+    Rooks[2]->setAlive(false);
+    Rooks[3]->setAlive(false);
+    Knights[2]->setAlive(false);
+    Knights[3]->setAlive(false);
+    Bishops[2]->setAlive(false);
+    Bishops[3]->setAlive(false);
 
 
-
-    if (iswhite) {
+    // We set the position of the pieces of the players to positions on the ChessBoard (which we will introduce in the class Board.h)
+    if (Color) {
         this->KinG->setPos(Position(4,0));
 
         this->Queens[0]->setPos(Position(3,0));
@@ -64,7 +66,7 @@ Player::Player(bool iswhite) {
         this->Pawns[7]->setPos(Position(7,1));
     }
 
-    else if (!iswhite) {
+    else if (!Color) {
         this->KinG->setPos(Position(4,7));
 
         this->Queens[0]->setPos(Position(3,7));
@@ -91,6 +93,7 @@ Player::Player(bool iswhite) {
 
 }
 
+// Constructor
 Player::Player() {}
 
 Player::~Player() {
@@ -110,16 +113,18 @@ Player::~Player() {
 //    delete this->Pawns[7];
 }
 
-bool Player::getIswhite() {
-    return this->Iswhite;
+
+bool Player::getColor() {
+    return this->Color;
 }
 
 
-void Player::setIswhite(bool iswhite) {
-    this->Iswhite = iswhite;
+void Player::setColor(bool color) {
+    this->Color = color;
 }
 
-
+// Get the King of a certain Player.
+// This returns a Pointer to a certain piece, for all the pieces a player has
 King* Player::getKing() {return KinG;}
 
 Queen* Player::getQueen(int i) {
@@ -151,81 +156,81 @@ Pawn* Player::getPawn(int i) {
     return Pawns[i];
 }
 
-
+// In a ChessGame, we want to keep track of the alive pieces a Player can have in order to see what moves he is allowed to make
 vector<Piece*> Player::getAlivePieces() {
-    // keep a vector of all alive pieces of a certain player
+    // keep a vector of pointers to all alive pieces of a certain player
     // keep in mind that we have four pieces of every kind, two for the case of promotion
     vector<Piece*> AlivePieces;
-    if (this->Queens[0]->getIsalive()) {
+    if (this->Queens[0]->getAlive()) {
         AlivePieces.push_back(this->Queens[0]);
     }
-    if (this->Queens[1]->getIsalive()) {
+    if (this->Queens[1]->getAlive()) {
         AlivePieces.push_back(this->Queens[1]);
     }
-    if (this->Queens[2]->getIsalive()) {
+    if (this->Queens[2]->getAlive()) {
         AlivePieces.push_back(this->Queens[2]);
     }
-    if (this->KinG->getIsalive()) {
+    if (this->KinG->getAlive()) {
         AlivePieces.push_back(this->KinG);
     }
-    if (this->Rooks[0]->getIsalive()) {
+    if (this->Rooks[0]->getAlive()) {
         AlivePieces.push_back(this->Rooks[0]);
     }
-    if (this->Rooks[1]->getIsalive()) {
+    if (this->Rooks[1]->getAlive()) {
         AlivePieces.push_back(this->Rooks[1]);
     }
-    if (this->Rooks[2]->getIsalive()) {
+    if (this->Rooks[2]->getAlive()) {
         AlivePieces.push_back(this->Rooks[2]);
     }
-    if (this->Rooks[3]->getIsalive()) {
+    if (this->Rooks[3]->getAlive()) {
         AlivePieces.push_back(this->Rooks[3]);
     }
-    if (this->Bishops[0]->getIsalive()) {
+    if (this->Bishops[0]->getAlive()) {
         AlivePieces.push_back(this->Bishops[0]);
     }
-    if (this->Bishops[1]->getIsalive()) {
+    if (this->Bishops[1]->getAlive()) {
         AlivePieces.push_back(this->Bishops[1]);
     }
-    if (this->Bishops[2]->getIsalive()) {
+    if (this->Bishops[2]->getAlive()) {
         AlivePieces.push_back(this->Bishops[2]);
     }
-    if (this->Bishops[3]->getIsalive()) {
+    if (this->Bishops[3]->getAlive()) {
         AlivePieces.push_back(this->Bishops[3]);
     }
-    if (this->Knights[0]->getIsalive()) {
+    if (this->Knights[0]->getAlive()) {
         AlivePieces.push_back(this->Knights[0]);
     }
-    if (this->Knights[1]->getIsalive()) {
+    if (this->Knights[1]->getAlive()) {
         AlivePieces.push_back(this->Knights[1]);
     }
-    if (this->Knights[2]->getIsalive()) {
+    if (this->Knights[2]->getAlive()) {
         AlivePieces.push_back(this->Knights[2]);
     }
-    if (this->Knights[3]->getIsalive()) {
+    if (this->Knights[3]->getAlive()) {
         AlivePieces.push_back(this->Knights[3]);
     }
-    if (this->Pawns[0]->getIsalive()) {
+    if (this->Pawns[0]->getAlive()) {
         AlivePieces.push_back(this->Pawns[0]);
     }
-    if (this->Pawns[1]->getIsalive()) {
+    if (this->Pawns[1]->getAlive()) {
         AlivePieces.push_back(this->Pawns[1]);
     }
-    if (this->Pawns[2]->getIsalive()) {
+    if (this->Pawns[2]->getAlive()) {
         AlivePieces.push_back(this->Pawns[2]);
     }
-    if (this->Pawns[3]->getIsalive()) {
+    if (this->Pawns[3]->getAlive()) {
         AlivePieces.push_back(this->Pawns[3]);
     }
-    if (this->Pawns[4]->getIsalive()) {
+    if (this->Pawns[4]->getAlive()) {
         AlivePieces.push_back(this->Pawns[4]);
     }
-    if (this->Pawns[5]->getIsalive()) {
+    if (this->Pawns[5]->getAlive()) {
         AlivePieces.push_back(this->Pawns[5]);
     }
-    if (this->Pawns[6]->getIsalive()) {
+    if (this->Pawns[6]->getAlive()) {
         AlivePieces.push_back(this->Pawns[6]);
     }
-    if (this->Pawns[7]->getIsalive()) {
+    if (this->Pawns[7]->getAlive()) {
         AlivePieces.push_back(this->Pawns[7]);
     }
     return AlivePieces;

@@ -4,12 +4,13 @@
 #include "piece.h"
 
 
-// Every Player has pointers to all its pieces
-//
+/*
+ * Every Player has a set of pieces and a Color. The Pieces have the same color as the Player.
+*/
 
 class Player {
 private:
-    bool Iswhite;
+    bool Color;
     King* KinG;
     Queen* Queens[3];
     Rook* Rooks[4];
@@ -24,8 +25,8 @@ public:
 
     ~Player();
 
-    bool getIswhite();
-    void setIswhite(bool);
+    bool getColor();
+    void setColor(bool);
 
     // now, we need a possibility of accessing the pieces of the player
     // we need a method to return a certain piece, or rather a pointer to a given piece
