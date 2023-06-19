@@ -79,7 +79,7 @@ public:
     // but actually, we have to make sure that no piece can move. Not a single one.
 
 
-    bool StaleMate();
+    bool StaleMate(Player*, Player*);
 
 
     void promotion(Position, Player*, QString inputstring);

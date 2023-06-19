@@ -217,7 +217,7 @@ bool ChessGame::Maketurn(Piece* pieceOne, Position pos2) {
     //            this->Board = Board;
 
             // check if Pawn can be promoted
-            if (pieceOne->Piecetype() == PAWN and pos2.getY() == 7) {
+            if (pieceOne->Piecetype() == PAWN and pos2.getY() == 7 or pieceOne->Piecetype() == PAWN and pos2.getY() == 0 ) {
                 this->promotion(pos2, Current, "");
                 this->Promotion = true;
             }
@@ -441,20 +441,6 @@ bool ChessGame::Check(Player* Current, Player* Other)  {
     }
 }
 
-//// this function returns a list of alive pieces for the player with color color
-//bool ChessGame::CanMove(Player * curr) {
-//    // can the piece curr move to any position?
-//    // player curr has a certain color, if he has the wrong color, the Maketurn function will return false
-////    Board.getPiece(Position(->getPos()));
-//    for (int i = 0; i<7; i++) {
-//        for (int j = 0; j<7; j++) {
-//            if (Checkmove(Move(curr->getPos(), Position(i,j)), curr) == true) {return true;}
-//            else {return false;}
-//        }
-//    }
-
-//}
-
 
 bool ChessGame::CheckMate(Player* Current, Player* Other)  {
     // okay, so what we'll do here is create a copy of the board, manipulate this copy and look if certain moves can be made.
@@ -506,24 +492,51 @@ bool ChessGame::CheckMate(Player* Current, Player* Other)  {
 }
 
 
-bool ChessGame::StaleMate() {
-    //        if (Check(current, other)) {return false;}
-    //        Position kingPos = Other->getKing()->getPos();
-    //        // here maybe a lambda function to iterate over all possible positions the king can be in
-    //        for (int i = -1; i<2; i++) {
-    //            for (int j = -1; j<2; j++) {
-    //                // if every spot around the king is either attacked or blocked by a piece of the same color
-    //                // the getPiece method takes a pos
-    ////                if (!Attack(current, kingPos.shiftPos(i, j)) or this->Board.getPiece(kingPos.shiftPos(i, j))->getIswhite() == Other->getIswhite() ) {return false;}
-    //                if (!Attack(current, other, kingPos.shiftPos(i, j)) and this->Board.getPiece(kingPos.shiftPos(i, j)) == nullptr ) {return false;}
-    //                else if (!Attack(current, other, kingPos.shiftPos(i, j)) and this->Board.getPiece(kingPos.shiftPos(i, j))->getIswhite() == Current->getIswhite()) {return false;}
-    //                // here, we have to iterate over the pieces on the board and see if any of them can move.
-    //                else if (true) {return false;}
-    //            }
-    //        }
-            return false;
+bool ChessGame::StaleMate(Player* Current, Player *Other) {
+    // If Current is checking other, it is not stalemate
+    if (Check(Current, Other)) {return false;}
+    vector<Piece*> AlivePieces = Other->getAlivePieces();
 
+    bool draw = true;
+
+    for (int i = 0; i<8; i++) {
+        for (int j = 0; j<8; j++) {
+                for (Piece* alivepiece : AlivePieces) {
+                    Position alivepiece_pos = alivepiece->getPos();
+                    if (Checkmove(Position(i,j), alivepiece)[0]) {
+
+                        Piece* pieceTwo = this->Board.getPiece(Position(i,j));
+                        if (pieceTwo != nullptr) {
+                            pieceTwo->setIsalive(false);
+                        }
+//                        Current->
+                        // erase the space that the piece is in and put it to the other space
+                        this->Board.setPiece(nullptr, alivepiece->getPos());
+                        this->Board.setPiece(alivepiece, Position(i,j));
+//                        alivepiece->setPos(Position(i,j));
+
+                        if (!Check(Current, Other)) {
+                            draw = false;
+                        }
+
+
+
+                        Board.setPiece(alivepiece, alivepiece_pos);
+
+                        if (pieceTwo != nullptr) {
+                            Board.setPiece(pieceTwo, Position(i,j));
+                            pieceTwo->setIsalive(true);
+                        }
+                        else {
+                            Board.setPiece(nullptr, Position(i,j));
+                        }
+                    }
+                }
         }
+    }
+    return draw;
+
+}
             // king is not attacked
             // but make_move does not work, because all of the fields are attacked
             // and the player can not move any other piece, so make_move does not work for any other piece either
@@ -743,10 +756,7 @@ void ChessGame::getInput(QString input)
 
 
 
-        // DRAW
-//        bool draw = this->StaleMate(current, other);
-//        if (draw) {sendResponse("The game is drawn."); return;}
-//        if (!draw) {sendResponse("No stalemate. The game goes on. ");}
+
 
 
         // after white, it's black and after black, it's white.
@@ -775,6 +785,7 @@ void ChessGame::getInput(QString input)
             sendStr += part2;
             QString part3 = ", Promotion";
             sendStr += part3;
+            emit sendResponse("Promotion");
             emit sendResponse(sendStr);
         }
 
@@ -800,6 +811,21 @@ void ChessGame::getInput(QString input)
             emit sendResponse(sendcheck);
         }
 
+        // We want to let the player know that they can choose a piece
+//        if (this->Promotion) {
+//            emit sendResponse("Promotion");
+//        }
+
+
+        //         DRAW
+        bool draw = this->StaleMate(Current, Other);
+        if (draw) {
+            sendResponse("Draw");
+            return;
+        }
+//        if (!draw) {
+//            sendResponse("No stalemate. The game goes on. ");
+//        }
 
         //         CHECKMATE
         bool gameOver = this->CheckMate(Current, Other);

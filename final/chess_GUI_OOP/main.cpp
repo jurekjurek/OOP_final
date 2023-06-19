@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 
     // set fixed size for the Scene, so we don't have scrollbars
     // ChatGPT recommended this
-    QRectF newSceneRect(0, 0, 600, 480);
+    QRectF newSceneRect(0, 0, 480, 700);
     view->setSceneRect(newSceneRect);
 
 

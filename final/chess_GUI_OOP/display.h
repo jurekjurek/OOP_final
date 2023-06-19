@@ -29,6 +29,7 @@ private:
     Color turnColor;
     QGraphicsTextItem * turn;
     QGraphicsTextItem * alert;
+    QGraphicsTextItem * prom;
 
     const QString spaces[64] =
     {

@@ -24,7 +24,7 @@ Display::Display()
 void Display::setup()
 {
     int j = 0;
-    int k = 0;
+    int k = 100;
     bool black = true;
     for(int i=0; i<64; i++)
     {
@@ -76,49 +76,61 @@ void Display::setup()
 //    match->setPos(500, 0);
 //    DisplayScene->addItem(match);
 
-    QString toMove = "White's turn";
+    QString toMove = "White to move";
     turn = new QGraphicsTextItem();
     turn->setPlainText(toMove);
-    turn->setPos(500, 100);
+    turn->setPos(10, 50);
+    QFont font;
+    font.setPointSize(13);
+    turn->setFont(font);
     DisplayScene->addItem(turn);
 
     QString state = "";
     alert = new QGraphicsTextItem();
     alert->setPlainText(state);
-    alert->setPos(500, 200);
+    alert->setPos(300, 50);
+    alert->setFont(font);
+    alert->setDefaultTextColor(Qt::red);
     DisplayScene->addItem(alert);
 
 
     // add promotion interface
-    button1 = new Space(500, 300);
-    button1->setRect(500,300,40,40);
+    button1 = new Space(300, 600);
+    button1->setRect(300,600,40,40);
 //    DisplayScene->addItem(button1);
     button1->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_knight_40px.png");
     button1->setName("Knight");
 
-    button2 = new Space(550, 300);
-    button2->setRect(550,300,40,40);
+    button2 = new Space(350, 600);
+    button2->setRect(350,600,40,40);
 //    DisplayScene->addItem(button2);
     button2->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_rook_40px.png");
     button2->setName("Rook");
 
-    button3 = new Space(500, 350);
-    button3->setRect(500,350,40,40);
+    button3 = new Space(300, 650);
+    button3->setRect(300,650,40,40);
 //    DisplayScene->addItem(button3);
     button3->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_queen_40px.png");
     button3->setName("Queen");
 
-    button4 = new Space(550, 350);
-    button4->setRect(550,350,40,40);
+    button4 = new Space(350, 650);
+    button4->setRect(350,650,40,40);
 //    DisplayScene->addItem(button4);
     button4->setImage("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_bishop_40px.png");
     button4->setName("Bishop");
+
+    QString choice = "Choose a piece";
+    prom = new QGraphicsTextItem();
+    prom->setPlainText(choice);
+    prom->setPos(120, 630);
+    prom->setFont(font);
+//    DisplayScene->addItem(prom);
 
 }
 
 void Display::resetColor() {
     int j = 0;
-    int k = 0;
+    int k = 100;
     bool black = true;
     for(int i=0; i<64; i++)
     {
@@ -213,9 +225,7 @@ void Display::getResponse(QString response)
     DisplayScene->removeItem(button2);
     DisplayScene->removeItem(button3);
     DisplayScene->removeItem(button4);
-
-
-
+    DisplayScene->removeItem(prom);
 
 
 
@@ -246,10 +256,14 @@ void Display::getResponse(QString response)
         resetColor();
         return;
     }
-    else if (responseString.compare("Stalemate") == 0)
+    else if (response == "Promotion") {
+        qDebug() << "KOmmt das an?";
+        turn->setPlainText("Choose a piece to promote your pawn to!");
+    }
+    else if (responseString.compare("Draw") == 0)
     {
-        qDebug() << "Stalemate!";
-        alert->setPlainText("Stalemate!");
+        qDebug() << "Draw!";
+        alert->setPlainText("Draw!");
         resetColor();
         return;
     }
@@ -405,6 +419,8 @@ void Display::getResponse(QString response)
 
                 DisplayScene->addItem(button4);
 
+                DisplayScene->addItem(prom);
+
                 QObject::connect(button1, SIGNAL(sendSignal(QString)), &game, SLOT(getInput(QString)));
                 QObject::connect(button2, SIGNAL(sendSignal(QString)), &game, SLOT(getInput(QString)));
                 QObject::connect(button3, SIGNAL(sendSignal(QString)), &game, SLOT(getInput(QString)));
@@ -431,6 +447,7 @@ void Display::getResponse(QString response)
 
 
         resetColor();
+
 
         // If we set a promoted piece, we are only promoting, its not a real move, so if we set a piece due to promotion, the colors do not switch
         if (turnColor == WHITE and response[0] != "P")
