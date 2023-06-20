@@ -10,14 +10,14 @@
 #include <QWidget>
 
 
-class Display: public QObject //, public QGraphicsView
+class GUI: public QObject //, public QGraphicsView
 {
     // if this line of code is included, it tells us that we can use signals and slots for our widgets
     // Basically, this is here so C++ understands all the stuff that we write
     Q_OBJECT
 private:
     // All QT logic goes inside the scene, we always need a scene
-    QGraphicsScene * DisplayScene;
+    QGraphicsScene * Scene_GUI;
 
     // Of course we have to connect the game to QT somehow, get Game in there
     ChessGame game;
@@ -25,8 +25,7 @@ private:
     // A list containing all the Squares on the Board, derived from class Square
     QList<Square *> squares;
     QString move;
-    void setup();
-    void placePieces();
+    void initialize_interface();
     void resetColor();
     bool Color;
     QGraphicsTextItem * turn;
@@ -54,7 +53,7 @@ private:
 
 public:
     // constructor
-    Display();
+    GUI();
     QGraphicsScene* getScene();
 
 

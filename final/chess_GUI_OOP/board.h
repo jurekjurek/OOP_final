@@ -20,7 +20,7 @@ private:
     Player* White;
 public:
     // constructor
-    ChessBoard(Player*, Player*);
+//    ChessBoard(Player*, Player*);
 
     // default constructor
     ChessBoard();

@@ -1,9 +1,9 @@
 #include "board.h"
 
 
-// The constructor assigns a pointer to every square on the board.
-//
-ChessBoard::ChessBoard(Player *white, Player *black)  {
+
+// the constructor assigns an appropriate pointer to every square on the board, given the initial constellation of pieces in a chess game
+ChessBoard::ChessBoard()  {
     // fill
     for (int i = 0; i < 8; i++) {
         for (int j = 2; j < 6; j++) {
@@ -11,13 +11,9 @@ ChessBoard::ChessBoard(Player *white, Player *black)  {
         }
     }
 
-    // double check that the colors are correct
-    if (!white->getColor() or black->getColor()) {
-        cout << "Wrong colors. Not setting up the board" << endl;
-        return;
-    }
-    this->White = white;
-    this->Black = black;
+    this->White = new Player(true);
+    this->Black = new Player(false);
+
     // Assign pieces of given Players to the board
     // First, the pieces of the white Player
     Board[0][0] = White->getRook(0);

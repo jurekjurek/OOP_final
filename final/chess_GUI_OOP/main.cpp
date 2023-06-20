@@ -12,15 +12,15 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     a.setApplicationDisplayName("Chess Game");
-    // Display kinda works like our Mainwindow here!
-    // Remember:
+    // GUI kinda works like our Mainwindow here!
+    // Remember this is the code for the Mainwindow:
     // Mainwindow w;
     // w.show();
-    // And this is the code for the Mainwindow
-    Display D;
+    //
+    GUI G;
 
     // Thats always how we visualize the scene. We make a new QGraphicsView(scene)
-    QGraphicsScene* scene = D.getScene();
+    QGraphicsScene* scene = G.getScene();
 
 
 

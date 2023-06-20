@@ -44,10 +44,6 @@ class ChessGame : public QObject{
     Q_OBJECT
 private:
 
-    // Every Chessgame has two Players, Black and White
-    Player White;
-    Player Black;
-
     // Every game has a Board
     ChessBoard Board;
 

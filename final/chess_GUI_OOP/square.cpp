@@ -5,17 +5,23 @@ Square::Square(int x, int y)
 {
     this->X = x;
     this->Y = y;
+
+    // establish the position of piece inside the Qt scene hierarchy.
+    // Since this class (square) inherits from QGraphicsRectItem,
+    // the item Square is one step above the item piece in the Qt hierarchy
     piece.setParentItem(this);
 }
 
-// When clicked, the position of this particular squere on the board is sent to Display slot
+// When clicked, the position of this particular square on the board is sent to Game slot
 void Square::mousePressEvent(QGraphicsSceneMouseEvent *ev){
     if(ev->buttons() == Qt::LeftButton){
-        qDebug() << "You clicked " << position;
+
+        // when clicked, color the square red
         this->setBrush(Qt::red);
     }
+
     // this sendSignal command directly gets transfered to the game
-    emit sendPosition(position);
+    emit sendPosition(this->position);
 }
 
 
@@ -25,23 +31,30 @@ void Square::setPosition(QString Position){
 }
 
 QString Square::getPosition(){
-    return position;
+    return this->position;
 }
 
-void Square::setImage(QString path)
+void Square::setPicture(QString path)
 {
-    image = path;
-    piece.setPixmap(path);
-    piece.setPos(X, Y);
-    piece.show();
+    // picture is a QString of a path to a picture
+    this->picture = path;
+
+    // the PixmapItem piece gets a picture assigned to it
+    this->piece.setPixmap(path);
+
+    // where to put the picture on the board?
+    this->piece.setPos(this->X, this->Y);
+
+    // show the picture to the respective scene
+    this->piece.show();
 }
 
-QString Square::getImage()
+QString Square::getPicture()
 {
-    return image;
+    return this->picture;
 
 }
-void Square::clearImage()
+void Square::clearPicture()
 {
-    piece.hide();
+    this->piece.hide();
 }

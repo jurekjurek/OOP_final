@@ -1,7 +1,7 @@
 #include "game.h"
 
 // Initialize the Players with the respective colors and set up the board with these players
-ChessGame::ChessGame() : Black(false), White(true), Board(&White, &Black) {
+ChessGame::ChessGame() : Board() {
 
     // Upon initialization, it's whites turn
     this->Turn= true;
