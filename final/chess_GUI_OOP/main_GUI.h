@@ -13,7 +13,7 @@
  * This class is responsible for handling everyting the GUI does.
  * It connects the square class to the game class and receives certain moves from the game class
  * to implement graphically. Furthermore, it receives strings indicating errors and warning messages the Game slot is emitting
- * Some parts of the GUI implementation with Qt are inspired by https://github.com/subeshb1/Chess/blob/master/game.cpp
+ * Parts of the GUI implementation with Qt are inspired by https://github.com/djbauman/Qt-Chess
 */
 
 
