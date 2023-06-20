@@ -75,10 +75,6 @@ int Piece::getPieceNo() {
     return 0;
 }
 
-bool Piece::getPromotion() {
-    return false;
-}
-
 bool Piece::getEnPassant() {
     return this->enPassant;
 }
@@ -311,29 +307,41 @@ bool Pawn::move_valid(Position final)  {
     if (this->getColor()) {
 
         // for its first move, it can take two steps
-        if (this->getFirstmove() and x == final.getX() and y+2 == final.getY()) {valid_move = true;}
+        if (this->getFirstmove() and x == final.getX() and y+2 == final.getY()) {
+            valid_move = true;
+        }
 
         // it can always move one up the board
-        else if (x == final.getX() and y+1 == final.getY()) {valid_move = true;}
+        else if (x == final.getX() and y+1 == final.getY()) {
+            valid_move = true;
+        }
 
         // and it can hit diagonally, either to the right
-        else if (x+1 == final.getX() and y+1 == final.getY()) {valid_move = true;}
+        else if (x+1 == final.getX() and y+1 == final.getY()) {
+            valid_move = true;
+        }
 
         // or to the left
-        else if (x-1 == final.getX() and y+1 == final.getY()) {valid_move = true;}
-
-        // if the pawn is white and we hit the uppermost row of the chessboard, the pawn can be promoted
-        if (valid_move == true and final.getY() == 7) {this->promotion = true;}
+        else if (x-1 == final.getX() and y+1 == final.getY()) {
+            valid_move = true;
+        }
     }
 
     // Pawn is black, can only move down the board
     if (!this->getColor()) {
         // the cases are all the same as for white
-        if (this->getFirstmove() and x == final.getX() and y-2 == final.getY()) {valid_move = true;}
-        else if (x == final.getX() and y-1 == final.getY()) {valid_move = true;}
-        else if (x+1 == final.getX() and y-1 == final.getY()) {valid_move = true;}
-        else if (x-1 == final.getX() and y-1 == final.getY()) {valid_move = true;}
-        if (valid_move == true and y == 0) {cout << "Your pawn can be promoted!" << endl; this->promotion = true;}
+        if (this->getFirstmove() and x == final.getX() and y-2 == final.getY()) {
+            valid_move = true;
+        }
+        else if (x == final.getX() and y-1 == final.getY()) {
+            valid_move = true;
+        }
+        else if (x+1 == final.getX() and y-1 == final.getY()) {
+            valid_move = true;
+        }
+        else if (x-1 == final.getX() and y-1 == final.getY()) {
+            valid_move = true;
+        }
     }
 
     return valid_move;
@@ -352,10 +360,6 @@ int Pawn::getPieceNo()  {
     return this->PieceNo;
 }
 
-// Is this pawn up for a promotion?
-bool Pawn::getPromotion() {
-    return this->promotion;
-}
 
 
 

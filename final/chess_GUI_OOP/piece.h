@@ -78,7 +78,6 @@ public:
     virtual int getPieceNo();
 
     // only relevant for the pawn class
-    virtual bool getPromotion();
     bool getEnPassant();
     void setEnPassant(bool);
 
@@ -172,9 +171,6 @@ public:
 
 // PAWN
 class Pawn: public Piece {
-private:
-    bool Capturepossible = false;
-    bool promotion = false;
 public:
 
     Pawn(bool);
@@ -189,10 +185,6 @@ public:
     void setPieceNo(int) override;
 
     int getPieceNo() override;
-
-    bool getPromotion();
-
-
 
 };
 

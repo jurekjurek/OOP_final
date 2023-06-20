@@ -272,10 +272,14 @@ bool ChessGame::Maketurn(Position pos1, Position pos2) {
             // set enpassant to false for all pieces on the board, we will set enpassant = true later if appropriate
             // Iterate through the list of alive pieces for the current and the other player
             for (Piece * alivePiece : Current->getAlivePieces()) {
-                alivePiece->setEnPassant(false);
+                if (alivePiece->Piecetype() == PAWN) {
+                    alivePiece->setEnPassant(false);
+                }
             }
             for (Piece * alivePiece : Other->getAlivePieces()) {
-                alivePiece->setEnPassant(false);
+                if (alivePiece->Piecetype() == PAWN) {
+                    alivePiece->setEnPassant(false);
+                }
             }
 
 
@@ -556,6 +560,10 @@ bool ChessGame::CheckMate(Player* Current, Player* Other)  {
                     if (Checkmove(Position(i,j), alivepiece)[0]) {
 
 
+                        if (i == 5 and j == 5 and Board.getPlayerWhite()->getQueen(0)->getPos().getY() == 2) {
+                            cout << "was?" << endl;
+                        }
+
                         // if the piece is a king, the checkmove function will return true if the king moves two to the right or left
                         // because of the castle rule. This is not a valid move.
                         if (alivepiece->Piecetype() == KING and abs(alivepiece->getPos().getX() - i) == 2) {
@@ -571,7 +579,7 @@ bool ChessGame::CheckMate(Player* Current, Player* Other)  {
 
                         // erase the space that the piece is in and put it to the other space
                         this->Board.setPiece(alivepiece, Position(i,j));
-                        this->Board.setPiece(nullptr, alivepiece->getPos());
+                        this->Board.setPiece(nullptr, alivepiece_pos);
 
                         // If, now that a possible move has been made, there is no more check on the board, checkmate is false
                         if (!Check(Current, Other)) {
