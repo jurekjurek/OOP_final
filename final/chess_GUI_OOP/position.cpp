@@ -38,31 +38,6 @@ bool Position::getValid() {
 
 
 
-Move::Move(Position from, Position to) {
-    this->From = from; this->To = to;
-}
-
-Move::Move() {
-
-}
-
-void Move::setFrom(Position from) {
-    this->From = from;
-}
-
-Position Move::getFrom() {
-    return this->From;
-}
-
-void Move::setTo(Position to) {
-    this->To = to;
-}
-
-Position Move::getTo() {
-    return this->To;
-}
-
-
 
 
 

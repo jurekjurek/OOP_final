@@ -87,7 +87,7 @@ Player::Player(bool color) {
 // Constructor
 Player::Player() {}
 
-Player::~Player() {
+//Player::~Player() {
 //    delete this->Rooks[0];
 //    delete this->Rooks[1];
 //    delete this->Bishops[0];
@@ -102,7 +102,7 @@ Player::~Player() {
 //    delete this->Pawns[5];
 //    delete this->Pawns[6];
 //    delete this->Pawns[7];
-}
+//}
 
 
 bool Player::getColor() {

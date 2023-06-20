@@ -197,6 +197,9 @@ QGraphicsScene* GUI::getScene()
     return Scene_GUI;
 }
 
+
+
+
 // Get a response from game.cpp and change the
 // Pictures of pieces on the board appropriately
 void GUI::getResultingBoard(QString response)

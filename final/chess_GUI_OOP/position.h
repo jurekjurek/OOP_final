@@ -24,6 +24,7 @@ public:
 
     // default constructor, FINDE NOCHMAL RAUS, WARUM!!
     Position();
+
     // setter and getter for the private variables X, Y
     void setX(int);
     void setY(int);
@@ -33,31 +34,9 @@ public:
     // A position can be valid or not, this is what we check here
     bool check_pos();
 
+    // is the position valid?
     bool getValid();
 
-};
-
-/*
- * Furthermore, we use the class Move. This class hold two positions. One position to move from and one position to move to.
-*/
-
-class Move {
-private:
-    Position From;
-    Position To;
-public:
-
-    // constructor
-    Move(Position from, Position to);
-
-    // default constructor
-    Move();
-
-    // getter and setter for the positions first and last
-    void setFrom(Position from);
-    void setTo(Position to);
-    Position getFrom();
-    Position getTo();
 };
 
 #endif // POSITION_H

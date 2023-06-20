@@ -297,7 +297,7 @@ bool ChessGame::Maketurn(Position pos1, Position pos2) {
 
             // check if Pawn can be promoted
             // if a pawn is on the 7th or 0th rank, it can be promoted
-            if (pieceOne->Piecetype() == PAWN and pos2.getY() == 7 or pieceOne->Piecetype() == PAWN and pos2.getY() == 0 ) {
+            if (pieceOne->Piecetype() == PAWN and pos2.getY() == 7 or pieceOne->Piecetype() == PAWN and pos2.getY() == 0) {
                 // the pawn will be promoted later. The GUI will provide a piecetype to promote to
                 // to use for the GUI
                 this->Promotion = true;
@@ -559,10 +559,6 @@ bool ChessGame::CheckMate(Player* Current, Player* Other)  {
                     // Check if this particular alive piece can move to this particular spot
                     if (Checkmove(Position(i,j), alivepiece)[0]) {
 
-
-                        if (i == 5 and j == 5 and Board.getPlayerWhite()->getQueen(0)->getPos().getY() == 2) {
-                            cout << "was?" << endl;
-                        }
 
                         // if the piece is a king, the checkmove function will return true if the king moves two to the right or left
                         // because of the castle rule. This is not a valid move.

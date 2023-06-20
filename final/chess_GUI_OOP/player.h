@@ -23,7 +23,7 @@ public:
     Player();
     Player(bool);
 
-    ~Player();
+//    ~Player();
 
     bool getColor();
     void setColor(bool);

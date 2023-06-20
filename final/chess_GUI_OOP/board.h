@@ -19,10 +19,8 @@ private:
     Player* Black;
     Player* White;
 public:
-    // constructor
-//    ChessBoard(Player*, Player*);
 
-    // default constructor
+    // constructor
     ChessBoard();
 
     // This will be important for the actual game when we have two players interacting
