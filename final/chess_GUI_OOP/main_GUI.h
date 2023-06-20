@@ -9,6 +9,13 @@
 #include <QPushButton>
 #include <QWidget>
 
+/*
+ * This class is responsible for handling everyting the GUI does.
+ * It connects the square class to the game class and receives certain moves from the game class
+ * to implement graphically. Furthermore, it receives strings indicating errors and warning messages the Game slot is emitting
+ * Some parts of the GUI implementation with Qt are inspired by https://github.com/djbauman/Qt-Chess
+*/
+
 
 class GUI: public QObject //, public QGraphicsView
 {
@@ -16,7 +23,7 @@ class GUI: public QObject //, public QGraphicsView
     // Basically, this is here so C++ understands all the stuff that we write
     Q_OBJECT
 private:
-    // All QT logic goes inside the scene, we always need a scene
+    // All QT logic goes inside the scene, we always need a scene. This is what is going to be shown via View in the main function
     QGraphicsScene * Scene_GUI;
 
     // Of course we have to connect the game to QT somehow, get Game in there
@@ -24,14 +31,25 @@ private:
 
     // A list containing all the Squares on the Board, derived from class Square
     QList<Square *> squares;
-    QString move;
+
+    // to display the correct pieces depending on the location of the program on your computer
+    QString PATH_QT;
+
+    // sets up the board with the pieces
     void initialize_interface();
+
+    // resets the color after each turn, square is colored red upon clicking on it
     void resetColor();
+
+    // Keep track of whose turn it is (Color == true -> whites turn, Color == false -> blacks turn)
     bool Color;
-    QGraphicsTextItem * turn;
+
+    // Display warnings and information on the screen
+    QGraphicsTextItem * whoseturn;
     QGraphicsTextItem * alert;
     QGraphicsTextItem * prom;
 
+    // array of positions on the chessboard. To be assigned to the squares.
     const QString positions[64] =
     {
         "07", "17", "27", "37", "47", "57", "67", "77",

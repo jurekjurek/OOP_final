@@ -3,6 +3,10 @@
 
 GUI::GUI()
 {
+    // this path has to be adjusted depending on the location of the program on your computer
+
+    std::string PATH = "C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/OOP_final/final/";
+    this->PATH_QT = QString::fromStdString(PATH);
 
     // create the scene that the whole chessgame takes place in
     Scene_GUI = new QGraphicsScene();
@@ -66,14 +70,14 @@ void GUI::initialize_interface() {
     }
 
     // textitem to indicate whose move it is
-    QString toMove = "White to move";
-    turn = new QGraphicsTextItem();
-    turn->setPlainText(toMove);
-    turn->setPos(10, 50);
+    QString Turn = "White to move";
+    whoseturn = new QGraphicsTextItem();
+    whoseturn->setPlainText(Turn);
+    whoseturn->setPos(10, 50);
     QFont font;
     font.setPointSize(13);
-    turn->setFont(font);
-    Scene_GUI->addItem(turn);
+    whoseturn->setFont(font);
+    Scene_GUI->addItem(whoseturn);
 
     // Is there an invalid move? Check? Checkmate? Stalemate?
     QString warning = "";
@@ -91,22 +95,22 @@ void GUI::initialize_interface() {
     // these buttons are instances of the class square as well, and they will be connected to the Game slot of the ChessGame class
     button1 = new Square(300, 600);
     button1->setRect(300,600,40,40);
-    button1->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_knight_40px.png");
+    button1->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_knight_40px.png");
     button1->setPosition("Knight");
 
     button2 = new Square(350, 600);
     button2->setRect(350,600,40,40);
-    button2->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_rook_40px.png");
+    button2->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_rook_40px.png");
     button2->setPosition("Rook");
 
     button3 = new Square(300, 650);
     button3->setRect(300,650,40,40);
-    button3->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_queen_40px.png");
+    button3->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_queen_40px.png");
     button3->setPosition("Queen");
 
     button4 = new Square(350, 650);
     button4->setRect(350,650,40,40);
-    button4->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_bishop_40px.png");
+    button4->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_bishop_40px.png");
     button4->setPosition("Bishop");
 
     // Textitem that tells the player to choose a piece
@@ -120,41 +124,43 @@ void GUI::initialize_interface() {
     // placing the respective pieces on the squares
     // use the setPicture method from QGraphicsPixmapItem!!
 
+
+
     // pictures from https://github.com/EmmanuelleBouchard/chessGame/tree/master/Picture
     qDebug() << "Placing Pieces";
-    squares[0]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_rook.png");
-    squares[1]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_knight.png");
-    squares[2]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_bishop.png");
-    squares[3]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_queen.png");
-    squares[4]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_king.png");
-    squares[5]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_bishop.png");
-    squares[6]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_knight.png");
-    squares[7]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_rook.png");
-    squares[8]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
-    squares[9]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
-    squares[10]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
-    squares[11]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
-    squares[12]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
-    squares[13]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
-    squares[14]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
-    squares[15]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_pawn.png");
+    squares[0]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_rook.png");
+    squares[1]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_knight.png");
+    squares[2]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_bishop.png");
+    squares[3]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_queen.png");
+    squares[4]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_king.png");
+    squares[5]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_bishop.png");
+    squares[6]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_knight.png");
+    squares[7]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_rook.png");
+    squares[8]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_pawn.png");
+    squares[9]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_pawn.png");
+    squares[10]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_pawn.png");
+    squares[11]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_pawn.png");
+    squares[12]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_pawn.png");
+    squares[13]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_pawn.png");
+    squares[14]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_pawn.png");
+    squares[15]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_pawn.png");
 
-    squares[48]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
-    squares[49]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
-    squares[50]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
-    squares[51]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
-    squares[52]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
-    squares[53]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
-    squares[54]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
-    squares[55]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_pawn.png");
-    squares[56]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_rook.png");
-    squares[57]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_knight.png");
-    squares[58]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_bishop.png");
-    squares[59]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_queen.png");
-    squares[60]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_king.png");
-    squares[61]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_bishop.png");
-    squares[62]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_knight.png");
-    squares[63]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_rook.png");
+    squares[48]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_pawn.png");
+    squares[49]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_pawn.png");
+    squares[50]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_pawn.png");
+    squares[51]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_pawn.png");
+    squares[52]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_pawn.png");
+    squares[53]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_pawn.png");
+    squares[54]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_pawn.png");
+    squares[55]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_pawn.png");
+    squares[56]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_rook.png");
+    squares[57]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_knight.png");
+    squares[58]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_bishop.png");
+    squares[59]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_queen.png");
+    squares[60]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_king.png");
+    squares[61]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_bishop.png");
+    squares[62]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_knight.png");
+    squares[63]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_rook.png");
 
 }
 
@@ -284,9 +290,6 @@ void GUI::getResultingBoard(QString response)
         resetColor();
         return;
     }
-    else if (response == "Promotion") {
-        turn->setPlainText("Choose a piece to promote your pawn to!");
-    }
     else if (response == "Draw")
     {
         qDebug() << "Draw!";
@@ -312,30 +315,30 @@ void GUI::getResultingBoard(QString response)
                 // We are promoting the piece of the player whose turn it is not!!
                 if (!this->Color) {
                     if (response[3] == "Q") {
-                        squares[i]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_queen.png");
+                        squares[i]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_queen.png");
                     }
                     if (response[3] == "B") {
-                        squares[i]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_bishop.png");
+                        squares[i]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_bishop.png");
                     }
                     if (response[3] == "K") {
-                        squares[i]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_knight.png");
+                        squares[i]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_knight.png");
                     }
                     if (response[3] == "R") {
-                        squares[i]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/white_rook.png");
+                        squares[i]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/white_rook.png");
                     }
                 }
                 if (this->Color) {
                     if (response[3] == "Q") {
-                        squares[i]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_queen.png");
+                        squares[i]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_queen.png");
                     }
                     if (response[3] == "B") {
-                        squares[i]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_bishop.png");
+                        squares[i]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_bishop.png");
                     }
                     if (response[3] == "K") {
-                        squares[i]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_knight.png");
+                        squares[i]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_knight.png");
                     }
                     if (response[3] == "R") {
-                        squares[i]->setPicture("C:/Users/Jurekk/Documents/Brussels/Uni/sem_2/OOP/pics_/black_rook.png");
+                        squares[i]->setPicture(PATH_QT + "chess_GUI_OOP/pics_/black_rook.png");
                     }
                 }
 
@@ -463,10 +466,10 @@ void GUI::getResultingBoard(QString response)
         if (response[0] != "P" and response != "Promotion" and response != "Check") {
             this->Color = !Color;
             if (this->Color == 0) {
-                turn->setPlainText("Black to move");
+                whoseturn->setPlainText("Black to move");
             }
             else {
-                turn->setPlainText("White to move");
+                whoseturn->setPlainText("White to move");
             }
         }
     }
